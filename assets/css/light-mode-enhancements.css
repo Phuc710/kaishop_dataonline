@@ -1,0 +1,235 @@
+/* ============================================
+   KaiShop Light Mode Enhancements
+   Additional improvements for modern UI
+============================================ */
+
+/* Enhanced Hero Badge Hover Effects */
+[data-theme="light"] .hero-badge {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%) !important;
+    border: 1px solid #93c5fd !important;
+    transition: all 0.3s ease !important;
+}
+
+[data-theme="light"] .hero-badge:hover {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Enhanced Typing Text Gradient */
+[data-theme="light"] .typing-text {
+    background: linear-gradient(90deg, #2563eb 0%, #7c3aed 50%, #db2777 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+}
+
+/* Enhanced Search Button Glow */
+[data-theme="light"] .search-btn {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+[data-theme="light"] .search-btn:hover {
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4) !important;
+    transform: scale(1.15) !important;
+}
+
+/* Enhanced Glass Cards in Promo Banner */
+[data-theme="light"] .glass-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%) !important;
+    border: 2px solid #e5e7eb !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+/* Enhanced Section Labels */
+[data-theme="light"] .section-label {
+    background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    font-weight: 800 !important;
+}
+
+/* Enhanced Trust Indicator */
+[data-theme="light"] .trust-indicator .avatars span {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3) !important;
+}
+
+/* Enhanced Scroll to Top Button */
+[data-theme="light"] .scroll-to-top {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+    border: 2px solid #e5e7eb !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .scroll-to-top:hover {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2) !important;
+    transform: translateY(-5px) scale(1.05) !important;
+}
+
+/* Enhanced Table Styling */
+[data-theme="light"] table {
+    border: 1px solid #e5e7eb !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+}
+
+[data-theme="light"] thead {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+}
+
+[data-theme="light"] tbody tr:hover {
+    background: #f8fafc !important;
+    transition: background 0.2s ease !important;
+}
+
+/* Enhanced Alert Boxes */
+[data-theme="light"] .alert {
+    border-left: 4px solid !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] .alert-error {
+    border-left-color: #ef4444 !important;
+}
+
+[data-theme="light"] .alert-success {
+    border-left-color: #10b981 !important;
+}
+
+/* Enhanced Input Focus States */
+[data-theme="light"] input:focus,
+[data-theme="light"] select:focus,
+[data-theme="light"] textarea:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+    outline: none !important;
+}
+
+/* Enhanced Dropdown Menu */
+[data-theme="light"] .kai-dropdown {
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.15) !important;
+    border: 1px solid #e5e7eb !important;
+}
+
+[data-theme="light"] .kai-dropdown-item:hover {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+}
+
+/* Enhanced Mobile Drawer */
+[data-theme="light"] .kai-mobile-drawer {
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .drawer-menu a {
+    transition: all 0.3s ease !important;
+}
+
+[data-theme="light"] .drawer-menu a:hover {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+    transform: translateX(4px) !important;
+}
+
+/* Enhanced Footer Links */
+[data-theme="light"] .kai-footer-links a {
+    transition: all 0.3s ease !important;
+}
+
+[data-theme="light"] .kai-footer-links a:hover {
+    color: #2563eb !important;
+    transform: translateX(2px) !important;
+}
+
+/* Enhanced Social Buttons */
+[data-theme="light"] .social-btn {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+[data-theme="light"] .social-btn:hover {
+    transform: translateY(-3px) scale(1.05) !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Enhanced Product Cards (if exists) */
+[data-theme="light"] .product-card {
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+[data-theme="light"] .product-card:hover {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 10px 30px -8px rgba(59, 130, 246, 0.2), 0 8px 16px -6px rgba(0, 0, 0, 0.08) !important;
+    transform: translateY(-6px) !important;
+}
+
+/* Enhanced Loading States */
+[data-theme="light"] .loading-spinner {
+    border-color: #e5e7eb !important;
+    border-top-color: #3b82f6 !important;
+}
+
+/* Enhanced Tooltips */
+[data-theme="light"] .tooltip {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Enhanced Modal/Dialog */
+[data-theme="light"] .modal,
+[data-theme="light"] .dialog {
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Enhanced Pagination */
+[data-theme="light"] .pagination-item {
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    transition: all 0.3s ease !important;
+}
+
+[data-theme="light"] .pagination-item:hover {
+    border-color: #3b82f6 !important;
+    background: #eff6ff !important;
+}
+
+[data-theme="light"] .pagination-item.active {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+    color: #ffffff !important;
+    border-color: transparent !important;
+}
+
+/* Enhanced Breadcrumbs */
+[data-theme="light"] .breadcrumb {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+    border: 1px solid #e5e7eb !important;
+}
+
+[data-theme="light"] .breadcrumb-item a:hover {
+    color: #2563eb !important;
+}
+
+/* Enhanced Code Blocks */
+[data-theme="light"] code,
+[data-theme="light"] pre {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+    border: 1px solid #e5e7eb !important;
+    color: #1e293b !important;
+}
+
+/* Smooth Transitions for All Interactive Elements */
+[data-theme="light"] button,
+[data-theme="light"] a,
+[data-theme="light"] input,
+[data-theme="light"] select,
+[data-theme="light"] textarea {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}

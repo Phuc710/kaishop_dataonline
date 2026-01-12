@@ -1,0 +1,504 @@
+/* =========================================
+   COMPREHENSIVE ADMIN RESPONSIVE CSS
+   For ALL Tabs: Dashboard, Users, Orders, 
+   Products, Vouchers, Logs, Settings, etc.
+   ========================================= */
+
+/* ==========================================================
+   MOBILE TOGGLE BUTTON (Hidden on Desktop)
+   ========================================================== */
+.mobile-menu-toggle {
+    display: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1100;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #06b6d4, #0891b2);
+    border: none;
+    color: white;
+    font-size: 1.3rem;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.mobile-menu-toggle:active {
+    transform: scale(0.92);
+}
+
+/* ==========================================================
+   TABLET BREAKPOINT (< 1024px)
+   ========================================================== */
+@media (max-width: 1024px) {
+
+    /* Show Toggle Button */
+    .mobile-menu-toggle {
+        display: flex;
+    }
+
+    /* Sidebar - Hidden by Default, Slide-in */
+    .admin-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1050;
+        width: 280px;
+    }
+
+    .admin-sidebar.mobile-open,
+    .admin-sidebar.open {
+        transform: translateX(0);
+    }
+
+    /* Content Area - Full Width */
+    .admin-content {
+        margin-left: 0 !important;
+        padding: 1.5rem;
+        padding-top: 5rem;
+        /* Space for toggle button */
+        width: 100%;
+    }
+
+    /* Page Header - Stack */
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 1rem;
+    }
+
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .page-header>a,
+    .page-header>button,
+    .page-header .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Stats Grid - 2 columns on tablet */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1rem;
+    }
+
+    /* Form Grid - 2 columns on tablet */
+    .form-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1rem;
+    }
+
+    /* Card adjustments */
+    .card {
+        padding: 1.25rem;
+    }
+
+    .card-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start !important;
+    }
+
+    .card-header input[type="text"] {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* Table Responsiveness - Horizontal Scroll */
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 12px;
+        margin: 0 -0.5rem;
+        padding: 0 0.5rem;
+    }
+
+    table {
+        min-width: 800px;
+    }
+
+    /* Modal Mobile */
+    #viewModal>div,
+    #balanceModal>div,
+    #voucher-modal>div,
+    .modal-content,
+    [id*="Modal"]>div:first-child {
+        width: 95% !important;
+        max-width: 100% !important;
+        margin: 1rem auto !important;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    /* Voucher Table */
+    .voucher-table {
+        min-width: 1000px;
+    }
+
+    /* Pagination wrap */
+    .pagination {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+}
+
+/* ==========================================================
+   MOBILE BREAKPOINT (< 768px)
+   ========================================================== */
+@media (max-width: 768px) {
+
+    /* Content padding */
+    .admin-content {
+        padding: 1rem;
+        padding-top: 4.5rem;
+    }
+
+    /* Stats Grid - Single Column */
+    .stats-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Form Grid - Single Column */
+    .form-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Stat Card adjustments */
+    .stat-card {
+        padding: 1rem !important;
+    }
+
+    .stat-value {
+        font-size: 1.5rem !important;
+    }
+
+    .stat-icon {
+        width: 45px !important;
+        height: 45px !important;
+        font-size: 1.2rem !important;
+    }
+
+    /* Table cells smaller */
+    th,
+    td {
+        padding: 0.6rem 0.5rem !important;
+        font-size: 0.85rem;
+    }
+
+    /* Buttons in tables - icon only */
+    td .btn-sm {
+        padding: 0.4rem 0.6rem !important;
+        font-size: 0.8rem;
+    }
+
+    /* Card smaller padding */
+    .card {
+        padding: 1rem;
+        border-radius: 12px;
+    }
+
+    /* Page header */
+    .page-header h1 {
+        font-size: 1.3rem;
+    }
+
+    /* Balance info grid (users modal) */
+    .balance-info-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+
+    /* Form controls */
+    .form-control {
+        font-size: 16px !important;
+        /* Prevent iOS zoom */
+        padding: 0.75rem !important;
+    }
+
+    /* Button full width */
+    .btn {
+        padding: 0.8rem 1rem !important;
+    }
+
+    /* Badges smaller */
+    .badge {
+        font-size: 0.7rem !important;
+        padding: 0.2rem 0.5rem !important;
+    }
+
+    /* Voucher modal form grid */
+    #voucher-modal .form-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Product selection smaller */
+    #product-selection {
+        max-height: 200px !important;
+    }
+
+    .product-item img {
+        width: 28px !important;
+        height: 28px !important;
+    }
+
+    /* View toggle buttons */
+    [style*="justify-content:space-between"] {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    /* Dropdown toggle in card header */
+    .card-header .form-control {
+        width: 100% !important;
+    }
+
+    /* Delete message modal fix */
+    #voucher-modal,
+    #viewModal,
+    #balanceModal {
+        padding: 0.5rem !important;
+    }
+
+    /* Filter form buttons */
+    .form-group .btn {
+        margin-top: 0.5rem;
+    }
+
+    /* Action buttons in table - stack if needed */
+    td div[style*="display:flex"][style*="gap"] {
+        flex-wrap: wrap;
+    }
+}
+
+/* ==========================================================
+   SMALL PHONE BREAKPOINT (< 480px)
+   ========================================================== */
+@media (max-width: 480px) {
+    .admin-content {
+        padding: 0.75rem;
+        padding-top: 4rem;
+    }
+
+    .page-header h1 {
+        font-size: 1.1rem;
+    }
+
+    .page-header p {
+        font-size: 0.8rem;
+    }
+
+    .stat-card {
+        padding: 0.85rem !important;
+    }
+
+    .stat-value {
+        font-size: 1.3rem !important;
+    }
+
+    .stat-label {
+        font-size: 0.75rem !important;
+    }
+
+    .stat-icon {
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    .card {
+        padding: 0.85rem;
+    }
+
+    .card-title {
+        font-size: 1rem !important;
+    }
+
+    /* Table even smaller */
+    table {
+        min-width: 700px;
+    }
+
+    th,
+    td {
+        padding: 0.5rem 0.4rem !important;
+        font-size: 0.8rem;
+    }
+
+    /* Pagination compact */
+    .pagination a,
+    .pagination span {
+        padding: 0.4rem 0.6rem !important;
+        font-size: 0.8rem;
+    }
+
+    /* Modal header */
+    #voucher-modal h3,
+    #viewModal h2,
+    #balanceModal h2 {
+        font-size: 1.1rem !important;
+    }
+}
+
+/* ==========================================================
+   SPECIFIC COMPONENT FIXES
+   ========================================================== */
+
+/* Toggle switch for vouchers */
+.toggle {
+    position: relative;
+    width: 50px;
+    height: 26px;
+}
+
+.toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #334155;
+    border-radius: 26px;
+    transition: 0.3s;
+}
+
+.toggle-slider::before {
+    content: "";
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.toggle input:checked+.toggle-slider {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.toggle input:checked+.toggle-slider::before {
+    transform: translateX(24px);
+}
+
+/* Products Grid View - Mobile */
+@media (max-width: 768px) {
+    [style*="grid-template-columns:repeat(auto-fill,minmax(280px,1fr))"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Logs tabs responsive */
+@media (max-width: 768px) {
+    [style*="display:flex"][style*="gap:0.5rem"] {
+        flex-wrap: wrap;
+    }
+}
+
+/* Settings tab - specific grids */
+@media (max-width: 768px) {
+
+    [style*="grid-template-columns: 1fr 1fr"],
+    [style*="grid-template-columns:1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Finance charts container */
+@media (max-width: 768px) {
+
+    .chart-container,
+    [style*="min-height:300px"] {
+        min-height: 250px !important;
+    }
+}
+
+/* Notifications subtabs */
+@media (max-width: 768px) {
+    [style*="display:flex"][style*="border-bottom"] {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+}
+
+/* Product editor forms */
+@media (max-width: 768px) {
+    [style*="display:grid"][style*="gap:2rem"] {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+}
+
+/* Security IP tables */
+@media (max-width: 768px) {
+    .table-wrapper table {
+        font-size: 0.85rem;
+    }
+}
+
+/* Image previews in product forms */
+@media (max-width: 768px) {
+
+    img[style*="max-width:200px"],
+    img[style*="width:200px"] {
+        max-width: 150px !important;
+        width: 100% !important;
+        height: auto !important;
+    }
+}
+
+/* Stock manager modal */
+@media (max-width: 768px) {
+
+    #stock-modal>div,
+    [id*="stock"]>div:first-child {
+        width: 95% !important;
+        padding: 1rem !important;
+    }
+}
+
+/* Category cards */
+@media (max-width: 768px) {
+    [style*="grid-template-columns:repeat(auto-fit,minmax(250px,1fr))"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Banner/Notification editor */
+@media (max-width: 768px) {
+    textarea.form-control {
+        min-height: 100px !important;
+    }
+}
+
+/* Date range pickers */
+@media (max-width: 768px) {
+
+    input[type="date"],
+    input[type="datetime-local"] {
+        font-size: 14px !important;
+        padding: 0.6rem !important;
+    }
+}
+
+/* Loading overlay fix */
+@media (max-width: 768px) {
+    .loading-overlay {
+        padding: 1rem;
+    }
+
+    .loading-overlay>div {
+        width: 90% !important;
+        max-width: 300px;
+    }
+}

@@ -1,0 +1,10 @@
+# Ticket folder routing
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /kaishop/ticket/
+    
+    # Remove .php extension
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME}\.php -f
+    RewriteRule ^(.*)$ $1.php [L]
+</IfModule>

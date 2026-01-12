@@ -1,0 +1,141 @@
+/**
+ * Loading Overlay System - Clean & Modern (Neafy Style)
+ */
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Custom deep background with depth */
+    background: radial-gradient(circle at center, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%);
+    backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.loading-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Wrapper to center everything properly */
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* New Spinner Design - Larger & More Vibrant */
+/* New Spinner Design - Replaced with GIF */
+.loading-spinner {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    /* Force center horizontally */
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* Use load.gif */
+    background-image: url('../images/load.gif');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.loading-spinner::before,
+.loading-spinner::after {
+    display: none;
+}
+
+.loading-center-dot {
+    display: none;
+}
+
+@keyframes dot-pulse {
+
+    0%,
+    100% {
+        transform: scale(0.8);
+        opacity: 0.6;
+    }
+
+    50% {
+        transform: scale(1.3);
+        opacity: 1;
+        box-shadow: 0 0 25px rgba(255, 255, 255, 1);
+    }
+}
+
+/* Clean Text - Larger */
+.loading-text {
+    margin-top: 30px;
+    /* Force center alignment */
+    text-align: center;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: 'Inter', sans-serif;
+    font-size: 1.1rem;
+    /* Larger font */
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: white;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #22d3ee, #c084fc, #f472b6);
+    /* Brighter gradient */
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 100%;
+    animation: text-shimmer 2s linear infinite;
+    filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.4));
+}
+
+@keyframes text-shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* Inline Loading Icon for Buttons */
+.loading-icon-inline {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-image: url('../images/load.gif');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .loading-spinner {
+        width: 60px;
+        /* Still decent size on mobile */
+        height: 60px;
+    }
+
+    .loading-text {
+        font-size: 0.95rem;
+        margin-top: 24px;
+    }
+}

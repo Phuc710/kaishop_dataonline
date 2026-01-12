@@ -1,0 +1,219 @@
+/**
+ * Search Suggestions CSS
+ * Styles for autocomplete dropdown
+ */
+
+.search-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    border-radius: 12px;
+    z-index: 1000;
+    max-height: 400px;
+    overflow-y: auto;
+    margin-top: 4px;
+}
+
+.suggestion-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item:hover,
+.suggestion-item.selected {
+    border-left: 3px solid #8b5cf6;
+}
+
+.suggestion-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.suggestion-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+}
+
+.suggestion-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.suggestion-title {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.suggestion-title mark {
+    color: #a855f7;
+    padding: 0 2px;
+    border-radius: 3px;
+}
+
+.suggestion-subtitle {
+    color: var(--text-secondary);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.suggestion-price {
+    color: #10b981;
+    font-weight: 700;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+/* Search container positioning */
+.search-container {
+    position: relative;
+}
+
+/* Scrollbar for suggestions */
+.search-suggestions::-webkit-scrollbar {
+    width: 6px;
+}
+
+.search-suggestions::-webkit-scrollbar-track {
+}
+
+.search-suggestions::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+}
+
+.search-suggestions::-webkit-scrollbar-thumb:hover {
+}
+
+/* Loading state */
+.search-suggestions.loading {
+    padding: 20px;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.search-suggestions.loading::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    border-top-color: #8b5cf6;
+    animation: spin 1s linear infinite;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Empty state */
+.search-suggestions.empty {
+    padding: 20px;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.search-suggestions.empty::before {
+    content: '🔍';
+    display: block;
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .search-suggestions {
+        max-height: 300px;
+        border-radius: 8px;
+    }
+    
+    .suggestion-item {
+        padding: 10px 12px;
+        gap: 10px;
+    }
+    
+    .suggestion-image,
+    .suggestion-icon {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .suggestion-title {
+        font-size: 13px;
+    }
+    
+    .suggestion-subtitle {
+        font-size: 11px;
+    }
+    
+    .suggestion-price {
+        font-size: 13px;
+    }
+}
+
+/* Animation for showing/hiding */
+.search-suggestions {
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: fadeInDown 0.2s ease forwards;
+}
+
+@keyframes fadeInDown {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Integration with existing search inputs */
+.kai-search-container {
+    position: relative;
+}
+
+.kai-search-input {
+    position: relative;
+}
+
+.kai-search-input input:focus + .search-suggestions,
+.kai-search-input .search-suggestions:hover {
+    display: block;
+}
+
+/* Dark theme adjustments */
+@media (prefers-color-scheme: dark) {
+    .search-suggestions {
+        border-color: rgba(148, 163, 184, 0.2);
+    }
+    
+    .suggestion-item:hover,
+    .suggestion-item.selected {
+    }
+}
+

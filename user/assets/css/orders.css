@@ -1,0 +1,325 @@
+/**
+ * User Orders Page - Enhanced CSS
+ */
+
+* {
+    box-sizing: border-box;
+}
+
+.download-link-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border: 1px solid #3b82f6;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    text-decoration: none !important;
+    cursor: pointer;
+    color: #ffffff !important;
+}
+
+.download-link-card:hover {
+    transform: none !important;
+}
+
+.download-icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+
+.copy-btn {
+    background: #8b5cf6;
+    color: #fff;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+
+.copy-btn:active {
+    transform: translateY(0);
+}
+
+/* Product Type Badges */
+.type-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.type-badge-account {
+    background: #8b5cf6;
+    color: #fff;
+}
+
+.type-badge-source {
+    background: #3b82f6;
+    color: #fff;
+}
+
+.type-badge-book {
+    background: #f59e0b;
+    color: #000;
+}
+
+/* Account Credentials Box */
+.account-box {
+    border: 1px solid #8b5cf6;
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+}
+
+.account-box:hover {
+    border-color: #a78bfa;
+}
+
+.account-credentials {
+    color: #10b981;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    line-height: 1.8;
+}
+
+/* Delivery Box */
+.delivery-box {
+    border: 1px solid #3b82f6;
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin-top: 1rem;
+}
+
+/* Product Card */
+.product-delivery-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.product-delivery-card:hover {
+    border-color: var(--primary);
+}
+
+/* Product Image */
+.product-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 2px solid var(--primary);
+    transition: all 0.3s ease;
+}
+
+.product-delivery-card:hover .product-image {
+    transform: scale(1.05);
+}
+
+/* Waiting State */
+.waiting-box {
+    border: 1px solid #f59e0b;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+/* Animations */
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
+}
+
+.pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .product-delivery-card {
+        padding: 1rem;
+    }
+
+    .product-image {
+        width: 80px;
+        height: 80px;
+    }
+
+    .download-link-card {
+        padding: 0.75rem;
+    }
+
+    .download-icon-box {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* ==========================================
+   LIGHT THEME - ORDERS PAGE OVERRIDES
+   ========================================== */
+
+/* Download Link Card */
+[data-theme="light"] .download-link-card {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #1e293b !important;
+}
+
+[data-theme="light"] .download-link-card:hover {
+    border-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] .download-icon-box {
+    background: linear-gradient(135deg, #1a73e8, #285aeb) !important;
+}
+
+/* Account Box */
+[data-theme="light"] .account-box {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+[data-theme="light"] .account-box:hover {
+    border-color: #1877f2 !important;
+}
+
+[data-theme="light"] .account-credentials {
+    color: #059669 !important;
+}
+
+/* Copy Button */
+[data-theme="light"] .copy-btn {
+    background: #000000 !important;
+    border: #000000 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="light"] .copy-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Delivery Box */
+[data-theme="light"] .delivery-box {
+    border: 1px solid rgba(24, 119, 242, 0.2) !important;
+}
+
+/* Product Delivery Card */
+[data-theme="light"] .product-delivery-card {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+[data-theme="light"] .product-delivery-card:hover {
+    border-color: #1877f2 !important;
+}
+
+/* Product Image */
+[data-theme="light"] .product-image {
+    border-color: #1877f2 !important;
+}
+
+/* Waiting Box */
+[data-theme="light"] .waiting-box {
+    border: 1px solid rgba(245, 158, 11, 0.3) !important;
+}
+
+/* Type Badges */
+[data-theme="light"] .type-badge-account {
+    background: #1877f2 !important;
+}
+
+[data-theme="light"] .type-badge-source {
+    background: #1a73e8 !important;
+}
+
+[data-theme="light"] .type-badge-book {
+    background: #f59e0b !important;
+}
+
+/* Review Styles */
+.review-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.review-textarea {
+    background: #0f172a !important;
+    /* Force dark background */
+    border: 1px solid #334155 !important;
+    color: #f8fafc !important;
+    /* Force light text */
+    transition: all 0.3s ease;
+}
+
+.review-textarea:focus {
+    outline: none;
+    border-color: var(--primary) !important;
+    background: #1e293b !important;
+}
+
+/* Download Link Text Colors for Dark Mode */
+
+/* Review Light Mode */
+[data-theme="light"] .review-card {
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+[data-theme="light"] .review-textarea {
+    background: #ffffff !important;
+    border-color: #cbd5e1 !important;
+    color: #1e293b !important;
+}
+
+/* Helper for download link URL */
+.download-link-url {
+    color: #94a3b8 !important;
+}
+
+[data-theme="light"] .download-link-url {
+    color: #3b82f6 !important;
+}
+
+[data-theme="light"] .review-textarea:focus {
+    border-color: #3b82f6 !important;
+    background: #ffffff !important;
+}
+
+.review-success-msg {
+    color: #22c55e !important;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    font-size: 0.95rem;
+    background: transparent !important;
+    border: none !important;
+}

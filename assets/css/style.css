@@ -1,0 +1,14 @@
+/* KaiShop Main Styles - Placeholder */
+/* This file is intentionally minimal as styles are defined in HeaderComponent.php */
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* Default background for normal mode */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+        url('https://w.wallhaven.cc/full/wq/wallhaven-wqve66.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+}

@@ -1,0 +1,881 @@
+/* --- 1. CHẾ ĐỘ TẾT (LUNAR NEW YEAR) --- */
+body.holiday-mode-tet {
+    --holiday-primary: #d32f2f;
+    /* Đỏ đậm */
+    --holiday-accent: #ffca28;
+    /* Vàng kim */
+    --holiday-bg-overlay: url('/kaishop/assets/images/tet.jpg');
+    /* Ảnh nền Tết */
+}
+
+/* Background trang web ngày Tết */
+body.holiday-mode-tet {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), var(--holiday-bg-overlay);
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+/* Header ngày Tết */
+body.holiday-mode-tet .kai-header {
+    background: rgba(211, 47, 47, 0.95);
+    /* Header đỏ */
+    border-bottom: 2px solid #ffca28;
+}
+
+body.holiday-mode-tet .kai-link {
+    color: #ffd54f !important;
+    /* Text menu vàng nhạt */
+}
+
+body.holiday-mode-tet .kai-link:hover {
+    color: #ffffff !important;
+    text-shadow: 0 0 10px #ffca28;
+}
+
+/* Button ngày Tết */
+body.holiday-mode-tet .kai-btn-primary {
+    background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+    border: 1px solid #ffca28;
+    color: #ffca28;
+}
+
+body.holiday-mode-tet .kai-btn-primary:hover {
+    background: linear-gradient(135deg, #b71c1c 0%, #d32f2f 100%);
+    box-shadow: 0 0 15px rgba(255, 202, 40, 0.5);
+}
+
+
+/* --- 2. CHẾ ĐỘ GIÁNG SINH (NOEL) --- */
+body.holiday-mode-noel {
+    --holiday-primary: #1a472a;
+    /* Xanh thông */
+    --holiday-accent: #ef4444;
+    /* Đỏ */
+    --holiday-snow: #f8fafc;
+}
+
+/* Background Noel - Rừng thông tuyết (High Quality) */
+body.holiday-mode-noel {
+    background-color: #0f172a;
+    background-image: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.7)),
+        url('/kaishop/assets/images/noel.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+/* Header Noel */
+body.holiday-mode-noel .kai-header {
+    background: rgba(22, 101, 52, 0.9);
+    /* Xanh lá đậm */
+    border-bottom: 2px solid #ef4444;
+    /* Viền đỏ */
+    position: sticky;
+}
+
+/* Decor cho Header (Ví dụ thêm icon tí hon vào menu nếu muốn) */
+body.holiday-mode-noel .kai-link::after {
+    content: '🎄';
+    font-size: 10px;
+    position: absolute;
+    top: 0;
+    right: -10px;
+    opacity: 0.7;
+}
+
+/* Button Noel */
+body.holiday-mode-noel .kai-btn-primary {
+    background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+    /* Nút đỏ */
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+body.holiday-mode-noel .kai-btn-primary:hover {
+    box-shadow: 0 0 15px rgba(220, 38, 38, 0.7);
+}
+
+
+/* --- 3. CHẾ ĐỘ HALLOWEEN --- */
+body.holiday-mode-halloween {
+    --holiday-primary: #ea580c;
+    /* Cam bí ngô */
+    --holiday-bg: #0f0f0f;
+}
+
+/* Halloween Logo Switching - Scoped to holiday-mode-halloween class */
+body.holiday-mode-halloween .hero-logo-image.light-mode-img,
+body.holiday-mode-halloween .hero-logo-image.dark-mode-img {
+    display: none !important;
+}
+
+body.holiday-mode-halloween .hero-logo-image.halloween-mode-img {
+    display: block !important;
+}
+
+/* Ensure Halloween logo is hidden by default in normal mode */
+.hero-logo-image.halloween-mode-img {
+    display: none !important;
+}
+
+
+/* Hide Theme Toggle Buttons in Halloween Mode */
+body.holiday-mode-halloween .kai-btn-icon[onclick*="toggleTheme"],
+body.holiday-mode-halloween button[onclick*="toggleTheme"],
+body.holiday-mode-halloween #theme-toggle-btn,
+body.holiday-mode-halloween #mobile-theme-icon,
+body.holiday-mode-halloween .theme-toggle {
+    display: none !important;
+}
+
+body.holiday-mode-halloween {
+    background-color: var(--holiday-bg);
+    /* Dark black/brown gradient as requested */
+    background-image: linear-gradient(rgba(15, 23, 42, 0.7), rgba(6, 8, 11, 0.482)),
+        url('/kaishop/assets/images/halloween.png');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+/* Override homepage background in Halloween mode */
+body.holiday-mode-halloween .page-wrapper::before {
+    background-image: linear-gradient(rgba(15, 23, 42, 0.7), rgba(6, 8, 11, 0.482)),
+        url('/kaishop/assets/images/halloween.png') !important;
+    background-size: cover !important;
+    background-attachment: fixed !important;
+    background-position: center !important;
+    animation: none !important;
+    opacity: 1 !important;
+}
+
+body.holiday-mode-halloween .kai-header {
+    background: rgba(20, 10, 5, 0.96);
+    border-bottom: 2px solid #ea580c;
+}
+
+body.holiday-mode-halloween .kai-link {
+    color: #fb923c !important;
+    /* Cam nhạt */
+    font-family: 'Creepster', cursive, sans-serif;
+    /* Nếu có font */
+}
+
+body.holiday-mode-halloween .kai-btn-primary {
+    background: #ea580c;
+    color: #000;
+    font-weight: bold;
+    box-shadow: 0 0 10px #ea580c;
+}
+
+/* Footer Halloween Overrides */
+body.holiday-mode-halloween .kai-footer {
+    background: linear-gradient(to bottom, #1a0500 0%, #000000 100%);
+    border-top: 1px solid #ea580c;
+}
+
+body.holiday-mode-halloween .kai-footer::before {
+    background: radial-gradient(circle at 50% 0, rgba(234, 88, 12, 0.15), transparent 70%);
+}
+
+body.holiday-mode-halloween .kai-footer-title {
+    color: #fb923c;
+    /* Cam nhạt */
+}
+
+body.holiday-mode-halloween .kai-footer-links a:hover {
+    color: #ea580c;
+    /* Cam đậm khi hover */
+}
+
+body.holiday-mode-halloween .kai-footer-badge {
+    border-color: #ea580c;
+    color: #fb923c;
+    background: rgba(20, 10, 5, 0.9);
+}
+
+/* Product Card Halloween Overrides */
+body.holiday-mode-halloween .product-card,
+body.holiday-mode-halloween .sp-card {
+    border: 1px solid rgba(234, 88, 12, 0.3) !important;
+    background: rgba(20, 10, 5, 0.8) !important;
+    backdrop-filter: blur(15px);
+}
+
+body.holiday-mode-halloween .product-card:hover,
+body.holiday-mode-halloween .sp-card:hover {
+    border-color: #ea580c !important;
+    box-shadow: 0 0 25px rgba(234, 88, 12, 0.4) !important;
+    transform: translateY(-8px) scale(1.02);
+}
+
+body.holiday-mode-halloween .sp-card::before {
+    display: none !important;
+}
+
+
+body.holiday-mode-halloween .product-card .card-title,
+body.holiday-mode-halloween .sp-card-title a {
+    color: #fdba74 !important;
+}
+
+body.holiday-mode-halloween .product-card .price-tag,
+body.holiday-mode-halloween .sp-card-price {
+    color: #ea580c !important;
+}
+
+body.holiday-mode-halloween .sp-card-rating i {
+    color: #f59e0b !important;
+}
+
+body.holiday-mode-halloween .sp-card-stock {
+    color: #22c55e !important;
+    background: rgba(34, 197, 94, 0.1) !important;
+    border: 1px solid rgba(34, 197, 94, 0.3) !important;
+    border-radius: 99px !important;
+    padding: 2px 10px !important;
+    font-weight: 600 !important;
+}
+
+/* Homepage Components Halloween Overrides */
+body.holiday-mode-halloween .feature-card,
+body.holiday-mode-halloween .stat-card,
+body.holiday-mode-halloween .process-step,
+body.holiday-mode-halloween .faq-item,
+body.holiday-mode-halloween .glass-card {
+    background: rgba(20, 10, 5, 0.70) !important;
+    border: 1px solid rgba(234, 88, 12, 0.3) !important;
+    backdrop-filter: blur(10px);
+}
+
+body.holiday-mode-halloween .feature-card:hover,
+body.holiday-mode-halloween .stat-card:hover,
+body.holiday-mode-halloween .process-step:hover,
+body.holiday-mode-halloween .faq-item:hover,
+body.holiday-mode-halloween .glass-card:hover {
+    border-color: #ea580c !important;
+    box-shadow: 0 0 20px rgba(234, 88, 12, 0.4) !important;
+    transform: translateY(-5px);
+}
+
+body.holiday-mode-halloween .feature-title,
+body.holiday-mode-halloween .stat-label,
+body.holiday-mode-halloween .process-step h3,
+body.holiday-mode-halloween .faq-head span,
+body.holiday-mode-halloween .h2-title,
+body.holiday-mode-halloween .section-title span,
+body.holiday-mode-halloween .hero-title span {
+    color: #fb923c !important;
+    /* Orange text */
+    background: none !important;
+    -webkit-text-fill-color: #fb923c !important;
+}
+
+body.holiday-mode-halloween .feature-icon-box i,
+body.holiday-mode-halloween .process-icon i,
+body.holiday-mode-halloween .dashboard-icon-lg i,
+body.holiday-mode-halloween .faq-head i {
+    color: #ea580c !important;
+}
+
+body.holiday-mode-halloween .feature-icon-box,
+body.holiday-mode-halloween .process-icon {
+    background: rgba(234, 88, 12, 0.15) !important;
+    border: 1px solid rgba(234, 88, 12, 0.3) !important;
+}
+
+body.holiday-mode-halloween .stat-value {
+    color: #fff !important;
+    text-shadow: 0 0 10px #ea580c;
+}
+
+/* --- HALLOWEEN GLOBAL HOMEPAGE OVERRIDES --- */
+body.holiday-mode-halloween .hero-title,
+body.holiday-mode-halloween .hero-subtitle strong,
+body.holiday-mode-halloween .section-title,
+body.holiday-mode-halloween .feature-title,
+body.holiday-mode-halloween .promo-content h2,
+body.holiday-mode-halloween .cta-content h2,
+body.holiday-mode-halloween .h2-title,
+body.holiday-mode-halloween .process-step h3,
+body.holiday-mode-halloween .faq-head {
+    color: #fb923c !important;
+    /* Orange text */
+}
+
+.section-link {
+    color: #fb923c !important;
+}
+
+body.holiday-mode-halloween .hero-subtitle,
+body.holiday-mode-halloween .section-sub,
+body.holiday-mode-halloween .feature-text,
+body.holiday-mode-halloween .promo-content p,
+body.holiday-mode-halloween .cta-content p,
+body.holiday-mode-halloween .process-step p,
+body.holiday-mode-halloween .faq-body p,
+body.holiday-mode-halloween .text-muted {
+    color: #ffffff !important;
+    /* Lighter orange/skin tone for muted text */
+}
+
+body.holiday-mode-halloween .text-gradient,
+body.holiday-mode-halloween .typing-text {
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 25%, #ff4500 50%, #dc143c 75%, #8b008b 100%) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-size: 200% 200% !important;
+    animation: halloween-gradient-shift 4s ease infinite !important;
+}
+
+@keyframes halloween-gradient-shift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* --- FOOTER DECORATION (PUMPKIN) --- */
+body.holiday-mode-halloween .kai-footer::after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    right: 20px;
+    width: 150px;
+    height: 150px;
+    background-image: url('/kaishop/assets/images/halloween/bingo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    z-index: 99999;
+    animation: pumpkin-float 3s ease-in-out infinite;
+}
+
+@keyframes pumpkin-float {
+
+    0%,
+    100% {
+        transform: rotate(15deg) translateY(0);
+    }
+
+    50% {
+        transform: rotate(15deg) translateY(-10px);
+    }
+}
+
+@media (max-width: 768px) {
+    body.holiday-mode-halloween .kai-footer::after {
+        display: none !important;
+    }
+}
+
+/* --- MOBILE NAVIGATION HALLOWEEN THEME --- */
+body.holiday-mode-halloween .kai-mobile-drawer {
+    background: linear-gradient(to bottom, #1a0500, #000000) !important;
+    border-right: 1px solid #ea580c !important;
+}
+
+body.holiday-mode-halloween .drawer-header {
+    border-bottom: 1px solid rgba(234, 88, 12, 0.3) !important;
+}
+
+body.holiday-mode-halloween .drawer-title {
+    color: #ea580c !important;
+    text-shadow: 0 0 5px rgba(234, 88, 12, 0.5);
+}
+
+body.holiday-mode-halloween .drawer-close {
+    color: #ea580c !important;
+    background: rgba(234, 88, 12, 0.1) !important;
+}
+
+
+
+body.holiday-mode-halloween .drawer-menu li a:hover {
+    background: #ea580c !important;
+    color: #000000 !important;
+}
+
+body.holiday-mode-halloween .drawer-menu li a i {
+    color: #ea580c !important;
+}
+
+body.holiday-mode-halloween .drawer-menu li a:hover i {
+    color: #000000 !important;
+}
+
+/* Drawer Footer Buttons */
+body.holiday-mode-halloween .drawer-footer .kai-btn-secondary {
+    background: rgba(20, 10, 5, 0.8) !important;
+    border: 1px solid rgba(234, 88, 12, 0.3) !important;
+    color: #000000 !important;
+}
+
+body.holiday-mode-halloween .drawer-footer .kai-btn-secondary:hover {
+    border-color: #ea580c !important;
+    box-shadow: 0 0 10px rgba(234, 88, 12, 0.2) !important;
+}
+
+/* Mobile Login Button in Drawer */
+body.holiday-mode-halloween .kai-mobile-login {
+    background: linear-gradient(135deg, #ea580c 0%, #b91c1c 100%) !important;
+    color: #000000 !important;
+    border: none !important;
+}
+
+/* --- ENHANCED HALLOWEEN BUTTONS --- */
+body.holiday-mode-halloween .btn-primary,
+body.holiday-mode-halloween .sp-btn-primary,
+body.holiday-mode-halloween .search-btn {
+    background: linear-gradient(135deg, #ea580c 0%, #b91c1c 100%) !important;
+    border: 1px solid rgba(255, 140, 0, 0.3) !important;
+    color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+    box-shadow: 0 4px 15px rgba(234, 88, 12, 0.2) !important;
+}
+
+body.holiday-mode-halloween .sp-btn-secondary {
+    background: rgba(234, 88, 12, 0.1) !important;
+    border: 1px solid rgba(234, 88, 12, 0.3) !important;
+    color: #fb923c !important;
+}
+
+body.holiday-mode-halloween .btn-primary:hover,
+body.holiday-mode-halloween .sp-btn-primary:hover,
+body.holiday-mode-halloween .sp-btn-secondary:hover,
+body.holiday-mode-halloween .search-btn:hover {
+    box-shadow: 0 0 20px rgba(234, 88, 12, 0.5) !important;
+    transform: translateY(-3px) scale(1.02) !important;
+    filter: brightness(1.2);
+}
+
+/* Category Tabs Halloween */
+body.holiday-mode-halloween .category-tab {
+    background: rgba(20, 10, 5, 0.6) !important;
+    border-color: rgba(234, 88, 12, 0.2) !important;
+    color: #fdba74 !important;
+}
+
+body.holiday-mode-halloween .category-tab:hover {
+    background: rgba(234, 88, 12, 0.1) !important;
+    border-color: #ea580c !important;
+    color: #fff !important;
+}
+
+body.holiday-mode-halloween .category-tab.active {
+    background: linear-gradient(135deg, #ea580c 0%, #b91c1c 100%) !important;
+    border-color: #ea580c !important;
+    color: #fff !important;
+    box-shadow: 0 0 15px rgba(234, 88, 12, 0.3) !important;
+}
+
+@keyframes halloween-gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Darker Background Overlay */
+body.holiday-mode-halloween {
+    background-image:
+        linear-gradient(to bottom, rgba(10, 0, 0, 0.70) 0%, rgba(5, 0, 0, 0.9) 100%),
+        url('/kaishop/assets/images/halloween.png') !important;
+}
+
+/* Search Box */
+body.holiday-mode-halloween .hero-search {
+    background: rgba(20, 10, 5, 0.9) !important;
+    border-color: #ea580c !important;
+    box-shadow: none !important;
+}
+
+body.holiday-mode-halloween .hero-search:hover {
+    box-shadow: none !important;
+}
+
+body.holiday-mode-halloween .search-placeholder,
+body.holiday-mode-halloween .search-keywords-rotate,
+body.holiday-mode-halloween .search-icon {
+    color: #fdba74 !important;
+}
+
+body.holiday-mode-halloween .search-btn {
+    background: linear-gradient(135deg, #ea580c 0%, #b91c1c 100%) !important;
+    box-shadow: none !important;
+}
+
+/* Badges */
+body.holiday-mode-halloween .hero-badge {
+    background: rgba(234, 88, 12, 0.15) !important;
+    border-color: #ea580c !important;
+    color: #fb923c !important;
+}
+
+body.holiday-mode-halloween .hero-badge-soft {
+    background: rgba(20, 10, 5, 0.8) !important;
+    border-color: rgba(234, 88, 12, 0.3) !important;
+}
+
+body.holiday-mode-halloween .hero-badge-soft strong {
+    color: #fb923c !important;
+}
+
+body.holiday-mode-halloween .hero-badge-soft span {
+    color: #fdba74 !important;
+}
+
+body.holiday-mode-halloween .hero-badge-soft i {
+    background: rgba(234, 88, 12, 0.2) !important;
+    color: #ea580c !important;
+}
+
+/* Buttons */
+body.holiday-mode-halloween .btn-ghost {
+    color: #fb923c !important;
+    border-color: #ea580c !important;
+    background: rgba(234, 88, 12, 0.1) !important;
+}
+
+body.holiday-mode-halloween .btn-ghost:hover {
+    background: rgba(234, 88, 12, 0.2) !important;
+}
+
+/* Sections Backgrounds */
+body.holiday-mode-halloween .promotion-banner,
+body.holiday-mode-halloween .dashboard-section,
+body.holiday-mode-halloween .cta-box {
+    background: radial-gradient(ellipse at center, rgba(234, 88, 12, 0.15) 0%, rgba(20, 10, 5, 0.9) 70%) !important;
+    border: 1px solid rgba(234, 88, 12, 0.3) !important;
+}
+
+/* Footer (Ensure it matches) */
+body.holiday-mode-halloween .kai-footer {
+    background: #000000 !important;
+    /* Pure black for footer contrast */
+    border-top: 1px solid #ea580c !important;
+}
+
+/* --- AUTH PAGE HALLOWEEN THEME --- */
+body.holiday-mode-halloween .auth-card {
+    background: rgba(10, 0, 0, 0.85) !important;
+    border: 1px solid rgba(234, 88, 12, 0.4) !important;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), 0 0 10px rgba(234, 88, 12, 0.2) !important;
+    backdrop-filter: blur(10px);
+}
+
+body.holiday-mode-halloween .auth-header h1 {
+    color: #fb923c !important;
+    text-shadow: 0 0 10px rgba(234, 88, 12, 0.70);
+}
+
+body.holiday-mode-halloween .auth-header .subtitle {
+    color: #fdba74 !important;
+}
+
+body.holiday-mode-halloween .input-wrapper {
+    background: rgba(15, 7, 2, 0.8) !important;
+    border: 1px solid rgba(234, 88, 12, 0.25) !important;
+    border-radius: 12px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.holiday-mode-halloween .input-wrapper:focus-within {
+    background: rgba(20, 10, 5, 0.95) !important;
+    border-color: #ea580c !important;
+    box-shadow: 0 0 20px rgba(234, 88, 12, 0.25), inset 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+    transform: translateY(-1px);
+}
+
+body.holiday-mode-halloween .input-wrapper input {
+    color: #fff !important;
+    font-weight: 500 !important;
+}
+
+body.holiday-mode-halloween .input-wrapper input::placeholder {
+    color: rgba(253, 186, 116, 0.4) !important;
+}
+
+body.holiday-mode-halloween .input-icon,
+body.holiday-mode-halloween .password-toggle {
+    color: #fb923c !important;
+    transition: color 0.3s ease !important;
+}
+
+body.holiday-mode-halloween .input-wrapper:focus-within .input-icon {
+    color: #ea580c !important;
+    filter: drop-shadow(0 0 5px rgba(234, 88, 12, 0.5));
+}
+
+body.holiday-mode-halloween .btn-submit {
+    background: linear-gradient(135deg, #d35400 0%, #c0392b 100%) !important;
+    box-shadow: 0 0 15px rgba(211, 84, 0, 0.4) !important;
+    border: 1px solid #ea580c !important;
+}
+
+body.holiday-mode-halloween .btn-submit:hover {
+    box-shadow: 0 0 25px rgba(211, 84, 0, 0.7) !important;
+    transform: translateY(-2px);
+    filter: brightness(1.2);
+}
+
+body.holiday-mode-halloween .btn-google:hover {
+    border-color: #2d2d2dcf !important;
+}
+
+body.holiday-mode-halloween .auth-footer,
+body.holiday-mode-halloween .auth-footer a {
+    color: #fdba74 !important;
+}
+
+body.holiday-mode-halloween .back-link-in-card {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fb923c !important;
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    width: fit-content;
+    padding: 5px 10px;
+    border-radius: 8px;
+    background: rgba(234, 88, 12, 0.1);
+}
+
+body.holiday-mode-halloween .back-link-in-card:hover {
+    color: #fff !important;
+    background: rgba(234, 88, 12, 0.2);
+    transform: translateX(-5px);
+}
+
+body.holiday-mode-halloween .marquee-text {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    letter-spacing: 1px;
+    padding: 2px 15px;
+    border: 1px solid rgba(234, 88, 12, 0.3);
+    border-radius: 50px;
+}
+
+body.holiday-mode-halloween .checkbox-wrapper input:checked+label::before {
+    background: #ea580c !important;
+    border-color: #ea580c !important;
+}
+
+/* ============================================
+   HALLOWEEN MODE - DEPOSIT PAGE (Nạp Tiền)
+   Dark & Mysterious Theme
+   ============================================ */
+
+/* Deposit Page Background - Darker */
+body.holiday-mode-halloween .deposit-page {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.85), rgba(10, 5, 0, 0.9)),
+        url('/kaishop/assets/images/halloween.png');
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+/* Page Header Section - Dark Orange */
+body.holiday-mode-halloween .page-header-section::before {
+    background: radial-gradient(circle, rgba(180, 60, 0, 0.15) 0%, transparent 70%) !important;
+}
+
+body.holiday-mode-halloween .page-badge {
+    background: rgba(20, 10, 5, 0.8) !important;
+    border-color: rgba(180, 60, 0, 0.5) !important;
+    color: #d97706 !important;
+}
+
+body.holiday-mode-halloween .page-title {
+    color: #d97706 !important;
+    text-shadow: 0 0 20px rgba(217, 119, 6, 0.3) !important;
+}
+
+body.holiday-mode-halloween .page-subtitle {
+    color: #a8a29e !important;
+}
+
+/* Feature Cards - Dark Brown/Black */
+body.holiday-mode-halloween .feature-card {
+    background: rgba(15, 10, 5, 0.9) !important;
+    border: 1px solid rgba(120, 50, 0, 0.3) !important;
+}
+
+body.holiday-mode-halloween .feature-card:hover {
+    border-color: rgba(180, 60, 0, 0.5) !important;
+    box-shadow: 0 4px 20px rgba(180, 60, 0, 0.2) !important;
+}
+
+body.holiday-mode-halloween .feature-title {
+    color: #d97706 !important;
+}
+
+body.holiday-mode-halloween .feature-desc {
+    color: #a8a29e !important;
+}
+
+body.holiday-mode-halloween .feature-icon {
+    border: 1px solid rgba(120, 50, 0, 0.3) !important;
+}
+
+/* Main Payment Card - Very Dark */
+body.holiday-mode-halloween .payment-card {
+    background: rgba(10, 5, 0, 0.95) !important;
+    border: 1px solid rgba(120, 50, 0, 0.4) !important;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8) !important;
+}
+
+body.holiday-mode-halloween .payment-card label {
+    color: #a8a29e !important;
+}
+
+/* Quick Amount Buttons - Dark */
+body.holiday-mode-halloween .amount-btn {
+    background: rgba(20, 15, 10, 0.8) !important;
+    border: 1px solid rgba(120, 50, 0, 0.3) !important;
+    color: #a8a29e !important;
+}
+
+body.holiday-mode-halloween .amount-btn:hover {
+    background: rgba(40, 25, 15, 0.9) !important;
+    border-color: rgba(180, 60, 0, 0.5) !important;
+    color: #d97706 !important;
+}
+
+body.holiday-mode-halloween .amount-btn.active {
+    background: rgba(60, 35, 20, 0.9) !important;
+    border-color: #b45309 !important;
+    color: #f59e0b !important;
+}
+
+/* Currency Input - Dark */
+body.holiday-mode-halloween .currency-input {
+    background: rgba(20, 15, 10, 0.9) !important;
+    border: 1px solid rgba(120, 50, 0, 0.3) !important;
+    color: #d97706 !important;
+}
+
+body.holiday-mode-halloween .currency-input:focus {
+    border-color: #b45309 !important;
+    background: rgba(25, 18, 12, 1) !important;
+}
+
+body.holiday-mode-halloween .currency-suffix {
+    color: #a8a29e !important;
+}
+
+/* Submit Button - Dark Orange Gradient */
+body.holiday-mode-halloween .btn-submit {
+    background: linear-gradient(135deg, #92400e 0%, #78350f 100%) !important;
+    box-shadow: 0 4px 15px rgba(146, 64, 14, 0.3) !important;
+}
+
+body.holiday-mode-halloween .btn-submit:hover {
+    box-shadow: 0 8px 25px rgba(146, 64, 14, 0.5) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Payment Details */
+body.holiday-mode-halloween .payment-details {
+    border-top-color: rgba(120, 50, 0, 0.3) !important;
+}
+
+/* QR Wrapper */
+body.holiday-mode-halloween .qr-wrapper {
+    background: #ffffff !important;
+    border: 2px solid #92400e !important;
+}
+
+/* Info Rows - Dark */
+body.holiday-mode-halloween .info-row {
+    background: rgba(20, 15, 10, 0.8) !important;
+    border: 1px solid rgba(120, 50, 0, 0.3) !important;
+}
+
+body.holiday-mode-halloween .info-label {
+    color: #a8a29e !important;
+}
+
+body.holiday-mode-halloween .info-value {
+    color: #d97706 !important;
+}
+
+body.holiday-mode-halloween .code-highlight {
+    color: #f59e0b !important;
+    text-shadow: 0 0 10px rgba(245, 158, 11, 0.3) !important;
+}
+
+/* Copy Button */
+body.holiday-mode-halloween .btn-copy {
+    background: rgba(120, 50, 0, 0.2) !important;
+    color: #d97706 !important;
+}
+
+body.holiday-mode-halloween .btn-copy:hover {
+    background: #92400e !important;
+    color: #ffffff !important;
+}
+
+/* Timer Box */
+body.holiday-mode-halloween .timer-box {
+    background: rgba(127, 29, 29, 0.2) !important;
+    border-color: rgba(185, 28, 28, 0.4) !important;
+}
+
+body.holiday-mode-halloween .timer-text {
+    color: #dc2626 !important;
+}
+
+/* Download QR Button */
+body.holiday-mode-halloween .btn-download-qr {
+    background: linear-gradient(135deg, #92400e 0%, #78350f 100%) !important;
+    box-shadow: 0 4px 15px rgba(146, 64, 14, 0.3) !important;
+}
+
+body.holiday-mode-halloween .btn-download-qr:hover {
+    box-shadow: 0 8px 25px rgba(146, 64, 14, 0.5) !important;
+}
+
+/* Cancel Button */
+body.holiday-mode-halloween .cancel-btn {
+    background: rgba(127, 29, 29, 0.2) !important;
+    border-color: rgba(185, 28, 28, 0.4) !important;
+    color: #dc2626 !important;
+}
+
+body.holiday-mode-halloween .cancel-btn:hover {
+    background: #991b1b !important;
+    color: #ffffff !important;
+}
+
+/* Remove bright glow animation */
+body.holiday-mode-halloween .payment-card {
+    animation: none !important;
+}
+
+/* Scrollbar Dark Theme */
+body.holiday-mode-halloween ::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #92400e 0%, #78350f 100%) !important;
+}
+
+body.holiday-mode-halloween ::-webkit-scrollbar-thumb:hover {
+    background: #92400e !important;
+}

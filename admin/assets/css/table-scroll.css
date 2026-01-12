@@ -1,0 +1,91 @@
+/**
+ * Admin Table Scroll Fix
+ * File riêng để fix scroll của bảng, không override CSS khác
+ */
+
+/* Fix page-level horizontal scroll */
+html,
+body {
+    overflow-x: hidden !important;
+}
+
+/* Fix admin-content width - KHÔNG dùng max-width cứng */
+.admin-content {
+    overflow-x: hidden !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+}
+
+/* Khi sidebar ẩn (mobile), content chiếm full width */
+@media (max-width: 1024px) {
+    .admin-content {
+        margin-left: 0 !important;
+    }
+}
+
+/* Table wrapper - scroll ngang chỉ trong bảng */
+.table-wrapper {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Custom scrollbar cho table */
+.table-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+}
+
+/* Table minimum width để force scroll */
+.table-wrapper table {
+    min-width: 900px;
+}
+
+/* =========================================
+   TEXT KHÔNG XUỐNG HÀNG - THẲNG LUÔN
+   ========================================= */
+
+/* Header table - không xuống hàng */
+.table-wrapper th {
+    white-space: nowrap !important;
+}
+
+/* Tất cả cell trong table - không xuống hàng */
+.table-wrapper td {
+    white-space: nowrap !important;
+}
+
+/* Row không xuống hàng */
+.table-wrapper tr {
+    white-space: nowrap !important;
+}
+
+/* Đảm bảo card không tràn */
+.card {
+    max-width: 100% !important;
+    overflow: hidden !important;
+}
+
+/* Stats grid không tràn */
+.stats-grid {
+    max-width: 100% !important;
+    overflow: hidden !important;
+}
+
+/* Form grid không tràn */
+.form-grid {
+    max-width: 100% !important;
+    overflow: hidden !important;
+}

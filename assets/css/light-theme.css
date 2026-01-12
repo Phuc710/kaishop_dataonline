@@ -1,0 +1,1585 @@
+[data-theme="light"] {
+    /* COLOR PALETTE - White & Blue Accents */
+    --bg-body: #ffffff;
+    --bg-main: #ffffff;
+    --bg-card: #ffffff;
+    --bg-card-solid: #ffffff;
+    --bg-element: #f7f8fa;
+    --bg-hover: #e4e6eb;
+
+    /* Text Colors */
+    --text-main: #1c1e21;
+    --text-primary: #1c1e21;
+    --text-muted: #65676b;
+    --text-disabled: #8a8d91;
+    --text-secondary: #65676b;
+
+    /* Accent - Blue (Facebook-style) */
+    --accent-blue: #1877f2;
+    --accent-blue-hover: #166fe5;
+
+    /* Borders */
+    --border: #dadde1;
+    --border-light: #e4e6eb;
+    --border-hover: #bec3c9;
+    --border-color: #dadde1;
+
+    /* Shadows - REMOVED FOR FLAT UI */
+    --shadow-sm: none;
+    --shadow-md: none;
+    --shadow-lg: none;
+}
+
+
+[data-theme="light"] body {
+    background: #ffffff !important;
+    color: #1c1e21 !important;
+}
+
+[data-theme="light"] .cart-bg-animated {
+    display: none !important;
+}
+
+/* Remove dark overlays */
+[data-theme="light"] body::before,
+[data-theme="light"] body::after {
+    display: none !important;
+}
+
+/* ==========================================
+   PAGE STRUCTURE - Pure White
+   ========================================== */
+
+[data-theme="light"] .page-wrapper {
+    background: #ffffff !important;
+    background-image: none !important;
+}
+
+[data-theme="light"] .page-wrapper::before {
+    display: none !important;
+}
+
+[data-theme="light"] .section {
+    background: transparent !important;
+    background-image: none !important;
+}
+
+[data-theme="light"] .bg-soft {
+    background: #ffffff !important;
+}
+
+/* Product Page (sanpham) - Pure White */
+[data-theme="light"] .sp-bg-animated,
+[data-theme="light"] .sp-bg-animated::before,
+[data-theme="light"] .sp-bg-animated::after {
+    display: none !important;
+}
+
+[data-theme="light"] .sp-header::before {
+    display: none !important;
+}
+
+[data-theme="light"] .sp-page {
+    background: #ffffff !important;
+}
+
+/* Search Input - White background */
+[data-theme="light"] #search-input-field {
+    color: #000000 !important;
+    border: 1px solid rgb(0, 0, 0) !important;
+    border-radius: 99px !important;
+}
+
+[data-theme="light"] #search-input-field::placeholder {
+    color: #000000 !important;
+}
+
+/* GROK Style Tags - Natural & Minimalist */
+
+[data-theme="light"] .category-tab {
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    color: #000000 !important;
+    border-radius: 99px !important;
+    font-weight: 500 !important;
+    padding: 8px 20px !important;
+}
+
+[data-theme="light"] .category-tab:hover {
+    border-color: #ffffff !important;
+    transform: translateY(-1px) !important;
+}
+
+[data-theme="light"] .category-tab.active {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+    font-weight: 700 !important;
+}
+
+/* Hide gradient effects on search box */
+[data-theme="light"] .glow,
+
+[data-theme="light"] .darkBorderBg,
+[data-theme="light"] .white,
+[data-theme="light"] .border,
+[data-theme="light"] #pink-mask {
+    display: none !important;
+}
+
+
+
+
+/* ==========================================
+   HEADER - White (Flat)
+   ========================================== */
+
+[data-theme="light"] .kai-header {
+    background: #ffffff !important;
+    border-bottom: none !important;
+}
+
+[data-theme="light"] .kai-nav,
+[data-theme="light"] .kai-link {
+    color: #1c1e21 !important;
+}
+
+[data-theme="light"] .kai-link:hover {
+    color: #1877f2 !important;
+}
+
+[data-theme="light"] .kai-btn-icon {
+    background: #e4e6eb !important;
+    border: none !important;
+    color: #1c1e21 !important;
+}
+
+
+[data-theme="light"] .kai-dropdown {
+    background: #ffffff !important;
+    border: none !important;
+    border-radius: 8px !important;
+}
+
+[data-theme="light"] .kai-dropdown-item {
+    color: #1c1e21 !important;
+}
+
+
+
+[data-theme="light"] .kai-mobile-drawer {
+    background: #ffffff !important;
+    border-right: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .drawer-menu a {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    color: #1c1e21 !important;
+    border-radius: 12px !important;
+}
+
+[data-theme="light"] .drawer-menu a:hover {
+    border-color: #1877f2 !important;
+}
+
+[data-theme="light"] .kai-btn {
+    background: #1877f2 !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+/* Make drawer icons black */
+[data-theme="light"] .drawer-menu a i {
+    color: #000000 !important;
+}
+
+[data-theme="light"] .drawer-menu a:hover i {
+    color: #000000 !important;
+}
+
+[data-theme="light"] .kai-mobile-menu-btn {
+    color: #000000 !important;
+    background: none !important;
+    border: black 1px solid !important;
+}
+
+[data-theme="light"] .drawer-title {
+    color: #000000 !important;
+    background: none !important;
+    background-clip: unset !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: #000000 !important;
+}
+
+[data-theme="light"] .drawer-close {
+    color: #000000 !important;
+    background: #f1f5f9 !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .drawer-close:hover {
+    color: #000000 !important;
+}
+
+/* ==========================================
+   CARDS - Modern Clean Design with Subtle Shadows
+   ========================================== */
+
+[data-theme="light"] .card,
+[data-theme="light"] .auth-card,
+[data-theme="light"] .stat-card,
+[data-theme="light"] .feature-card,
+[data-theme="light"] .product-purchase-section,
+[data-theme="light"] .glass-card,
+[data-theme="light"] .payment-card,
+[data-theme="light"] .deposit-card {
+    background: #ffffff !important;
+    background-image: none !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 20px !important;
+    backdrop-filter: none !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+[data-theme="light"] .card:hover,
+[data-theme="light"] .feature-card:hover {
+    border-color: #cbd5e1 !important;
+    transform: translateY(-4px) !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* ==========================================
+   TEXT
+   ========================================== */
+
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3,
+[data-theme="light"] h4,
+[data-theme="light"] h5,
+[data-theme="light"] h6,
+[data-theme="light"] strong,
+[data-theme="light"] .text-main,
+[data-theme="light"] .card-title,
+[data-theme="light"] .section-title,
+[data-theme="light"] .hero-title,
+[data-theme="light"] .page-title,
+[data-theme="light"] .stat-value,
+[data-theme="light"] .feature-title {
+    color: #1c1e21 !important;
+    background: none !important;
+    background-clip: unset !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: unset !important;
+}
+
+[data-theme="light"] p,
+[data-theme="light"] span:not(.badge):not(.kai-badge),
+[data-theme="light"] .text-muted,
+[data-theme="light"] label,
+[data-theme="light"] .subtitle,
+[data-theme="light"] .hero-subtitle,
+[data-theme="light"] .page-subtitle,
+[data-theme="light"] .feature-text,
+[data-theme="light"] .feature-desc {
+    color: #000000 !important;
+}
+
+/* Remove gradient text */
+[data-theme="light"] .text-gradient {
+    background: none !important;
+    color: #1c1e21 !important;
+    -webkit-text-fill-color: #1c1e21 !important;
+}
+
+/* ==========================================
+   FORMS - Clean inputs
+   ========================================== */
+
+[data-theme="light"] input,
+[data-theme="light"] select,
+[data-theme="light"] textarea,
+[data-theme="light"] .form-control,
+[data-theme="light"] .currency-input {
+    background: #ffffff !important;
+    border: 1px solid #dadde1 !important;
+    color: #1c1e21 !important;
+    border-radius: 6px !important;
+}
+
+[data-theme="light"] input::placeholder,
+[data-theme="light"] textarea::placeholder {
+    color: #8a8d91 !important;
+}
+
+[data-theme="light"] input:focus,
+[data-theme="light"] select:focus,
+[data-theme="light"] textarea:focus {
+    background: #ffffff !important;
+    border-color: #1877f2 !important;
+}
+
+/* ==========================================
+   BUTTONS - Enhanced with Better Gradients
+   ========================================== */
+
+/* Primary buttons keep brand color */
+
+[data-theme="light"] .btn-secondary {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+    border: none !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2) !important;
+    transition: all 0.3s ease !important;
+}
+
+[data-theme="light"] .btn-secondary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.3) !important;
+}
+
+[data-theme="light"] .btn-ghost {
+    background: #ffffff !important;
+    border: 2px solid #e5e7eb !important;
+    color: #1e293b !important;
+    transition: all 0.3s ease !important;
+}
+
+[data-theme="light"] .btn-ghost:hover {
+    background: #1e293b !important;
+    border-color: #1e293b !important;
+    color: #ffffff !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 20px rgba(30, 41, 59, 0.2) !important;
+}
+
+
+/* Fix Trust Indicator text color */
+[data-theme="light"] .trust-indicator .avatars span,
+[data-theme="light"] .avatars span {
+    background: #000000 !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+
+/* Amount buttons */
+[data-theme="light"] .amount-btn {
+    background: #ffffff !important;
+    border: 1px solid #dadde1 !important;
+    color: #1c1e21 !important;
+}
+
+[data-theme="light"] .amount-btn:hover,
+[data-theme="light"] .amount-btn.active {
+    background: #e4e6eb !important;
+    border-color: #1877f2 !important;
+}
+
+/* ==========================================
+   SIDEBARS
+   ========================================== */
+
+[data-theme="light"] .admin-sidebar,
+[data-theme="light"] .user-sidebar {
+    background: #ffffff !important;
+    border: none !important;
+}
+
+[data-theme="light"] .menu-item {
+    color: #65676b !important;
+}
+
+[data-theme="light"] .menu-item:hover,
+[data-theme="light"] .menu-item.active {
+    background: #e7f3ff !important;
+    color: #1877f2 !important;
+}
+
+/* ==========================================
+   TABLES
+   ========================================== */
+
+[data-theme="light"] table {
+    background: #ffffff !important;
+}
+
+[data-theme="light"] thead {
+    background: #f7f8fa !important;
+}
+
+[data-theme="light"] th {
+    color: #65676b !important;
+    font-weight: 600 !important;
+    border-bottom: 1px solid #dadde1 !important;
+}
+
+[data-theme="light"] td {
+    color: #1c1e21 !important;
+    border-bottom: 1px solid #e4e6eb !important;
+}
+
+
+/* ==========================================
+   BADGES - Modern Pill Design
+   ========================================== */
+
+[data-theme="light"] .page-badge,
+[data-theme="light"] .hero-badge-soft {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #1e40af !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+    transition: all 0.3s ease !important;
+}
+
+[data-theme="light"] .page-badge:hover,
+[data-theme="light"] .hero-badge-soft:hover {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* ==========================================
+   ICONS - Modern Gradient Backgrounds
+   ========================================== */
+
+[data-theme="light"] .feature-icon,
+[data-theme="light"] .feature-icon-box {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
+    color: #2563eb !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15) !important;
+    transition: all 0.3s ease !important;
+}
+
+[data-theme="light"] .feature-card:hover .feature-icon-box {
+    transform: scale(1.05) rotate(-5deg) !important;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.25) !important;
+}
+
+[data-theme="light"] .feature-icon-box.color-2 {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
+    color: #2563eb !important;
+}
+
+[data-theme="light"] .feature-icon-box.color-3 {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
+    color: #059669 !important;
+}
+
+/* ==========================================
+   FOOTER - Clean White
+   ========================================== */
+
+[data-theme="light"] footer,
+[data-theme="light"] .footer,
+[data-theme="light"] .kai-footer {
+    background: #ffffff !important;
+    background-image: none !important;
+    border-top: 1px solid #dadde1 !important;
+    color: #65676b !important;
+    margin-top: 0 !important;
+    /* Fix spacing */
+}
+
+/* Hide gradient overlay */
+[data-theme="light"] .kai-footer::before {
+    display: none !important;
+}
+
+[data-theme="light"] footer *,
+[data-theme="light"] .footer *,
+[data-theme="light"] .kai-footer * {
+    color: #65676b;
+}
+
+/* Fix Inline White Text specifically */
+[data-theme="light"] .kai-footer-text b,
+[data-theme="light"] .kai-footer-text strong {
+    color: #1877f2 !important;
+    /* Blue accent instead of white */
+}
+
+[data-theme="light"] footer a,
+[data-theme="light"] .footer a {
+    color: #1c1e21 !important;
+}
+
+[data-theme="light"] footer a:hover,
+[data-theme="light"] .footer a:hover {
+    color: #1877f2 !important;
+}
+
+/* Footer Badge Fix */
+[data-theme="light"] .kai-footer-badge {
+    background: #e7f3ff !important;
+    border: 1px solid #1877f2 !important;
+    color: #1877f2 !important;
+}
+
+/* Fix Footer Logo Gradient */
+[data-theme="light"] .kai-footer-logo {
+    background: none !important;
+    -webkit-text-fill-color: #1877f2 !important;
+    color: #1877f2 !important;
+}
+
+[data-theme="light"] footer h3,
+[data-theme="light"] footer h4,
+[data-theme="light"] footer strong,
+[data-theme="light"] .kai-footer-title {
+    color: #1c1e21 !important;
+}
+
+/* Footer icons */
+[data-theme="light"] footer i,
+[data-theme="light"] .footer i {
+    color: #1c1e21 !important;
+}
+
+[data-theme="light"] footer .social-icons a,
+[data-theme="light"] .social-btn {
+    background: #ffffff !important;
+    color: #1c1e21 !important;
+    border: 1px solid #dadde1 !important;
+}
+
+[data-theme="light"] footer .social-icons a:hover,
+[data-theme="light"] .social-btn:hover {
+    color: #ffffff !important;
+    border-color: transparent !important;
+    /* Let specific social colors take over on hover */
+}
+
+/* ==========================================
+   PAYMENT PAGE
+   ========================================== */
+
+[data-theme="light"] .payment-container,
+[data-theme="light"] .deposit-form {
+    background: #ffffff !important;
+}
+
+[data-theme="light"] .info-row {
+    background: #f7f8fa !important;
+    border: none !important;
+    border-radius: 8px !important;
+}
+
+[data-theme="light"] .info-label {
+    color: #65676b !important;
+}
+
+[data-theme="light"] .info-value {
+    color: #1c1e21 !important;
+}
+
+[data-theme="light"] .code-highlight {
+    color: #1877f2 !important;
+    font-weight: 600 !important;
+}
+
+/* ==========================================
+   HIDE DARK EFFECTS
+   ========================================== */
+
+[data-theme="light"] .page-header-section::before,
+[data-theme="light"] .payment-card::before,
+[data-theme="light"] .feature-card::before,
+[data-theme="light"] .hero-bg-glow {
+    display: none !important;
+}
+
+/* Feature Card Specific Colors on Hover - Enhanced with Glow */
+[data-theme="light"] .feature-card:nth-child(1):hover {
+    border-color: #22c55e !important;
+    box-shadow: 0 10px 30px -8px rgba(34, 197, 94, 0.25), 0 8px 16px -6px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .feature-card:nth-child(2):hover {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 10px 30px -8px rgba(59, 130, 246, 0.25), 0 8px 16px -6px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .feature-card:nth-child(3):hover {
+    border-color: #f97316 !important;
+    box-shadow: 0 10px 30px -8px rgba(249, 115, 22, 0.25), 0 8px 16px -6px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Payment Card Stronger Frame */
+[data-theme="light"] .payment-card {
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+}
+
+[data-theme="light"] .promotion-banner {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+    transition: all 0.3s ease !important;
+}
+
+[data-theme="light"] .dashboard-section {
+    background: #ffffff !important;
+    background-image: none !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+/* CTA Box - Gradient Border with Modern Look */
+[data-theme="light"] .cta-box {
+    background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%) !important;
+    background-image: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+    border: 2px solid transparent !important;
+    background-clip: padding-box !important;
+    position: relative !important;
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1) !important;
+}
+
+
+
+[data-theme="light"] .btn-white {
+    background: #000000 !important;
+    color: #ffffff !important;
+    border: 1px solid #000000 !important;
+}
+
+[data-theme="light"] .btn-white:hover {
+    color: #000000 !important;
+    background: #ffffff !important;
+}
+
+[data-theme="light"] .process-icon {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid #000000 !important;
+}
+
+[data-theme="light"] .process-icon::before {
+    display: none !important;
+}
+
+[data-theme="light"] .dashboard-section {
+    background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%) !important;
+    border: 1px solid #e5e7eb !important;
+    background-image: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%) !important;
+    box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .dashboard-section::before {
+    display: none !important;
+}
+
+[data-theme="light"] .dashboard-section:hover {
+    box-shadow: 0 8px 30px -6px rgba(0, 0, 0, 0.12) !important;
+}
+
+[data-theme="light"] .dashboard-icon-lg {
+    color: #000000 !important;
+    border-radius: 20px !important;
+}
+
+/* Stats Cards - Enhanced with gradient border on hover */
+[data-theme="light"] .stat-card {
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05) !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+[data-theme="light"] .stat-card::before {
+    content: '' !important;
+    position: absolute !important;
+    inset: 0 !important;
+    border-radius: 20px !important;
+    padding: 1px !important;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899) !important;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
+    -webkit-mask-composite: xor !important;
+    mask-composite: exclude !important;
+    opacity: 0 !important;
+    transition: opacity 0.3s ease !important;
+}
+
+[data-theme="light"] .stat-card:hover::before {
+    opacity: 1 !important;
+}
+
+[data-theme="light"] .stat-card:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+}
+
+
+/* Process Steps - Modern Card with Icon Glow */
+[data-theme="light"] .process-step {
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 24px !important;
+    padding: 32px !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+[data-theme="light"] .process-step::before {
+    display: none !important;
+}
+
+[data-theme="light"] .process-step:hover {
+    border-color: #3b82f6 !important;
+    transform: translateY(-6px) scale(1.02) !important;
+    box-shadow: 0 20px 40px -10px rgba(59, 130, 246, 0.15), 0 10px 20px -5px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .process-icon {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%) !important;
+    border: 2px solid #3b82f6 !important;
+    color: #2563eb !important;
+    transition: all 0.3s ease !important;
+}
+
+[data-theme="light"] .process-step:hover .process-icon {
+    transform: scale(1.1) rotate(5deg) !important;
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* FAQ Items - Clean with Smooth Transitions */
+[data-theme="light"] .faq-item {
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03) !important;
+    transition: all 0.3s ease !important;
+}
+
+[data-theme="light"] .faq-item:hover {
+    border-color: #cbd5e1 !important;
+    box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .faq-item.active {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 4px 16px -2px rgba(59, 130, 246, 0.15) !important;
+}
+
+
+/* ==========================================
+   HEADER PC & DROPDOWNS
+   ========================================== */
+
+[data-theme="light"] .kai-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .kai-link {
+    color: #475569 !important;
+}
+
+[data-theme="light"] .kai-link:hover {
+    color: #0f172a !important;
+}
+
+[data-theme="light"] .kai-dropdown {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+}
+
+/* ==========================================
+   SCROLL TO TOP - Light Mode
+   ========================================== */
+[data-theme="light"] .scroll-to-top {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    color: #1877f2 !important;
+}
+
+[data-theme="light"] .scroll-to-top:hover {
+    border-color: #1877f2 !important;
+    transform: translateY(-3px) !important;
+    color: #1877f2 !important;
+}
+
+[data-theme="light"] .kai-dropdown-item {
+    color: #1e293b !important;
+}
+
+[data-theme="light"] .kai-dropdown-item:hover {
+    color: #000000 !important;
+}
+
+
+/* Header Buttons (Icon, User, Secondary) */
+[data-theme="light"] .kai-btn-icon,
+[data-theme="light"] .kai-btn-secondary,
+[data-theme="light"] .kai-btn-user {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    color: #475569 !important;
+}
+
+[data-theme="light"] .kai-btn-icon:hover,
+[data-theme="light"] .kai-btn-secondary:hover,
+[data-theme="light"] .kai-btn-user:hover {
+    border-color: #94a3b8 !important;
+    color: #0f172a !important;
+}
+
+/* Deposit Page Specifics */
+[data-theme="light"] .amount-btn {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    color: #475569 !important;
+}
+
+[data-theme="light"] .amount-btn:hover {
+    border-color: #94a3b8 !important;
+}
+
+[data-theme="light"] .amount-btn.active {
+    border-color: #2563eb !important;
+    background: #eff6ff !important;
+    color: #2563eb !important;
+}
+
+[data-theme="light"] .info-row {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme="light"] .info-label {
+    color: #64748b !important;
+}
+
+[data-theme="light"] .info-value {
+    color: #0f172a !important;
+}
+
+[data-theme="light"] .qr-wrapper {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+}
+
+[data-theme="light"] .promotion-banner::before {
+    display: none !important;
+}
+
+/* ==========================================
+   ALERTS
+   ========================================== */
+
+[data-theme="light"] .alert {
+    background: #f7f8fa !important;
+    border: none !important;
+    border-radius: 8px !important;
+}
+
+[data-theme="light"] .alert-error {
+    background: #ffebe9 !important;
+    color: #cf222e !important;
+}
+
+[data-theme="light"] .alert-success {
+    background: #dafbe1 !important;
+    color: #116329 !important;
+}
+
+/* ==========================================
+   CART PAGE OVERRIDES - Modern Clean Design
+   ========================================== */
+
+[data-theme="light"] .cart-item,
+[data-theme="light"] .cart-summary,
+[data-theme="light"] .empty-cart,
+[data-theme="light"] .customer-info-box {
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    backdrop-filter: none !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.3s ease !important;
+}
+
+[data-theme="light"] .cart-item:hover {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1) !important;
+    transform: translateY(-2px) !important;
+}
+
+[data-theme="light"] .cart-item-title,
+[data-theme="light"] .cart-summary h2,
+[data-theme="light"] .empty-cart h2 {
+    color: #1c1e21 !important;
+}
+
+[data-theme="light"] .cart-item-price {
+    background: none !important;
+    -webkit-text-fill-color: #059669 !important;
+    color: #059669 !important;
+    /* Emerald green for price */
+}
+
+[data-theme="light"] .cart-item-total-price {
+    background: none !important;
+    -webkit-text-fill-color: red !important;
+    color: red !important;
+    /* Amber for total */
+}
+
+[data-theme="light"] .qty-box {
+    background: #f1f5f9 !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+[data-theme="light"] .qty-btn {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+[data-theme="light"] .qty-btn:hover {
+    color: #ffffff !important;
+    background: #000000 !important;
+}
+
+[data-theme="light"] .qty-input {
+    color: #1c1e21 !important;
+}
+
+[data-theme="light"] .summary-total {
+    background: none !important;
+    -webkit-text-fill-color: #1877f2 !important;
+    color: #1877f2 !important;
+}
+
+[data-theme="light"] .customer-info-input {
+    background: #f8fafc !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #1c1e21 !important;
+}
+
+[data-theme="light"] .cart-header h1 {
+    background: none !important;
+    -webkit-text-fill-color: #1c1e21 !important;
+    color: #1c1e21 !important;
+}
+
+
+
+/* Make email and phone stand out with blue accent */
+[data-theme="light"] .kai-footer-links li:nth-child(1),
+/* Email */
+[data-theme="light"] .kai-footer-links li:nth-child(2)
+
+/* Phone */
+    {
+    color: #1877f2 !important;
+    font-weight: 500;
+}
+
+[data-theme="light"] .kai-footer-links li i {
+    color: #1877f2 !important;
+}
+
+
+/* Force Marquee to keep its original dark-theme styling even in Light Mode */
+[data-theme="light"] .notification-banner-wrapper,
+[data-theme="light"] .notification-banner,
+[data-theme="light"] .marquee-content,
+[data-theme="light"] .marquee-item,
+[data-theme="light"] .notif-icon,
+[data-theme="light"] .notif-message {
+    background: initial !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="light"] .notification-banner {
+    background-image: linear-gradient(90deg, #7c3aed, #f97316, #7c3aed) !important;
+}
+
+/* Button Colors & Hover for Light Mode - Enhanced */
+[data-theme="light"] .btn-checkout,
+[data-theme="light"] .btn-primary,
+[data-theme="light"] .btn-confirm,
+[data-theme="light"] .kai-btn-primary {
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+[data-theme="light"] .btn-checkout *,
+[data-theme="light"] .btn-primary *,
+[data-theme="light"] .btn-confirm *,
+[data-theme="light"] .kai-btn-primary * {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+[data-theme="light"] .btn-checkout:hover,
+[data-theme="light"] .btn-primary:hover,
+[data-theme="light"] .btn-confirm:hover,
+[data-theme="light"] .kai-btn-primary:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4) !important;
+    transform: translateY(-3px) scale(1.02) !important;
+}
+
+/* Cart Buttons - Better Colors with Glow */
+[data-theme="light"] .btn-checkout {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+}
+
+[data-theme="light"] .btn-checkout:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+    transform: translateY(-4px) scale(1.03) !important;
+    box-shadow: 0 12px 32px rgba(37, 99, 235, 0.5) !important;
+}
+
+[data-theme="light"] .btn-continue {
+    background: transparent !important;
+    border: 2px solid #1e293b !important;
+    color: #1e293b !important;
+    transition: all 0.3s ease !important;
+}
+
+[data-theme="light"] .btn-continue:hover {
+    background: #1e293b !important;
+    border-color: #1e293b !important;
+    color: #ffffff !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 20px rgba(30, 41, 59, 0.2) !important;
+}
+
+/* ==========================================
+   VIVID LIGHT HEADER (Rebuilt & Cleaned)
+   ========================================== */
+
+[data-theme="light"] .kai-header {
+    backdrop-filter: blur(12px) !important;
+    border-bottom: 1px solid #e1e3e1 !important;
+    padding-top: 0 !important;
+}
+
+/* Links: Vivid Black - NO Background on Hover */
+[data-theme="light"] .kai-nav .kai-link {
+    color: #1f1f1f !important;
+    /* Material Black */
+    font-weight: 600 !important;
+    opacity: 0.9;
+}
+
+[data-theme="light"] .kai-nav .kai-link:hover {
+    color: #1a73e8 !important;
+    /* Google Blue Hover */
+    background: none !important;
+    /* Removed BG as requested */
+    opacity: 1;
+}
+
+/* Header Action Buttons (Icons) */
+[data-theme="light"] .header-action-btn,
+[data-theme="light"] .kai-btn-icon {
+    background: #f1f3f4 !important;
+    /* Material Gray 100 */
+    color: #444746 !important;
+    /* Material Gray 700 */
+    border: none !important;
+}
+
+[data-theme="light"] .header-action-btn:hover,
+[data-theme="light"] .kai-btn-icon:hover {
+    color: #1f1f1f !important;
+}
+
+/* Header User Menu */
+[data-theme="light"] .kai-btn-user {
+    background: #f1f3f4 !important;
+    border: 1px solid transparent !important;
+    color: #1f1f1f !important;
+}
+
+/* User Name: Black */
+[data-theme="light"] .kai-username {
+    color: #1f1f1f !important;
+    font-weight: 700 !important;
+}
+
+/* Wallet: Green */
+[data-theme="light"] .kai-wallet {
+    color: #10b981 !important;
+    /* Emerald 500 */
+    font-weight: 700 !important;
+}
+
+[data-theme="light"] .kai-wallet i {
+    color: #10b981 !important;
+}
+
+/* Currency Switcher */
+[data-theme="light"] #currencySortText {
+    color: #1f1f1f !important;
+    font-weight: 600 !important;
+}
+
+/* Fix Logo Visibility */
+[data-theme="light"] .kai-logo-img {
+    filter: none !important;
+}
+
+/* ==========================================
+   CLEAN LIGHT SEARCH BAR
+   ========================================== */
+
+/* Target common search inputs and containers to remove dark gradients */
+[data-theme="light"] .kai-search-container,
+[data-theme="light"] .search-box,
+[data-theme="light"] input[type="search"],
+[data-theme="light"] input[name="search"],
+[data-theme="light"] .form-control {
+    background: #ffffff !important;
+    /* Pure White */
+    border: 1px solid #e5e7eb !important;
+    color: #1f1f1f !important;
+    /* Remove dark shadows */
+}
+
+[data-theme="light"] .kai-search-container input,
+[data-theme="light"] .search-box input {
+    background: transparent !important;
+    color: #1f1f1f !important;
+}
+
+[data-theme="light"] input::placeholder {
+    color: #9ca3af !important;
+}
+
+/* ==========================================
+   LIGHT NOTIFICATION POPUP
+   ========================================== */
+
+[data-theme="light"] .notification-popup {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+[data-theme="light"] .notification-header {
+    border-bottom: 1px solid #f1f5f9 !important;
+}
+
+[data-theme="light"] .notification-header h4 {
+    color: #1f1f1f !important;
+}
+
+[data-theme="light"] .notification-item {
+    border-bottom: 1px solid #f1f5f9 !important;
+}
+
+[data-theme="light"] .notification-title {
+    color: #1f1f1f !important;
+}
+
+[data-theme="light"] .notification-message {
+    color: #64748b !important;
+}
+
+[data-theme="light"] .notification-time {
+    color: #94a3b8 !important;
+}
+
+[data-theme="light"] .notification-empty {
+    color: #64748b !important;
+}
+
+[data-theme="light"] .mark-all-read {
+    color: #64748b !important;
+}
+
+[data-theme="light"] .mark-all-read:hover {
+    color: #1f1f1f !important;
+}
+
+/* ==========================================
+   DROPDOWN MENU & ICONS
+   ========================================== */
+
+/* Dropdown Arrow Icon - Black */
+[data-theme="light"] .kai-dropdown-icon {
+    color: #1f1f1f !important;
+}
+
+/* User Dropdown Menu - White BG, Black Text */
+[data-theme="light"] .kai-dropdown {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+[data-theme="light"] .kai-dropdown-item {
+    color: #1f1f1f !important;
+}
+
+[data-theme="light"] .kai-dropdown-item:hover {
+    color: #1a73e8 !important;
+}
+
+[data-theme="light"] .kai-dropdown-item i {
+    color: #64748b !important;
+}
+
+[data-theme="light"] .kai-dropdown-divider {
+    background: #e2e8f0 !important;
+}
+
+/* Logout stays red */
+[data-theme="light"] .kai-logout {
+    color: #ef4444 !important;
+}
+
+[data-theme="light"] .kai-logout:hover {
+    color: #dc2626 !important;
+}
+
+/* ==========================================
+   FOOTER LINKS - BLACK TEXT (High Specificity)
+   ========================================== */
+
+/* Use high specificity to fight generic overrides */
+[data-theme="light"] footer.kai-footer .kai-footer-links li,
+[data-theme="light"] footer.kai-footer .kai-footer-links a {
+    color: #1f1f1f !important;
+}
+
+[data-theme="light"] footer.kai-footer .kai-footer-links a:hover {
+    color: #000000 !important;
+}
+
+/* ==========================================
+   TRANSACTION BUTTON (Nạp Tiền Page)
+   ========================================== */
+
+/* Fix "Tạo Giao Dịch" button to use Google Blue instead of purple */
+[data-theme="light"] button[type="submit"],
+[data-theme="light"] .btn-transaction,
+[data-theme="light"] .btn-create-transaction,
+[data-theme="light"] .btn-submit {
+    background: linear-gradient(135deg, #1a73e8 0%, #285aeB 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+/* Ensure text and icons inside these buttons are white */
+[data-theme="light"] .btn-submit *,
+[data-theme="light"] .btn-submit span,
+[data-theme="light"] .btn-submit i {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+
+[data-theme="light"] .sp-card {
+    background: #ffffff !important;
+    border: 1px solid #c9c9c9bd !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02) !important;
+    overflow: hidden !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+[data-theme="light"] .sp-card:hover {
+    border-color: #000000 !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08) !important;
+    transform: translateY(-5px) !important;
+}
+
+html[data-theme="light"] body .sp-card:hover .sp-card-img-wrap .sp-card-label {
+    transform: translateY(-2px) scale(1.05) !important;
+}
+
+
+
+/* Image Area - 200px Height */
+[data-theme="light"] .sp-card-img-wrap {
+    background: #ffffff !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    /* height: 200px inherited */
+}
+
+[data-theme="light"] .sp-card-img {
+    transition: transform 0.5s ease !important;
+}
+
+[data-theme="light"] .sp-card:hover .sp-card-img {
+    transform: scale(1.05) !important;
+}
+
+/* Badges - White text with enhanced visibility for light theme */
+html[data-theme="light"] body .sp-card .sp-card-img-wrap .sp-card-label {
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.8px !important;
+    text-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.3),
+        0 1px 2px rgba(0, 0, 0, 0.5) !important;
+    transform: translateY(0) !important;
+    position: absolute !important;
+    overflow: hidden !important;
+    z-index: 100 !important;
+}
+
+
+
+[data-theme="light"] .sp-card-title a {
+    color: #000000 !important;
+    /* Black */
+    -webkit-text-fill-color: #000000 !important;
+    font-weight: 700 !important;
+    text-decoration: none !important;
+    background: none !important;
+}
+
+[data-theme="light"] .sp-card:hover .sp-card-title a {
+    color: #2563eb !important;
+    -webkit-text-fill-color: #2563eb !important;
+}
+
+/* Rating - GOLDEN YELLOW */
+[data-theme="light"] .sp-card-rating {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    font-size: 13px !important;
+    color: #64748b !important;
+    margin-bottom: 12px !important;
+}
+
+[data-theme="light"] .sp-card .sp-card-rating span.stars,
+[data-theme="light"] .sp-card .sp-card-rating .stars i,
+[data-theme="light"] .sp-card .sp-card-rating .stars svg {
+    color: #ff9f00 !important;
+    /* Vivid Yellow-Orange */
+    text-shadow: none !important;
+    -webkit-text-fill-color: #ff9f00 !important;
+}
+
+/* Price Section - RED ORANGE GRADIENT */
+/* Price Section - Remove structural overrides */
+[data-theme="light"] .sp-card-price-row {
+    border-top: 1px solid #f1f5f9 !important;
+    /* Remove padding/margin/flex overrides */
+}
+
+[data-theme="light"] .sp-card-price {
+    /* REMOVED font-size/weight overrides */
+    /* Red-Orange Gradient for Price */
+    background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%) !important;
+    background-clip: text !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+}
+
+[data-theme="light"] .sp-card-price::after {
+    display: none !important;
+}
+
+/* Stock - GREEN STYLE */
+/* Stock - GREEN STYLE */
+[data-theme="light"] .sp-card-stock {
+    padding: 2px 6px !important;
+    background: #dcfce7 !important;
+    color: #15803d !important;
+    border: 1px solid #bbf7d0 !important;
+    border-radius: 6px !important;
+    /* Remove padding font-size overrides if any, though default doesn't have bg */
+}
+
+/* Actions */
+/* Actions - Remove structure overrides */
+[data-theme="light"] .sp-card-actions {
+    /* Remove display:flex, gap, margin overrides if default is grid */
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+}
+
+/* Force buttons to fill grid cells */
+[data-theme="light"] .sp-card-actions .sp-btn,
+[data-theme="light"] .sp-card-actions button {
+    width: 100% !important;
+    /* Remove flex:1 */
+}
+
+/* Cart Button - CLEAN OUTLINE */
+[data-theme="light"] .sp-btn-cart {
+    background: #ffffff !important;
+    border: 2px solid #e2e8f0 !important;
+    color: #64748b !important;
+    /* removed width/radius/transition overrides to match default shape */
+    border-radius: 10px !important;
+    /* Default is 10px */
+}
+
+[data-theme="light"] .sp-btn-cart:hover {
+    border-color: #3b82f6 !important;
+    color: #3b82f6 !important;
+}
+
+/* Secondary Button (Add to Cart with Text) */
+[data-theme="light"] .sp-card-actions .sp-btn-secondary {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #000000 !important;
+}
+
+[data-theme="light"] .sp-card-actions .sp-btn-secondary:hover {
+    border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] .sp-card-actions .sp-btn-secondary i {
+    color: #000000 !important;
+}
+
+/* Buy Button - BLUE GRADIENT (Light Theme) */
+[data-theme="light"] .sp-btn-primary,
+[data-theme="light"] .sp-btn-buy {
+    background: linear-gradient(135deg, #1a73e8 0%, #285aeB 100%) !important;
+    /* Google Blue */
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 12px !important;
+    font-weight: 700 !important;
+}
+
+[data-theme="light"] .sp-btn-primary:hover,
+[data-theme="light"] .sp-btn-buy:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: none !important;
+}
+
+[data-theme="light"] .sp-btn-primary span,
+[data-theme="light"] .sp-btn-primary i,
+[data-theme="light"] .sp-btn-buy span,
+[data-theme="light"] .sp-btn-buy i {
+    color: #ffffff !important;
+}
+
+/* Fix product tab count pill for light theme */
+[data-theme="light"] .pd-tab span.count-pill {
+    background: #ffffff !important;
+    color: #1877f2 !important;
+    border: 1px solid #1877f2 !important;
+}
+
+/* ==========================================
+   NOTIFICATION BELL - Grok / Groksper Style (Minimalist)
+   ========================================== */
+
+[data-theme="light"] .notification-bell {
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    /* Light Gray Border Default */
+    color: #000000 !important;
+    /* Pitch Black Icon */
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 99px !important;
+    /* Pill/Circle */
+    padding: 0 !important;
+    box-shadow: none !important;
+    /* Clean, Flat */
+    transition: all 0.2s ease !important;
+}
+
+[data-theme="light"] .notification-bell:hover {
+    background: #ffffff !important;
+    border-color: #000000 !important;
+    /* Solid Black Border on Hover */
+    color: #000000 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] .notification-bell.active {
+    background: #000000 !important;
+    color: #ffffff !important;
+    border-color: #000000 !important;
+}
+
+/* Badge Styling - High Visibility */
+[data-theme="light"] .notification-badge {
+    background: #ef4444 !important;
+    /* Keep Red for Alert */
+    color: #ffffff !important;
+    border: 2px solid #ffffff !important;
+    /* Clean Cut */
+    box-shadow: none !important;
+    top: -2px !important;
+    right: -2px !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    min-width: 18px !important;
+    height: 18px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 4px !important;
+}
+
+/* Popup Styling - Clean & Sharp */
+[data-theme="light"] .notification-popup {
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 16px !important;
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1) !important;
+    backdrop-filter: none !important;
+}
+
+[data-theme="light"] .notification-header {
+    border-bottom: 1px solid #f1f5f9 !important;
+    background: #ffffff !important;
+    border-radius: 16px 16px 0 0 !important;
+    padding: 1.25rem !important;
+}
+
+[data-theme="light"] .notification-header h4 {
+    color: #000000 !important;
+    font-weight: 700 !important;
+    font-size: 1.1rem !important;
+}
+
+[data-theme="light"] .notification-item {
+    background: #ffffff !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    padding: 1rem 1.25rem !important;
+}
+
+[data-theme="light"] .notification-item:hover {
+    background: #f8fafc !important;
+}
+
+[data-theme="light"] .notification-title {
+    color: #000000 !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+}
+
+[data-theme="light"] .notification-message {
+    color: #475569 !important;
+    font-size: 0.85rem !important;
+}
+
+[data-theme="light"] .notification-time {
+    color: #94a3b8 !important;
+    font-size: 0.75rem !important;
+}
+
+[data-theme="light"] .notification-empty {
+    color: #64748b !important;
+}
+
+[data-theme="light"] .mark-all-read {
+    color: #64748b !important;
+    font-weight: 500 !important;
+}
+
+[data-theme="light"] .mark-all-read:hover {
+    background: #f1f5f9 !important;
+    color: #000000 !important;
+}

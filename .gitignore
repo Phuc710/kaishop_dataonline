@@ -1,0 +1,36 @@
+# Environment files
+.env
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Uploads
+uploads/*
+!uploads/.gitkeep
+
+# Cache
+cache/
+tmp/
+
+# Dependencies
+vendor/
+node_modules/
+
+# Sensitive data
+*.key
+*.pem
+*.p12
+config/secrets.php
