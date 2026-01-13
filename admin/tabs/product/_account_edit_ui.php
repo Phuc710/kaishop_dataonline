@@ -143,7 +143,7 @@
                     <div class="form-group">
                         <label><i class="fas fa-money-bill-wave"></i> Giá Gốc (VND)</label>
                         <input type="number" name="price_vnd" class="form-control" value="<?= $product['price_vnd'] ?>"
-                            min="1000" step="1000" required>
+                            required>
                     </div>
                     <div class="form-group">
                         <label><i class="fas fa-percent"></i> Giảm Giá (%)</label>
@@ -223,13 +223,15 @@
             <div class="info-box"
                 style="background: rgba(139, 92, 246, 0.1); border-left-color: #8b5cf6; margin-bottom: 1.5rem;">
                 <i class="fas fa-layer-group" style="color: #8b5cf6;"></i>
-                Sản phẩm có <strong><?= count($variants) ?> variants</strong>. Cập nhật thông tin từng variant bên dưới.
+                Sản phẩm có <strong><?= count($variants) ?> variants</strong>. Mỗi variant như 1 sản phẩm độc lập.
             </div>
 
             <?php foreach ($variants as $idx => $variant): ?>
-                <div class="variant-item" style="margin-bottom: 1.5rem;">
-                    <div class="variant-header">
-                        <h5><i class="fas fa-star"></i> <?= htmlspecialchars($variant['variant_name']) ?></h5>
+                <div class="variant-item" style="margin-bottom: 2rem; background: rgba(30, 41, 59, 0.3); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: 16px; padding: 1.5rem;">
+                    <div class="variant-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid rgba(139, 92, 246, 0.2);">
+                        <h5 style="margin: 0; color: #a78bfa; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-star"></i> <?= htmlspecialchars($variant['variant_name']) ?>
+                        </h5>
                         <button type="button" class="btn btn-danger btn-sm"
                             onclick="if(confirm('Xóa variant này?'))deleteVariant('<?= $variant['id'] ?>')">
                             <i class="fas fa-trash"></i> Xóa
@@ -239,54 +241,144 @@
                     <div class="variant-body">
                         <input type="hidden" name="variant_ids[]" value="<?= $variant['id'] ?>">
 
-                        <div class="form-group">
-                            <label><i class="fas fa-tag"></i> Tên Variant</label>
-                            <input type="text" name="variant_names[<?= $variant['id'] ?>]" class="form-control"
-                                value="<?= htmlspecialchars($variant['variant_name']) ?>" required>
-                        </div>
-
-                        <div class="form-grid-2">
+                        <!-- Variant Info Section -->
+                        <div class="variant-section" style="margin-bottom: 1.5rem;">
+                            <h6 style="color: #60a5fa; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-info-circle"></i> Thông Tin Variant
+                            </h6>
                             <div class="form-group">
-                                <label><i class="fas fa-money-bill-wave"></i> Giá (VND)</label>
-                                <input type="number" name="variant_prices[<?= $variant['id'] ?>]" class="form-control"
-                                    value="<?= $variant['price_vnd'] ?>" min="1000" step="1000" required>
-                            </div>
-                            <div class="form-group">
-                                <label><i class="fas fa-percent"></i> Giảm Giá (%)</label>
-                                <input type="number" name="variant_discounts[<?= $variant['id'] ?>]" class="form-control"
-                                    value="<?= $variant['discount_percent'] ?>" min="0" max="100">
+                                <label><i class="fas fa-tag"></i> Tên Variant</label>
+                                <input type="text" name="variant_names[<?= $variant['id'] ?>]" class="form-control"
+                                    value="<?= htmlspecialchars($variant['variant_name']) ?>" required>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label><i class="fas fa-boxes"></i> Tồn Kho</label>
-                            <input type="number" name="variant_stocks[<?= $variant['id'] ?>]"
-                                class="form-control variant-stock-input" value="<?= $variant['stock'] ?>"
-                                <?= $product['requires_customer_info'] ? '' : 'readonly' ?>
-                                style="<?= $product['requires_customer_info'] ? '' : 'background: rgba(139, 92, 246, 0.1);' ?>"
-                                min="0">
+                        <!-- Pricing Section -->
+                        <div class="variant-section" style="margin-bottom: 1.5rem;">
+                            <h6 style="color: #10b981; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-dollar-sign"></i> Giá & Giảm Giá
+                            </h6>
+                            <div class="form-grid-2">
+                                <div class="form-group">
+                                    <label><i class="fas fa-money-bill-wave"></i> Giá (VND)</label>
+                                    <input type="number" name="variant_prices[<?= $variant['id'] ?>]" class="form-control"
+                                        value="<?= $variant['price_vnd'] ?>" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-percent"></i> Giảm Giá (%)</label>
+                                    <input type="number" name="variant_discounts[<?= $variant['id'] ?>]" class="form-control"
+                                        value="<?= $variant['discount_percent'] ?>" min="0" max="100">
+                                </div>
+                            </div>
+
+                            <!-- Customer Info Requirement for Variant -->
+                            <div style="border-top: 1px solid rgba(139, 92, 246, 0.2); padding-top: 1rem; margin-top: 1rem;">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; margin-bottom: 1rem;">
+                                        <input type="checkbox" name="variant_requires_customer_info[<?= $variant['id'] ?>]" value="1" 
+                                            id="variantRequiresCustomerInfo<?= $variant['id'] ?>"
+                                            <?= ($variant['requires_customer_info'] ?? 0) ? 'checked' : '' ?>
+                                            style="width: 20px; height: 20px;">
+                                        <span style="color: var(--text-primary); font-weight: 600;">
+                                            <i class="fas fa-user-circle" style="color: #8b5cf6;"></i>
+                                            Yêu cầu khách hàng nhập thông tin khi mua
+                                        </span>
+                                    </label>
+                                    <small style="color: var(--text-muted); display: block; margin-left: 2.25rem;">
+                                        <i class="fas fa-info-circle"></i>
+                                        Dành cho sản phẩm dịch vụ
+                                    </small>
+                                </div>
+
+                                <div id="variantCustomerInfoLabelGroup<?= $variant['id'] ?>"
+                                    style="<?= ($variant['requires_customer_info'] ?? 0) ? 'display: block;' : 'display: none;' ?> margin-top: 1rem; padding-left: 2rem; border-left: 3px solid #8b5cf6;">
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <label><i class="fas fa-tag"></i> Nhãn yêu cầu</label>
+                                        <textarea name="variant_customer_info_label[<?= $variant['id'] ?>]" class="form-control" rows="3"
+                                            placeholder="VD: Nhập email và số điện thoại của bạn"><?= htmlspecialchars($variant['customer_info_label'] ?? '') ?></textarea>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <button type="button" class="btn btn-primary btn-sm stock-manager-btn"
-                            onclick="openStockManager('variant', '<?= $variant['id'] ?>')"
-                            style="margin-top: 0.5rem; width: 100%; <?= $product['requires_customer_info'] ? 'display:none;' : '' ?>">
-                            <i class="fas fa-cog"></i> Quản Lý Kho (<?= $variant['stock'] ?>)
-                        </button>
+                        <!-- Stock Management Section -->
+                        <div class="variant-section">
+                            <h6 style="color: #a78bfa; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-warehouse"></i> Quản Lý Kho
+                            </h6>
 
-                        <div class="form-grid-2" style="margin-top: 1rem;">
                             <div class="form-group">
-                                <label><i class="fas fa-arrow-down"></i> Min</label>
-                                <input type="number" name="variant_mins[<?= $variant['id'] ?>]" class="form-control"
-                                    value="<?= $variant['min_purchase'] ?? 1 ?>" min="1">
+                                <label><i class="fas fa-boxes"></i> Tồn Kho</label>
+                                <input type="number" name="variant_stocks[<?= $variant['id'] ?>]"
+                                    class="form-control variant-stock-input variant-stock-input-<?= $variant['id'] ?>" 
+                                    value="<?= $variant['stock'] ?>"
+                                    <?= ($variant['requires_customer_info'] ?? 0) ? '' : 'readonly' ?>
+                                    style="<?= ($variant['requires_customer_info'] ?? 0) ? '' : 'background: rgba(139, 92, 246, 0.1); cursor: not-allowed;' ?>"
+                                    min="0">
+                                <small style="color: var(--text-muted); margin-top: 0.5rem; display: block;">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span class="variant-stock-hint-<?= $variant['id'] ?>">
+                                        <?= ($variant['requires_customer_info'] ?? 0) ? 'Nhập số lượng thủ công' : 'Tự động tính từ kho.' ?>
+                                    </span>
+                                </small>
                             </div>
-                            <div class="form-group">
-                                <label><i class="fas fa-arrow-up"></i> Max</label>
-                                <input type="number" name="variant_maxs[<?= $variant['id'] ?>]" class="form-control"
-                                    value="<?= $variant['max_purchase'] ?? 999 ?>" min="1">
+
+                            <button type="button" class="btn btn-primary btn-sm stock-manager-btn variant-stock-manager-btn-<?= $variant['id'] ?>"
+                                onclick="openStockManager('variant', '<?= $variant['id'] ?>')"
+                                style="margin-top: 0.5rem; width: 100%; <?= ($variant['requires_customer_info'] ?? 0) ? 'display:none;' : '' ?>">
+                                <i class="fas fa-cog"></i> Quản Lý Kho Tài Khoản (<?= $variant['stock'] ?>)
+                            </button>
+
+                            <div class="form-grid-2" style="margin-top: 1rem;">
+                                <div class="form-group">
+                                    <label><i class="fas fa-arrow-down"></i> Min Mua</label>
+                                    <input type="number" name="variant_mins[<?= $variant['id'] ?>]" class="form-control"
+                                        value="<?= $variant['min_purchase'] ?? 1 ?>" min="1">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-arrow-up"></i> Max Mua</label>
+                                    <input type="number" name="variant_maxs[<?= $variant['id'] ?>]" class="form-control"
+                                        value="<?= $variant['max_purchase'] ?? 999 ?>" min="1">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <script>
+                    // Toggle customer info for variant <?= $variant['id'] ?>
+
+                    document.getElementById('variantRequiresCustomerInfo<?= $variant['id'] ?>')?.addEventListener('change', function () {
+                        const isChecked = this.checked;
+                        const variantId = '<?= $variant['id'] ?>';
+
+                        // Show/hide customer info label input
+                        document.getElementById('variantCustomerInfoLabelGroup' + variantId).style.display = isChecked ? 'block' : 'none';
+
+                        // Hide/show stock manager button
+                        const stockManagerBtn = document.querySelector('.variant-stock-manager-btn-' + variantId);
+                        if (stockManagerBtn) {
+                            stockManagerBtn.style.display = isChecked ? 'none' : 'block';
+                        }
+
+                        // Toggle stock input readonly state
+                        const stockInput = document.querySelector('.variant-stock-input-' + variantId);
+                        const stockHint = document.querySelector('.variant-stock-hint-' + variantId);
+                        if (stockInput) {
+                            if (isChecked) {
+                                stockInput.removeAttribute('readonly');
+                                stockInput.style.background = '';
+                                stockInput.style.cursor = '';
+                                if (stockHint) stockHint.textContent = 'Nhập số lượng thủ công';
+                            } else {
+                                stockInput.setAttribute('readonly', 'readonly');
+                                stockInput.style.background = 'rgba(139, 92, 246, 0.1)';
+                                stockInput.style.cursor = 'not-allowed';
+                                if (stockHint) stockHint.textContent = 'Tự động tính từ kho.';
+                            }
+                        }
+                    });
+                </script>
             <?php endforeach; ?>
         <?php endif; ?>
     </div>

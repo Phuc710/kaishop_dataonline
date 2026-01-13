@@ -1,8 +1,3 @@
-/**
- * Content Protection Script
- * Prevents image copying and right-click on images only
- * Text copying is allowed
- */
 
 (function () {
     'use strict';

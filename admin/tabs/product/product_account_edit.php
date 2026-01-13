@@ -148,6 +148,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_product'])) {
         $variant_discounts = $_POST['variant_discounts'] ?? [];
         $variant_mins = $_POST['variant_mins'] ?? [];
         $variant_maxs = $_POST['variant_maxs'] ?? [];
+        $variant_requires_customer_info = $_POST['variant_requires_customer_info'] ?? [];
+        $variant_customer_info_label = $_POST['variant_customer_info_label'] ?? [];
 
         if (empty($errors)) {
             $pdo->beginTransaction();
@@ -181,11 +183,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_product'])) {
                     $vdiscount = intval($variant_discounts[$vid] ?? 0);
                     $vmin = intval($variant_mins[$vid] ?? 1);
                     $vmax = intval($variant_maxs[$vid] ?? 999);
+                    $v_requires_info = isset($variant_requires_customer_info[$vid]) ? 1 : 0;
+                    $v_info_label = trim($variant_customer_info_label[$vid] ?? '');
 
-                    // Calculate stock from pool
-                    $stmt = $pdo->prepare("SELECT COUNT(*) FROM product_stock_pool WHERE product_id = ? AND variant_id = ? AND is_used = 0");
-                    $stmt->execute([$product_id, $vid]);
-                    $vstock = $stmt->fetchColumn();
+                    // Calculate stock from pool (if not requires customer info)
+                    if ($v_requires_info) {
+                        // Manual stock input
+                        $vstock = intval($_POST['variant_stocks'][$vid] ?? 0);
+                    } else {
+                        // Auto calculate from pool
+                        $stmt = $pdo->prepare("SELECT COUNT(*) FROM product_stock_pool WHERE product_id = ? AND variant_id = ? AND is_used = 0");
+                        $stmt->execute([$product_id, $vid]);
+                        $vstock = $stmt->fetchColumn();
+                    }
 
                     $vprice_usd = round($vprice / $exchange_rate, 2);
                     $vdiscount_vnd = round($vprice * $vdiscount / 100);
@@ -198,7 +208,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_product'])) {
                         variant_name=?, price_vnd=?, price_usd=?,
                         discount_percent=?, discount_amount_vnd=?, discount_amount_usd=?,
                         final_price_vnd=?, final_price_usd=?, stock=?,
-                        min_purchase=?, max_purchase=?
+                        min_purchase=?, max_purchase=?,
+                        requires_customer_info=?, customer_info_label=?
                         WHERE id=?
                     ")->execute([
                                 $vname,
@@ -212,6 +223,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_product'])) {
                                 $vstock,
                                 $vmin,
                                 $vmax,
+                                $v_requires_info,
+                                $v_info_label,
                                 $vid
                             ]);
                 }

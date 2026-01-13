@@ -46,30 +46,6 @@ require_once __DIR__ . '/../includes/header.php';
             </p>
         </div>
 
-        <!-- Feature Cards -->
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon" style="background: rgba(34, 197, 94, 0.1); color: #22c55e;">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <h3 class="feature-title">Tự Động 100%</h3>
-                <p class="feature-desc">Tiền được cộng vào tài khoản ngay sau khi giao dịch hoàn tất thành công.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <h3 class="feature-title">An Toàn & Bảo Mật</h3>
-                <p class="feature-desc">Thông tin giao dịch được mã hóa và bảo vệ tuyệt đối an toàn.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon" style="background: rgba(249, 115, 22, 0.1); color: #f97316;">
-                    <i class="fas fa-bolt"></i>
-                </div>
-                <h3 class="feature-title">Siêu Tốc Độ</h3>
-                <p class="feature-desc">Thời gian xử lý trung bình chỉ từ 1-3 phút cho mỗi giao dịch.</p>
-            </div>
-        </div>
 
         <!-- Main Payment Form -->
         <div class="payment-card">
@@ -123,7 +99,7 @@ require_once __DIR__ . '/../includes/header.php';
                     <!-- Right: Info -->
                     <div>
                         <div class="timer-box">
-                            <div style="color: #ef4444; font-size: 0.9rem; margin-bottom: 5px;">Thời gian còn lại</div>
+                            <div style="color: #ff0000ff; font-size: 1.1rem; font-weight: bold; margin-bottom: 5px;">Thời gian còn lại</div>
                             <div class="timer-text" id="timerDisplay">05:00</div>
                         </div>
 
@@ -164,20 +140,20 @@ require_once __DIR__ . '/../includes/header.php';
 
                         <div class="info-row">
                             <span class="info-label">Số tiền</span>
-                            <span class="info-value" style="color: #10b981; font-size: 1.2rem;">
-                                <span id="displayAmount">0</span>đ
+                            <span class="info-value" style="color: #00ff22ff; font-size: 1.2rem;">
+                                <span id="displayAmount">0</span>VNĐ
                             </span>
                         </div>
 
                         <button class="cancel-btn" onclick="cancelTransaction()">
-                            <i class="fas fa-times"></i> Hủy giao dịch
+                           Hủy giao dịch
                         </button>
                     </div>
                 </div>
 
                 <!-- Note -->
                 <div
-                    style="margin-top: 1.5rem; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 12px; padding: 1rem; font-size: 0.9rem; color: #94a3b8; line-height: 1.6;">
+                    style="margin-top: 1.5rem; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 12px; padding: 1rem; font-size: 0.9rem; line-height: 1.6;">
                     <strong style="color: #60a5fa;"><i class="fas fa-info-circle"></i> Lưu ý quan trọng:</strong><br>
                     • Vui lòng chuyển khoản đúng số tiền và nội dung chuyển khoản để hệ thống tự động xử lý.<br>
                     • Tuyệt đối không sửa đổi nội dung chuyển khoản.<br>

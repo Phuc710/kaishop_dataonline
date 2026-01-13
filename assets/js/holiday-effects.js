@@ -11,112 +11,80 @@ const HolidayEffects = {
     },
 
     startHalloween() {
-        const container = document.body;
-
-        // 1. Add Spiderwebs (Corner decorations)
-        const webStyle = document.createElement('style');
-        webStyle.textContent = `
-            .spiderweb {
-                position: absolute;
-                width: 350px;
-                height: 350px;
-                background-repeat: no-repeat;
-                background-size: contain;
-                pointer-events: none;
-                z-index: 999;
-                opacity: 0.95;
-                filter: drop-shadow(0 5px 15px rgba(0,0,0,0.8));
-                transition: opacity 0.5s ease;
-            }
-            .spiderweb-left {
-                top: 0;
-                left: 0;
-                background-image: url('/kaishop/assets/images/halloween/ghost.png');
-                transform: scaleX(1) rotate(10deg);
-                width: 180px;
-                height: 180px;
-                margin-top: 100px;
-
-            }
-            .spiderweb-right {
-                top: 0;
-                right: 0;
-                margin-top: 30px;
-                background-image: url('/kaishop/assets/images/halloween/tonhen.png');
-                transform: scaleX(-1) rotate(10deg);
-            }
-            
-            @media (max-width: 768px) {
-                .spiderweb, .ghost-float-left {
-                    display: none !important;
-                }
-            }
-        `;
-        document.head.appendChild(webStyle);
-
-        const webLeft = document.createElement('div');
-        webLeft.className = 'spiderweb spiderweb-left';
-
-        const webRight = document.createElement('div');
-        webRight.className = 'spiderweb spiderweb-right';
-
-        const ghostLeft = document.createElement('div');
-        ghostLeft.className = 'ghost-float-left';
-
-        container.appendChild(webLeft);
-        container.appendChild(webRight);
-        container.appendChild(ghostLeft);
     },
 
     startSnow() {
-        // Init logic for snowflakes
-        const flakeCount = 50; // Số lượng bông tuyết
-        const container = document.body;
+        // Canvas Snow Effect - Ultra High Performance
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
 
-        const style = document.createElement('style');
-        style.textContent = `
-            .snowflake {
-                position: fixed;
-                top: -10px;
-                color: #fff;
-                user-select: none;
-                z-index: 9999;
-                pointer-events: none;
-                animation-name: fall, sway;
-                animation-timing-function: linear, ease-in-out;
-                animation-iteration-count: infinite, infinite;
-            }
-            @keyframes fall {
-                0% { top: -10px; }
-                100% { top: 100vh; }
-            }
-            @keyframes sway {
-                0% { transform: translateX(0); }
-                50% { transform: translateX(50px); }
-                100% { transform: translateX(0); }
-            }
-        `;
-        document.head.appendChild(style);
+        canvas.style.position = 'fixed';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.pointerEvents = 'none';
+        canvas.style.zIndex = '9999';
+        document.body.appendChild(canvas);
 
-        for (let i = 0; i < flakeCount; i++) {
-            const flake = document.createElement('div');
-            flake.innerHTML = '&#10052;'; // Ký tự bông tuyết
-            flake.classList.add('snowflake');
+        const snowflakes = [];
+        // Giảm số lượng xuống mức tối ưu nhưng vẫn đẹp
+        const flakeCount = window.innerWidth < 768 ? 20 : 40;
 
-            // Ngẫu nhiên hóa vị trí, kích thước và tốc độ
-            flake.style.left = Math.random() * 100 + 'vw';
-            flake.style.opacity = Math.random() * 0.6 + 0.2;
-            flake.style.fontSize = (Math.random() * 15 + 10) + 'px';
-
-            const fallDuration = Math.random() * 5 + 5 + 's'; // 5s đến 10s
-            const swayDuration = Math.random() * 2 + 2 + 's'; // 2s đến 4s
-            const delay = Math.random() * 5 + 's';
-
-            flake.style.animationDuration = `${fallDuration}, ${swayDuration}`;
-            flake.style.animationDelay = `${delay}, ${delay}`;
-
-            container.appendChild(flake);
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Khởi tạo tuyết
+        for (let i = 0; i < flakeCount; i++) {
+            snowflakes.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                r: Math.random() * 3 + 1, // Bán kính (kích thước)
+                d: Math.random() * flakeCount, // Mật độ để rơi lệch nhau
+                vx: (Math.random() - 0.5) * 0.5, // Gió ngang nhẹ
+                vy: Math.random() * 1 + 0.5 // Tốc độ rơi
+            });
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.beginPath();
+
+            for (let i = 0; i < flakeCount; i++) {
+                const f = snowflakes[i];
+                ctx.moveTo(f.x, f.y);
+                ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
+            }
+            ctx.fill();
+            update();
+            requestAnimationFrame(draw);
+        }
+
+        function update() {
+            for (let i = 0; i < flakeCount; i++) {
+                const f = snowflakes[i];
+                f.y += f.vy;
+                f.x += f.vx;
+
+                // Reset khi chạm đáy
+                if (f.y > canvas.height) {
+                    f.y = -10;
+                    f.x = Math.random() * canvas.width;
+                }
+
+                // Hiệu ứng lắc lư nhẹ
+                f.x += Math.sin(f.d) * 0.5;
+                f.d += 0.01;
+            }
+        }
+
+        // Bắt đầu loop
+        requestAnimationFrame(draw);
     },
 
     startPetals() {

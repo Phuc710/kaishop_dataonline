@@ -109,8 +109,6 @@ function addVariant() {
                                 name="variant_price[]" 
                                 class="form-control variant-price" 
                                 required
-                                min="1000"
-                                step="1000"
                                 data-variant="${variantIndex}"
                                 oninput="calculateVariant(${variantIndex})"
                             >
@@ -162,8 +160,8 @@ function addVariant() {
                                     <i class="fas fa-tag"></i>
                                     Nhãn yêu cầu
                                 </label>
-                                <input type="text" name="variant_customer_info_label[]" class="form-control"
-                                    placeholder="VD: Nhập email và số điện thoại của bạn">
+                                <textarea name="variant_customer_info_label[]" class="form-control" rows="3"
+                                    placeholder="VD: Nhập email và số điện thoại của bạn"></textarea>
                             </div>
                         </div>
                     </div>

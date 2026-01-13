@@ -137,12 +137,29 @@ class HeaderComponent
 
             <!-- Holiday Mode Assets -->
             <?php if (HolidayModeManager::isActive()): ?>
-                <link rel="stylesheet" href="<?= asset('css/holiday-modes.css') ?>?v=<?= time() ?>">
+                <?php
+                $currentMode = HolidayModeManager::getCurrentMode();
+                $cssFile = '';
+                switch ($currentMode) {
+                    case 'halloween':
+                        $cssFile = 'halloween.css';
+                        break;
+                    case 'noel':
+                        $cssFile = 'noel.css';
+                        break;
+                    case 'tet':
+                        $cssFile = 'tet.css';
+                        break;
+                }
+                if ($cssFile):
+                ?>
+                    <link rel="stylesheet" href="<?= asset('css/' . $cssFile) ?>?v=<?= time() ?>">
+                <?php endif; ?>
                 <script src="<?= asset('js/holiday-effects.js') ?>?v=<?= time() ?>"></script>
                 <script>
                     document.addEventListener('DOMContentLoaded', () => {
                         if (typeof HolidayEffects !== 'undefined') {
-                            HolidayEffects.init('<?= HolidayModeManager::getCurrentMode() ?>');
+                            HolidayEffects.init('<?= $currentMode ?>');
                         }
                     });
                 </script>

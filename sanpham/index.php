@@ -109,18 +109,19 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQ
 
         // Price HTML (with consistent height)
         $hasMultipleVariants = ($product['variant_count'] > 1);
-        $pricePrefix = $hasMultipleVariants ? '<span style="font-size:0.75rem;color:#94a3b8;font-weight:400;">Từ </span>' : '';
+        $pricePrefix = $hasMultipleVariants ? '<span style="font-size:0.75rem;color:#94a3b8;font-weight:400;"></span>' : '';
 
         $priceHTML = '';
         if ($product['display_discount_percent'] > 0) {
-            $priceHTML .= '<div style="font-size:0.85rem;color:#64748b;text-decoration:line-through;margin-bottom:4px;">' . formatVND($product['display_price_vnd']) . '</div>';
-            $priceHTML .= '<div class="sp-card-price">' . $pricePrefix . formatVND($product['display_final_price_vnd']) . '</div>';
-            $priceHTML .= '<div style="font-size:0.75rem;color:#ef4444;font-weight:700;margin-top:2px;">-' . $product['display_discount_percent'] . '%</div>';
+            $priceHTML .= '<div style="display:flex;align-items:center;gap:8px;">';
+            $priceHTML .= '<div class="sp-card-price" style="margin-bottom:0;">' . $pricePrefix . formatVND($product['display_final_price_vnd']) . '</div>';
+            $priceHTML .= '<div style="font-size:0.75rem;color:#ef4444;font-weight:700;margin-bottom:2px;">-' . $product['display_discount_percent'] . '%</div>';
+            $priceHTML .= '</div>';
+            $priceHTML .= '<div style="font-size:0.85rem;color:#64748b;text-decoration:line-through;margin-top:2px;">' . formatVND($product['display_price_vnd']) . '</div>';
         } else {
             // Add empty space to match height
-            $priceHTML .= '<div style="height:21px;margin-bottom:4px;"></div>';
             $priceHTML .= '<div class="sp-card-price">' . $pricePrefix . formatVND($product['display_final_price_vnd']) . '</div>';
-            $priceHTML .= '<div style="height:19px;margin-top:2px;"></div>';
+            $priceHTML .= '<div style="height:21px;margin-top:2px;"></div>';
         }
 
         // Out of stock overlay (not for source/book)
@@ -158,7 +159,7 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQ
                 
                 <div class="sp-card-price-row">
                     <div>' . $priceHTML . '</div>
-                    <span class="sp-card-stock">' . ($isDigitalProduct ? '∞ Unlimited' : 'Kho hàng ' . $product['display_stock']) . '</span>
+                    <span class="sp-card-stock">' . ($isDigitalProduct ? '∞ Unlimited' : 'Stock ' . $product['display_stock']) . '</span>
                 </div>
                 
                 <div class="sp-card-actions">';
@@ -893,6 +894,8 @@ require_once __DIR__ . '/../includes/header.php';
     }
 
     .sp-card-stock {
+        padding: 2px 12px;
+        border-radius: 99px;
         font-size: 13px;
         color: #22c55e;
         font-weight: 600;
@@ -962,8 +965,6 @@ require_once __DIR__ . '/../includes/header.php';
     }
 
     .sp-btn-secondary:hover {
-        background: rgba(139, 92, 246, 0.2);
-        border-color: rgba(139, 92, 246, 0.5);
         transform: translateY(-2px);
         box-shadow: none;
     }
@@ -1372,30 +1373,30 @@ require_once __DIR__ . '/../includes/header.php';
                             <div>
                                 <?php
                                 $hasMultipleVariants = ($product['variant_count'] > 1);
-                                $pricePrefix = $hasMultipleVariants ? '<span style="font-size:0.75rem;color:#94a3b8;font-weight:400;">Từ </span>' : '';
+                                $pricePrefix = $hasMultipleVariants ? '<span style="font-size:0.75rem;color:#94a3b8;font-weight:400;"></span>' : '';
                                 ?>
                                 <?php if ($product['display_discount_percent'] > 0): ?>
-                                    <div
-                                        style="font-size:0.85rem;color:#64748b;text-decoration:line-through;margin-bottom:4px;">
+                                    <div style="display:flex;align-items:center;gap:8px;">
+                                        <div class="sp-card-price" style="margin-bottom:0;">
+                                            <?= $pricePrefix ?>         <?= formatVND($product['display_final_price_vnd']) ?>
+                                        </div>
+                                        <div style="font-size:0.75rem;color:#ef4444;font-weight:700;margin-bottom:2px;">
+                                            -<?= $product['display_discount_percent'] ?>%
+                                        </div>
+                                    </div>
+                                    <div style="font-size:0.85rem;color:#64748b;text-decoration:line-through;margin-top:2px;">
                                         <?= formatVND($product['display_price_vnd']) ?>
                                     </div>
-                                    <div class="sp-card-price">
-                                        <?= $pricePrefix ?>         <?= formatVND($product['display_final_price_vnd']) ?>
-                                    </div>
-                                    <div style="font-size:0.75rem;color:#ef4444;font-weight:700;margin-top:2px;">
-                                        -<?= $product['display_discount_percent'] ?>%
-                                    </div>
                                 <?php else: ?>
-                                    <!-- Empty space to match discount height -->
-                                    <div style="height:21px;margin-bottom:4px;"></div>
                                     <div class="sp-card-price">
                                         <?= $pricePrefix ?>         <?= formatVND($product['display_final_price_vnd']) ?>
                                     </div>
-                                    <div style="height:19px;margin-top:2px;"></div>
+                                    <!-- Empty space to match discount height -->
+                                    <div style="height:21px;margin-top:2px;"></div>
                                 <?php endif; ?>
                             </div>
                             <span
-                                class="sp-card-stock"><?= $isDigitalProduct ? '∞ Unlimited' : 'Kho hàng ' . $product['display_stock'] ?></span>
+                                class="sp-card-stock"><?= $isDigitalProduct ? '∞ Unlimited' : 'Stock ' . $product['display_stock'] ?></span>
                         </div>
 
                         <?php $requiresInfo = !empty($product['requires_customer_info']); ?>

@@ -295,15 +295,8 @@ h1 {
     margin: 20px 0;
     padding: 20px;
     border-radius: 14px;
-    background: #1e293b;
-    /* Dark Slate */
     border: 1px solid rgba(148, 163, 184, 0.2);
     transition: all 0.3s ease;
-}
-
-.voucher-box:hover {
-    background: #334155;
-    border-color: rgba(148, 163, 184, 0.4);
 }
 
 .voucher-title {

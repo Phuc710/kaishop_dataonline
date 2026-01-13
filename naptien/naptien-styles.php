@@ -355,7 +355,6 @@
     }
 
     .timer-text {
-        color: #ef4444;
         font-size: 1.5rem;
         font-weight: 800;
         font-family: monospace;
@@ -397,9 +396,9 @@
     .cancel-btn {
         width: 100%;
         padding: 0.875rem;
-        background: rgba(239, 68, 68, 0.1);
+        background: #ef4444;
         border: 1px solid rgba(239, 68, 68, 0.3);
-        color: #ef4444;
+        color: white;
         border-radius: 10px;
         font-weight: 600;
         margin-top: 1rem;
@@ -408,8 +407,6 @@
     }
 
     .cancel-btn:hover {
-        background: #ef4444;
-        color: white;
     }
 
     /* Responsive */

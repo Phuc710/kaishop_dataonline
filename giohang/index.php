@@ -13,8 +13,8 @@ $stmt = $pdo->prepare("
         c.*,
         p.name,
         p.image,
-        p.requires_customer_info,
-        p.customer_info_label,
+        COALESCE(v.requires_customer_info, p.requires_customer_info) as requires_customer_info,
+        COALESCE(v.customer_info_label, p.customer_info_label) as customer_info_label,
         COALESCE(v.final_price_vnd, p.final_price_vnd) as price_vnd,
         COALESCE(v.final_price_usd, p.final_price_usd) as price_usd,
         COALESCE(v.stock, p.stock) as stock,
@@ -307,7 +307,7 @@ require_once __DIR__ . '/../includes/header.php';
         width: 100%;
         padding: 13px 24px;
         margin-top: 24px;
-        background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+        background: linear-gradient(135deg, #0600ff 0%, #5f00b9 100%);
         border: none;
         border-radius: 99px;
         color: #fff;
@@ -327,7 +327,6 @@ require_once __DIR__ . '/../includes/header.php';
 
     .btn-checkout:hover {
         transform: translateY(-3px) scale(1.02);
-        background: linear-gradient(135deg, #7c3aed 0%, #9333ea 100%);
     }
 
     .btn-checkout:active {

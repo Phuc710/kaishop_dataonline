@@ -264,7 +264,6 @@
 [data-theme="light"] .text-main,
 [data-theme="light"] .card-title,
 [data-theme="light"] .section-title,
-[data-theme="light"] .hero-title,
 [data-theme="light"] .page-title,
 [data-theme="light"] .stat-value,
 [data-theme="light"] .feature-title {
@@ -273,6 +272,17 @@
     background-clip: unset !important;
     -webkit-background-clip: unset !important;
     -webkit-text-fill-color: unset !important;
+}
+
+/* Premium Light Mode Hero Title */
+[data-theme="light"] .hero-title {
+    color: #0f172a !important;
+    background: none !important;
+    background-clip: unset !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: unset !important;
+    letter-spacing: -2px !important;
+    font-weight: 800 !important;
 }
 
 [data-theme="light"] p,
@@ -287,11 +297,15 @@
     color: #000000 !important;
 }
 
-/* Remove gradient text */
+/* Vibrant Light Mode Gradients */
 [data-theme="light"] .text-gradient {
-    background: none !important;
-    color: #1c1e21 !important;
-    -webkit-text-fill-color: #1c1e21 !important;
+    background: linear-gradient(135deg, #2563eb 0%, #7c3aed 50%, #db2777 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    color: transparent !important;
+    font-weight: 800 !important;
+    filter: drop-shadow(0 2px 4px rgba(124, 58, 237, 0.15)) !important;
 }
 
 /* ==========================================
@@ -531,6 +545,8 @@
 [data-theme="light"] footer strong,
 [data-theme="light"] .kai-footer-title {
     color: #1c1e21 !important;
+    font-weight: 800 !important;
+    /* Made bolder as requested */
 }
 
 /* Footer icons */
@@ -585,12 +601,27 @@
    HIDE DARK EFFECTS
    ========================================== */
 
+/* Disable Glow Effects in Light Mode */
+[data-theme="light"] .cta-box::before,
+[data-theme="light"] .dashboard-section::before,
+[data-theme="light"] .promotion-banner::before,
 [data-theme="light"] .page-header-section::before,
 [data-theme="light"] .payment-card::before,
 [data-theme="light"] .feature-card::before,
 [data-theme="light"] .hero-bg-glow {
     display: none !important;
 }
+
+[data-theme="light"] .promotion-banner,
+[data-theme="light"] .cta-box {
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+}
+
+[data-theme="light"] .cta-box {
+    border-radius: 24px !important;
+}
+
 
 /* Feature Card Specific Colors on Hover - Enhanced with Glow */
 [data-theme="light"] .feature-card:nth-child(1):hover {
@@ -614,7 +645,7 @@
 }
 
 [data-theme="light"] .promotion-banner {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+    background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%) !important;
     transition: all 0.3s ease !important;
 }
 
@@ -626,14 +657,11 @@
 
 /* CTA Box - Gradient Border with Modern Look */
 [data-theme="light"] .cta-box {
-    background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%) !important;
-    background-image: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
-    border: 2px solid transparent !important;
+    background: #ffffff !important;
+    border: 2px solid #e5e7eb !important;
     background-clip: padding-box !important;
     position: relative !important;
-    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1) !important;
 }
-
 
 
 [data-theme="light"] .btn-white {
@@ -756,7 +784,7 @@
 }
 
 [data-theme="light"] .faq-item.active {
-    border-color: #3b82f6 !important;
+    border-color: #000000 !important;
     box-shadow: 0 4px 16px -2px rgba(59, 130, 246, 0.15) !important;
 }
 
@@ -812,25 +840,47 @@
 [data-theme="light"] .kai-btn-user {
     background: #ffffff !important;
     border: 1px solid rgba(0, 0, 0, 0.12) !important;
-    color: #475569 !important;
+    color: #000000 !important;
 }
 
 [data-theme="light"] .kai-btn-icon:hover,
 [data-theme="light"] .kai-btn-secondary:hover,
 [data-theme="light"] .kai-btn-user:hover {
-    border-color: #94a3b8 !important;
+    border-color: #000000 !important;
     color: #0f172a !important;
 }
 
-/* Deposit Page Specifics */
+/* Deposit Page Specifics - Corrected Specificity */
 [data-theme="light"] .amount-btn {
     background: #ffffff !important;
     border: 1px solid rgba(0, 0, 0, 0.12) !important;
-    color: #475569 !important;
+    color: #000000 !important;
+}
+
+[data-theme="light"] #displayAmount {
+    color: #10b981 !important;
+}
+
+[data-theme="light"] .btn-download-qr,
+[data-theme="light"] .btn-download-qr span,
+[data-theme="light"] .btn-download-qr i {
+    color: #ffffff !important;
+}
+
+[data-theme="light"] .btn-copy,
+[data-theme="light"] .btn-copy i {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    color: #000000 !important;
+}
+
+[data-theme="light"] .btn-copy:hover {
+    border-color: #000000 !important;
+    color: #0f172a !important;
 }
 
 [data-theme="light"] .amount-btn:hover {
-    border-color: #94a3b8 !important;
+    border-color: #000000 !important;
 }
 
 [data-theme="light"] .amount-btn.active {
@@ -1282,8 +1332,6 @@
 
 [data-theme="light"] .sp-card:hover {
     border-color: #000000 !important;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08) !important;
-    transform: translateY(-5px) !important;
 }
 
 html[data-theme="light"] body .sp-card:hover .sp-card-img-wrap .sp-card-label {
@@ -1582,4 +1630,17 @@ html[data-theme="light"] body .sp-card .sp-card-img-wrap .sp-card-label {
 [data-theme="light"] .mark-all-read:hover {
     background: #f1f5f9 !important;
     color: #000000 !important;
+}
+
+/* Light Mode Scroll to Top */
+[data-theme="light"] .scroll-to-top {
+    background: #ffffff !important;
+    color: #1c1e21 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .scroll-to-top:hover {
+    background: #1877f2 !important;
+    color: #ffffff !important;
+    box-shadow: 0 8px 20px rgba(24, 119, 242, 0.3) !important;
 }

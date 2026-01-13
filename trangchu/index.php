@@ -41,6 +41,12 @@ require_once __DIR__ . '/../includes/header.php';
                         <img src="<?= asset('images/halloween/logo.png') ?>"
                             alt="Mua tài khoản ChatGPT Gemini Canva Netflix giá rẻ KaiShop Halloween"
                             class="hero-logo-image halloween-mode-img">
+                        <img src="<?= asset('images/noel/onggianoel.png') ?>"
+                            alt="Mua tài khoản ChatGPT Gemini Canva Netflix giá rẻ KaiShop Noel"
+                            class="hero-logo-image noel-mode-img">
+                        <img src="<?= asset('images/tet/lan.png') ?>"
+                            alt="Mua tài khoản ChatGPT Gemini Canva Netflix giá rẻ KaiShop Tết"
+                            class="hero-logo-image tet-mode-img">
                     </div>
                 </div>
 

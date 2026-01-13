@@ -122,6 +122,9 @@ class FooterComponent
 
         <!-- Security: Image Protection Only -->
         <script src="<?= asset('js/content-protection.js') ?>"></script>
+
+        <!-- Enable Text Copying -->
+        <script src="<?= asset('js/enable-copy.js') ?>"></script>
         </body>
 
         </html>
@@ -336,44 +339,46 @@ class FooterComponent
                 }
             }
 
-            /* Scroll to Top Button */
+            /* Scroll to Top Button (Redesigned) */
             .scroll-to-top {
                 position: fixed;
                 bottom: 30px;
                 right: 30px;
                 width: 50px;
                 height: 50px;
-                background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
-                border: 1px solid rgba(59, 130, 246, 0.3);
-                border-radius: 12px;
-                color: #60a5fa;
+                background: rgba(15, 23, 42, 0.8);
+                backdrop-filter: blur(10px);
+                border-radius: 50%;
+                color: #fff;
                 font-size: 20px;
                 cursor: pointer;
                 opacity: 0;
                 visibility: hidden;
-                transform: translateY(100px);
-                transition: all 0.3s ease;
+                transform: translateY(20px) scale(0.8);
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
                 z-index: 1000;
-                box-shadow: 0 4px 15px rgba(15, 23, 42, 0.6);
-                backdrop-filter: blur(10px);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
             }
 
             .scroll-to-top.show {
                 opacity: 1;
                 visibility: visible;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
 
             .scroll-to-top:hover {
-                background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-                border-color: rgba(96, 165, 250, 0.5);
-                transform: translateY(-3px);
-                box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
-                color: #93c5fd;
+                background: #7c3aed;
+                border-color: rgba(124, 58, 237, 0.5);
+                transform: translateY(-5px) scale(1.1);
+                box-shadow: 0 15px 30px rgba(124, 58, 237, 0.4);
+                color: #fff;
             }
 
             .scroll-to-top:active {
-                transform: translateY(-1px);
+                transform: translateY(-2px) scale(1);
             }
 
             @media (max-width: 768px) {

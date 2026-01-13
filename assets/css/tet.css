@@ -1,0 +1,490 @@
+/* ============================================
+   TET MODE - Chinese New Year Luxury Theme
+   Red & Gold - Clean & Premium
+   ============================================ */
+
+body.holiday-mode-tet {
+    --tet-red: #c8102e;
+    --tet-dark-red: #d40000be;
+    --tet-gold: #ffd700;
+    --tet-light-gold: #fff4e6;
+}
+
+/* Background */
+body.holiday-mode-tet {
+    background-color: #0a0000 !important;
+    background-image:
+        linear-gradient(rgba(10, 0, 0, 0.85), rgba(54, 0, 0, 0.411)),
+        url('/kaishop/assets/images/tet/tet.jpg') !important;
+    background-size: cover !important;
+    background-attachment: fixed !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+}
+
+body.holiday-mode-tet .page-wrapper::before {
+    content: '' !important;
+    background-image: url('/kaishop/assets/images/tet/thantai.png') !important;
+    background-size: 300px auto !important;
+    background-attachment: fixed !important;
+    background-position: bottom right !important;
+    background-repeat: no-repeat !important;
+    opacity: 0.5 !important;
+    pointer-events: none !important;
+}
+
+@keyframes float-thantai {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+/* Header */
+body.holiday-mode-tet .kai-header {
+    background: linear-gradient(135deg, #3c000000 0%, #4b000000 100%) !important;
+    backdrop-filter: blur(10px);
+}
+
+body.holiday-mode-tet .kai-link {
+    color: #ffd700 !important;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+body.holiday-mode-tet .kai-link:hover {
+    color: #ffffff !important;
+    transform: translateY(-2px);
+}
+
+/* Notification Banner */
+body.holiday-mode-tet .notification-banner {
+    background: linear-gradient(90deg, rgba(255, 215, 0, 0.95), rgba(255, 223, 0, 0.9)) !important;
+    border-bottom: 2px solid #c8102e !important;
+    color: #8b0000 !important;
+}
+
+/* Buttons */
+body.holiday-mode-tet .kai-btn-primary,
+body.holiday-mode-tet .btn-primary,
+body.holiday-mode-tet .sp-btn-primary,
+body.holiday-mode-tet .search-btn,
+body.holiday-mode-tet .btn-submit,
+body.holiday-mode-tet button.btn-primary,
+body.holiday-mode-tet a.btn-primary {
+    background: linear-gradient(135deg, #c8102e 0%, #db0000 100%) !important;
+    border: none !important;
+    color: #fbff00 !important;
+    font-weight: 700 !important;
+    transition: all 0.3s ease !important;
+}
+
+body.holiday-mode-tet .kai-btn-primary:hover,
+body.holiday-mode-tet .btn-primary:hover,
+body.holiday-mode-tet .sp-btn-primary:hover,
+body.holiday-mode-tet .search-btn:hover,
+body.holiday-mode-tet .btn-submit:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 8px 20px rgba(168, 0, 28, 0.4) !important;
+}
+
+body.holiday-mode-tet .btn-ghost {
+    color: #000000 !important;
+    border: none !important;
+    background: rgb(255, 255, 255) !important;
+}
+
+body.holiday-mode-tet .btn-ghost:hover {
+    transform: translateY(-2px) !important;
+}
+
+/* Footer */
+body.holiday-mode-tet .kai-footer {
+    background: linear-gradient(to bottom, #1a0000 0%, #0a0000 100%) !important;
+    border-top: 3px solid #ffd700 !important;
+}
+
+body.holiday-mode-tet .kai-footer-title {
+    color: #ffd700 !important;
+    font-weight: 800;
+}
+
+body.holiday-mode-tet .kai-footer-text,
+body.holiday-mode-tet .kai-footer-links a {
+    color: #fff4e6 !important;
+}
+
+body.holiday-mode-tet .kai-footer-links a:hover {
+    transform: translateY(-2px) !important;
+}
+
+/* Product Cards */
+body.holiday-mode-tet .product-card,
+body.holiday-mode-tet .sp-card {
+    background: rgba(26, 0, 0, 0.85) !important;
+    border: 2px solid rgba(255, 215, 0, 0.3) !important;
+    backdrop-filter: blur(15px);
+}
+
+body.holiday-mode-tet .product-card:hover,
+body.holiday-mode-tet .sp-card:hover {
+    transform: translateY(-2px) !important;
+}
+
+body.holiday-mode-tet .sp-card::before {
+    display: none !important;
+}
+
+body.holiday-mode-tet .product-card .card-title,
+body.holiday-mode-tet .sp-card-title a {
+    color: #ffffff !important;
+    font-weight: 700;
+}
+
+body.holiday-mode-tet .product-card .price-tag,
+body.holiday-mode-tet .sp-card-price {
+    color: #ffd700 !important;
+    font-weight: 900;
+    font-size: 1.3em;
+}
+
+body.holiday-mode-tet .sp-card-rating i {
+    color: #ffd700 !important;
+}
+
+body.holiday-mode-tet .sp-card-stock {
+    color: #ffd700 !important;
+    background: linear-gradient(135deg, rgba(200, 16, 46, 0.3), rgba(139, 0, 0, 0.3)) !important;
+    border: 2px solid #ffd700 !important;
+    border-radius: 99px !important;
+    padding: 4px 12px !important;
+    font-weight: 700 !important;
+}
+
+/* Homepage Components */
+body.holiday-mode-tet .feature-card,
+body.holiday-mode-tet .stat-card,
+body.holiday-mode-tet .process-step,
+body.holiday-mode-tet .faq-item,
+body.holiday-mode-tet .glass-card {
+    background: rgb(51 1 1 / 37%) !important;
+    border: 2px solid rgba(255, 215, 0, 0.3) !important;
+    backdrop-filter: blur(10px);
+}
+
+body.holiday-mode-tet .feature-card:hover,
+body.holiday-mode-tet .stat-card:hover,
+body.holiday-mode-tet .process-step:hover {
+    transform: translateY(-2px) !important;
+}
+
+body.holiday-mode-tet .feature-title,
+body.holiday-mode-tet .stat-label,
+body.holiday-mode-tet .process-step h3 {
+    color: #ffd700 !important;
+    font-weight: 700;
+}
+
+body.holiday-mode-tet .feature-text,
+body.holiday-mode-tet .feature-desc,
+body.holiday-mode-tet .process-step p {
+    color: #fff4e6 !important;
+}
+
+body.holiday-mode-tet .stat-value {
+    color: #ffd700 !important;
+    font-weight: 900;
+}
+
+/* Text Styles */
+body.holiday-mode-tet .hero-title,
+body.holiday-mode-tet .section-title {
+    color: #ffd700 !important;
+    font-weight: 900;
+}
+
+body.holiday-mode-tet .text-gradient {
+    background: linear-gradient(135deg, #ffd700 0%, #ff002b 50%, #ffd700 100%) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-size: 200% 200% !important;
+    animation: tet-gradient-shift 4s ease infinite !important;
+}
+
+@keyframes tet-gradient-shift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+body.holiday-mode-tet .typing-text,
+body.holiday-mode-tet #typing-text {
+    background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    font-weight: 800 !important;
+}
+
+body.holiday-mode-tet .hero-subtitle,
+body.holiday-mode-tet .section-sub {
+    color: #ffffff !important;
+}
+
+/* Search Box */
+body.holiday-mode-tet .hero-search {
+    background: rgba(26, 0, 0, 0.90) !important;
+    border: 2px solid #ffd700 !important;
+}
+
+body.holiday-mode-tet .search-placeholder,
+body.holiday-mode-tet .search-keywords-rotate,
+body.holiday-mode-tet .search-icon {
+    color: #ffd700 !important;
+}
+
+/* Badges */
+body.holiday-mode-tet .hero-badge {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(200, 16, 46, 0.2)) !important;
+    border: 2px solid #ffd700 !important;
+    color: #ffd700 !important;
+    font-weight: 700;
+}
+
+body.holiday-mode-tet .hero-badge-soft {
+    background: rgba(26, 0, 0, 0.80) !important;
+    border: 2px solid rgba(255, 215, 0, 0.3) !important;
+}
+
+body.holiday-mode-tet .hero-badge-soft strong {
+    color: #ffd700 !important;
+}
+
+body.holiday-mode-tet .hero-badge-soft span {
+    color: #fff4e6 !important;
+}
+
+/* Sections */
+body.holiday-mode-tet .promotion-banner,
+body.holiday-mode-tet .dashboard-section,
+body.holiday-mode-tet .cta-box {
+    background: radial-gradient(ellipse at center, rgba(200, 16, 46, 0.2) 0%, rgba(26, 0, 0, 0.90) 70%) !important;
+    border: 2px solid rgba(255, 215, 0, 0.3) !important;
+}
+
+/* Category Tabs */
+body.holiday-mode-tet .category-tab {
+    background: rgba(26, 0, 0, 0.80) !important;
+    border: 2px solid rgba(255, 215, 0, 0.3) !important;
+    color: #fff4e6 !important;
+}
+
+body.holiday-mode-tet .category-tab:hover {
+    transform: translateY(-2px) !important;
+}
+
+body.holiday-mode-tet .category-tab.active {
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%) !important;
+    border-color: #c8102e !important;
+    color: #8b0000 !important;
+    font-weight: 700;
+}
+
+/* Mobile Navigation */
+body.holiday-mode-tet .kai-mobile-drawer {
+    background: linear-gradient(to bottom, #1a0000, #0a0000) !important;
+    border-right: 3px solid #ffd700 !important;
+}
+
+body.holiday-mode-tet .drawer-title {
+    color: #ffd700 !important;
+}
+
+body.holiday-mode-tet .drawer-menu li a {
+    color: #fff4e6 !important;
+}
+
+body.holiday-mode-tet .drawer-menu li a i {
+    color: #ffd700 !important;
+}
+
+body.holiday-mode-tet .drawer-menu li a:hover {
+    transform: translateY(-2px) !important;
+}
+
+.back-link-in-card {
+    color: #ffd700 !important;
+}
+
+/* Auth Page */
+body.holiday-mode-tet .auth-card {
+    background: rgba(26, 0, 0, 0.658) !important;
+    border: 1px solid #ffd700 !important;
+    backdrop-filter: blur(15px);
+}
+
+body.holiday-mode-tet .auth-header h1 {
+    color: #ffd700 !important;
+}
+
+body.holiday-mode-tet .auth-header .subtitle {
+    color: #fff4e6 !important;
+}
+
+body.holiday-mode-tet .input-wrapper {
+    background: rgba(26, 0, 0, 0.80) !important;
+}
+
+body.holiday-mode-tet .input-wrapper:focus-within {
+    transform: translateY(-2px) !important;
+}
+
+body.holiday-mode-tet .input-wrapper input {
+    color: #ffffff !important;
+}
+
+body.holiday-mode-tet .input-icon,
+body.holiday-mode-tet .password-toggle {
+    color: #ffd700 !important;
+}
+
+body.holiday-mode-tet .checkbox-wrapper input:checked+label::before {
+    background: #ffd700 !important;
+    border-color: #ffd700 !important;
+}
+
+/* Deposit Page */
+body.holiday-mode-tet .deposit-page {
+    background-image: linear-gradient(rgba(10, 0, 0, 0.85), rgba(54, 0, 0, 0.411)),
+        url('/kaishop/assets/images/tet/tet.jpg') !important;
+    background-size: cover !important;
+    background-attachment: fixed !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+}
+
+body.holiday-mode-tet .page-badge {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(200, 16, 46, 0.2)) !important;
+    border: 2px solid #ffd700 !important;
+    color: #ffd700 !important;
+}
+
+body.holiday-mode-tet .page-title {
+    color: #ffd700 !important;
+}
+
+body.holiday-mode-tet .page-subtitle {
+    color: #fff4e6 !important;
+}
+
+body.holiday-mode-tet .payment-card {
+    background: rgba(26, 0, 0, 0.90) !important;
+    border: none !important;
+}
+
+body.holiday-mode-tet .payment-card label {
+    color: #fff4e6 !important;
+}
+
+body.holiday-mode-tet .amount-btn {
+    background: rgba(26, 0, 0, 0.80) !important;
+    border: 2px solid rgba(255, 215, 0, 0.3) !important;
+    color: #ffd700 !important;
+}
+
+body.holiday-mode-tet .amount-btn:hover {
+    transform: translateY(-2px) !important;
+}
+
+body.holiday-mode-tet .amount-btn.active {
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%) !important;
+    border-color: #c8102e !important;
+    color: #8b0000 !important;
+    font-weight: 700;
+}
+
+body.holiday-mode-tet .currency-input {
+    background: rgba(26, 0, 0, 0.80) !important;
+    border: 2px solid rgba(255, 215, 0, 0.3) !important;
+    color: #ffd700 !important;
+}
+
+body.holiday-mode-tet .currency-input:focus {
+    transform: translateY(-2px) !important;
+}
+
+body.holiday-mode-tet .currency-suffix {
+    color: #ffd700 !important;
+}
+
+body.holiday-mode-tet .info-row {
+    background: rgba(26, 0, 0, 0.80) !important;
+    border: 2px solid rgba(255, 215, 0, 0.2) !important;
+}
+
+body.holiday-mode-tet .info-label {
+    color: #fff4e6 !important;
+}
+
+body.holiday-mode-tet .info-value {
+    font-weight: 800;
+}
+
+body.holiday-mode-tet .code-highlight {
+    font-weight: 900;
+}
+
+body.holiday-mode-tet .timer-text {
+    font-weight: 800;
+}
+
+body.holiday-mode-tet .btn-copy {
+    background: rgba(255, 215, 0, 0.1) !important;
+    border: 2px solid #ffffff !important;
+    color: #ffffff !important;
+}
+
+body.holiday-mode-tet .btn-copy:hover {
+    transform: translateY(-2px) !important;
+}
+#displayAmount{
+    color: rgb(0, 255, 0) !important;
+}
+/* Tet Mode Hero Image */
+body.holiday-mode-tet .light-mode-img,
+body.holiday-mode-tet .dark-mode-img,
+body.holiday-mode-tet .halloween-mode-img,
+body.holiday-mode-tet .noel-mode-img {
+    display: none !important;
+}
+
+body.holiday-mode-tet .tet-mode-img {
+    display: block !important;
+}
+
+/* Tet Mode Scroll to Top */
+body.holiday-mode-tet .scroll-to-top {
+    background: linear-gradient(135deg, #c8102e 0%, #8b0000 100%) !important;
+    border: 2px solid #ffd700 !important;
+    box-shadow: 0 0 15px rgba(200, 16, 46, 0.5) !important;
+}
+
+body.holiday-mode-tet .scroll-to-top:hover {
+    background: #ffd700 !important;
+    color: #8b0000 !important;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.6) !important;
+}

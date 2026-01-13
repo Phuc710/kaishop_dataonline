@@ -84,6 +84,7 @@ CREATE TABLE products (
     label_color VARCHAR(7) DEFAULT '#8b5cf6',
     label_bg_color VARCHAR(7) DEFAULT '#ffffff',
     label_text_color VARCHAR(7) DEFAULT '#ffffff',
+    label_id INT UNSIGNED NULL DEFAULT NULL COMMENT 'ID nhãn sản phẩm (tham chiếu product_labels)',
     sold_count INT DEFAULT 0,
     view_count INT DEFAULT 0,
     views INT DEFAULT 0,
@@ -106,6 +107,7 @@ CREATE TABLE products (
     INDEX idx_featured (is_featured),
     INDEX idx_pinned (is_pinned),
     INDEX idx_label (label),
+    INDEX idx_label_id (label_id),
     INDEX idx_stock (stock),
     INDEX idx_is_active (is_active),
     INDEX idx_product_type (product_type),
@@ -113,7 +115,7 @@ CREATE TABLE products (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Sản phẩm hỗ trợ 3 loại: Account, Source Code, Book';
 
 -- ============================================================================
--- 4. PRODUCT_VARIANTS TABLE - Biến thể sản phẩm
+-- 4. PRODUCT_VARIANTS TABLE - Biến thể sản phẩm (MỖI VARIANT = 1 SẢN PHẨM ĐỘC LẬP)
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS product_variants (
     id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT COMMENT 'Variant ID',
@@ -129,7 +131,9 @@ CREATE TABLE IF NOT EXISTS product_variants (
     stock INT NOT NULL DEFAULT 0 COMMENT 'Số lượng tồn kho',
     min_purchase INT NOT NULL DEFAULT 1 COMMENT 'Số lượng mua tối thiểu',
     max_purchase INT NOT NULL DEFAULT 999 COMMENT 'Số lượng mua tối đa',
-    account_data TEXT COMMENT 'Dữ liệu tài khoản',
+    requires_customer_info TINYINT(1) DEFAULT 0 COMMENT 'Yêu cầu khách hàng nhập thông tin (0=Upload TK, 1=Nhập info)',
+    customer_info_label VARCHAR(500) DEFAULT NULL COMMENT 'Label/prompt cho trường thông tin khách hàng',
+    account_data TEXT COMMENT 'Dữ liệu tài khoản (deprecated - dùng product_stock_pool)',
     is_default TINYINT(1) NOT NULL DEFAULT 0 COMMENT '1 = variant mặc định được chọn',
     sort_order INT NOT NULL DEFAULT 0 COMMENT 'Thứ tự sắp xếp',
     is_active TINYINT(1) NOT NULL DEFAULT 1 COMMENT '1 = active, 0 = inactive',
@@ -141,7 +145,7 @@ CREATE TABLE IF NOT EXISTS product_variants (
     INDEX idx_default (is_default),
     INDEX idx_product_active (product_id, is_active),
     INDEX idx_product_default (product_id, is_default)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Product variants with individual pricing and stock';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Product variants - Mỗi variant như 1 sản phẩm độc lập';
 
 -- ============================================================================
 -- 4B. PRODUCT_STOCK_POOL TABLE - Kho tài khoản cho sản phẩm loại Account
@@ -760,10 +764,12 @@ CREATE TABLE IF NOT EXISTS `webhook_logs` (
 -- ============================================================================
 -- PRODUCT LABELS TABLE - Nhãn sản phẩm với ảnh
 -- ============================================================================
+-- PRODUCT LABELS TABLE - Nhãn sản phẩm với ảnh
+-- ============================================================================
 CREATE TABLE IF NOT EXISTS product_labels (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT COMMENT 'Label ID',
     name VARCHAR(100) NOT NULL UNIQUE COMMENT 'Tên nhãn (VD: HOT, NEW, SALE)',
-    image VARCHAR(255) NOT NULL COMMENT 'Đường dẫn ảnh nhãn',
+    image_url VARCHAR(255) NOT NULL COMMENT 'Đường dẫn ảnh nhãn',
     display_order INT DEFAULT 0 COMMENT 'Thứ tự hiển thị',
     is_active TINYINT(1) DEFAULT 1 COMMENT '1 = active, 0 = inactive',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -773,16 +779,24 @@ CREATE TABLE IF NOT EXISTS product_labels (
     INDEX idx_order (display_order)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Nhãn sản phẩm với ảnh';
 
--- Add label_id column to products table
-ALTER TABLE products 
-ADD COLUMN IF NOT EXISTS label_id INT UNSIGNED NULL DEFAULT NULL COMMENT 'ID nhãn sản phẩm' AFTER label_text_color,
-ADD INDEX IF NOT EXISTS idx_label_id (label_id);
+-- Add foreign key constraint for product labels (products table already has label_id column)
+-- Note: MariaDB doesn't support IF NOT EXISTS for constraints, so we check manually
+SET @constraint_exists = (
+    SELECT COUNT(*) 
+    FROM information_schema.TABLE_CONSTRAINTS 
+    WHERE CONSTRAINT_SCHEMA = DATABASE() 
+    AND TABLE_NAME = 'products' 
+    AND CONSTRAINT_NAME = 'fk_products_label'
+);
 
--- Add foreign key constraint for product labels
-ALTER TABLE products
-ADD CONSTRAINT IF NOT EXISTS fk_products_label 
-FOREIGN KEY (label_id) REFERENCES product_labels(id) 
-ON DELETE SET NULL;
+SET @sql = IF(@constraint_exists = 0, 
+    'ALTER TABLE products ADD CONSTRAINT fk_products_label FOREIGN KEY (label_id) REFERENCES product_labels(id) ON DELETE SET NULL',
+    'SELECT "Constraint fk_products_label already exists" AS message'
+);
+
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
 
 -- ============================================================================
 -- SESSIONS TABLE - User session management for instant ban detection
@@ -938,4 +952,3 @@ BEGIN
 END$$
 
 DELIMITER ;
-

@@ -18,7 +18,6 @@
 
 /* Enhanced Typing Text Gradient */
 [data-theme="light"] .typing-text {
-    background: linear-gradient(90deg, #2563eb 0%, #7c3aed 50%, #db2777 100%) !important;
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
     background-clip: text !important;
@@ -99,7 +98,7 @@
 }
 
 [data-theme="light"] .alert-success {
-    border-left-color: #10b981 !important;
+    border-left-color: #00ff2a !important;
 }
 
 /* Enhanced Input Focus States */
@@ -232,4 +231,26 @@
 [data-theme="light"] select,
 [data-theme="light"] textarea {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* ============================================
+   Page Title Enhancements (Added for Shop & Recharge)
+============================================ */
+
+/* All sản phẩm KaiShop & Nạp Tiền Tài Khoản Titles - Cyber Purple Palette */
+[data-theme="light"] .sp-header h1,
+[data-theme="light"] .page-title {
+    background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    color: transparent !important;
+    font-weight: 800 !important;
+    filter: drop-shadow(0 2px 4px rgba(124, 58, 237, 0.15)) !important;
+    letter-spacing: -1.5px !important;
+}
+
+/* Ensure the Shop page title remains centered and large */
+[data-theme="light"] .sp-header h1 {
+    font-size: 3.5rem !important;
 }

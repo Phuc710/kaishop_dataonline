@@ -1,0 +1,562 @@
+/* ============================================
+   NOEL MODE - KaiShop Christmas Theme
+   Green Pine & Red Christmas Theme
+   ============================================ */
+
+body.holiday-mode-noel {
+    --holiday-primary: #16a34a;
+    --holiday-accent: #ff0000;
+    --holiday-snow: #f8fafc;
+    --holiday-gold: #fbbf24;
+}
+
+/* Noel Logo Switching */
+body.holiday-mode-noel .hero-logo-image.light-mode-img,
+body.holiday-mode-noel .hero-logo-image.dark-mode-img,
+body.holiday-mode-noel .hero-logo-image.halloween-mode-img {
+    display: none !important;
+}
+
+body.holiday-mode-noel .hero-logo-image.noel-mode-img {
+    display: block !important;
+}
+
+/* Noel Mode Scroll to Top */
+body.holiday-mode-noel .scroll-to-top {
+    background: linear-gradient(135deg, #0a4d2c 0%, #1a2f23 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 15px rgba(10, 77, 44, 0.5) !important;
+}
+
+body.holiday-mode-noel .scroll-to-top:hover {
+    background: #c1121f !important;
+    box-shadow: 0 0 25px rgba(193, 18, 31, 0.6) !important;
+}
+
+.hero-logo-image.noel-mode-img {
+    display: none !important;
+}
+
+/* Background - Snowy Christmas */
+body.holiday-mode-noel {
+    background-color: #0a1f1a !important;
+    background-image: linear-gradient(rgba(10, 31, 26, 0.582), rgba(0, 27, 18, 0.712)),
+        url('/kaishop/assets/images/noel/noel.jpg') !important;
+    background-size: cover !important;
+    background-attachment: fixed !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+}
+
+body.holiday-mode-noel .page-wrapper::before {
+    content: '' !important;
+    background-image: url('/kaishop/assets/images/noel/caythong.png') !important;
+    background-size: 400px auto !important;
+    background-attachment: fixed !important;
+    background-position: bottom right !important;
+    background-repeat: no-repeat !important;
+    animation: none !important;
+    opacity: 0.3 !important;
+    pointer-events: none !important;
+}
+
+/* Header - Simple Green Christmas */
+body.holiday-mode-noel .kai-header {
+    background: rgb(0 0 0 / 50%) !important;
+    backdrop-filter: blur(10px);
+}
+
+body.holiday-mode-noel .kai-link {
+    color: #ffffff !important;
+    transition: color 0.3s ease;
+}
+
+body.holiday-mode-noel .kai-link:hover {
+    color: #fbbf24 !important;
+}
+
+/* Notification Banner - Noel Theme */
+body.holiday-mode-noel .notification-banner {
+    background: linear-gradient(90deg, #ffffff5e, #ffffff4d) !important;
+    border-bottom: 1px solid #dcb226;
+    color: rgb(21, 255, 0) !important;
+}
+
+body.holiday-mode-noel .notification-banner a {
+    color: rgb(21, 255, 0) !important;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+body.holiday-mode-noel .notification-banner .close-btn {
+    color: rgb(21, 255, 0) !important;
+    opacity: 0.8;
+}
+
+body.holiday-mode-noel .notification-banner .close-btn:hover {
+    opacity: 1;
+    color: rgb(21, 255, 0) !important;
+}
+
+/* Buttons - Bright Red Christmas - FORCE ALL */
+body.holiday-mode-noel .kai-btn-primary,
+body.holiday-mode-noel .btn-primary,
+body.holiday-mode-noel .sp-btn-primary,
+body.holiday-mode-noel .search-btn,
+body.holiday-mode-noel button.btn-primary,
+body.holiday-mode-noel a.btn-primary,
+body.holiday-mode-noel .hero-actions .btn-primary,
+body.holiday-mode-noel .action-buttons .btn-primary {
+    background-color: #ff0000 !important;
+    background-image: none !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+}
+
+#currencyText {
+    color: #ffffff !important;
+}
+
+body.holiday-mode-noel .kai-btn-primary:hover,
+body.holiday-mode-noel .btn-primary:hover,
+body.holiday-mode-noel .sp-btn-primary:hover,
+body.holiday-mode-noel .search-btn:hover,
+body.holiday-mode-noel button.btn-primary:hover,
+body.holiday-mode-noel a.btn-primary:hover {
+    transform: translateY(-2px) !important;
+    background: #ff0000 !important;
+    background-color: #ff0000 !important;
+}
+
+body.holiday-mode-noel .btn-ghost {
+    color: #86efac !important;
+    border-color: #16a34a !important;
+    background: rgba(22, 163, 74, 0.1) !important;
+    transition: all 0.3s ease;
+}
+
+body.holiday-mode-noel .btn-ghost:hover {
+    transform: translateY(-2px) !important;
+}
+
+/* Footer - Dark Green */
+body.holiday-mode-noel .kai-footer {
+    background: linear-gradient(to bottom, #14532d 0%, #052e16 100%);
+    border-top: 2px solid #16a34a;
+}
+
+body.holiday-mode-noel .kai-footer::before {
+    background: radial-gradient(circle at 50% 0, rgba(22, 163, 74, 0.2), transparent 70%);
+}
+
+body.holiday-mode-noel .kai-footer-title {
+    color: #ffffff !important;
+    font-weight: 700;
+}
+
+body.holiday-mode-noel .kai-footer-text,
+body.holiday-mode-noel .kai-footer-desc,
+body.holiday-mode-noel .kai-footer-links a,
+body.holiday-mode-noel .footer-copyright {
+    color: #ffffff !important;
+    /* Make all small text white */
+    opacity: 0.9;
+}
+
+body.holiday-mode-noel .kai-footer-links a:hover {
+    color: #fbbf24 !important;
+    opacity: 1;
+}
+
+
+body.holiday-mode-noel .kai-footer-bottom p {
+    color: #ffffff !important;
+}
+
+body.holiday-mode-noel .kai-footer-badge {
+    border-color: #fbbf24;
+    color: #fbbf24;
+    background: rgba(251, 191, 36, 0.1);
+}
+
+body.holiday-mode-noel .auth-card {
+    background: rgb(6 26 13 / 49%) !important;
+    border: 1px solid rgba(22, 163, 74, 0.4) !important;
+    backdrop-filter: blur(10px);
+}
+
+/* Product Cards - Christmas Theme */
+body.holiday-mode-noel .product-card,
+body.holiday-mode-noel .sp-card {
+    background: rgba(15, 30, 20, 0.90) !important;
+    backdrop-filter: blur(15px);
+}
+
+body.holiday-mode-noel .sp-card::before {
+    display: none !important;
+}
+
+body.holiday-mode-noel .sp-card:hover {
+    border: 1px solid rgba(0, 255, 42, 0.6) !important;
+}
+
+body.holiday-mode-noel .product-card .card-title,
+body.holiday-mode-noel .sp-card-title a {
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+body.holiday-mode-noel .product-card .price-tag,
+body.holiday-mode-noel .sp-card-price {
+    color: #fbbf24 !important;
+    font-weight: 800;
+}
+
+body.holiday-mode-noel .sp-card-rating i {
+    color: #fbbf24 !important;
+}
+
+body.holiday-mode-noel .sp-card-stock {
+    color: #86efac !important;
+    background: rgba(22, 163, 74, 0.1) !important;
+    border: 1px solid #16a34a !important;
+    border-radius: 99px !important;
+    padding: 4px 12px !important;
+    font-weight: 600 !important;
+}
+
+/* Homepage Components - Christmas Theme - NO HOVER */
+body.holiday-mode-noel .feature-card,
+body.holiday-mode-noel .stat-card,
+body.holiday-mode-noel .process-step,
+body.holiday-mode-noel .faq-item,
+body.holiday-mode-noel .glass-card {
+    background: rgba(15, 30, 20, 0.85) !important;
+    border: 1px solid rgba(22, 163, 74, 0.4) !important;
+    backdrop-filter: blur(10px);
+}
+
+body.holiday-mode-noel .feature-title,
+body.holiday-mode-noel .stat-label,
+body.holiday-mode-noel .process-step h3,
+body.holiday-mode-noel .faq-head span,
+body.holiday-mode-noel .h2-title,
+body.holiday-mode-noel .section-title span,
+body.holiday-mode-noel .hero-title span {
+    color: #ffffff !important;
+    background: none !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+
+
+
+
+body.holiday-mode-noel .stat-value {
+    color: #fff !important;
+}
+
+/* Text Styles - Colorful */
+body.holiday-mode-noel .hero-title,
+body.holiday-mode-noel .section-title {
+    color: #ffffff !important;
+    font-size: 3.5rem !important;
+    /* Make it big */
+    text-shadow: 0 0 10px rgba(0, 255, 42, 0.3) !important;
+    /* Subtle green glow */
+}
+
+/* Text Gradient - HERO TITLE Customization */
+body.holiday-mode-noel .text-gradient {
+    /* Gradient from White to Neon Green */
+    background: linear-gradient(180deg, #ffffff 20%, #00ff2a 100%) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    font-weight: 800 !important;
+    text-shadow: 0 0 20px rgba(0, 255, 42, 0.5) !important;
+    /* Stronger neon glow */
+    display: inline-block !important;
+}
+
+/* Typing text style */
+body.holiday-mode-noel .typing-text,
+body.holiday-mode-noel #typing-text {
+    background: linear-gradient(90deg, #fbbf24, #f59e0b) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    font-weight: 700 !important;
+}
+
+/* Search Box - Christmas Theme */
+body.holiday-mode-noel .hero-search {
+    background: rgba(15, 30, 20, 0.92) !important;
+    border-color: #16a34a !important;
+}
+
+body.holiday-mode-noel .hero-search:hover {
+    border-color: #16a34a !important;
+}
+
+body.holiday-mode-noel .search-placeholder,
+body.holiday-mode-noel .search-keywords-rotate,
+body.holiday-mode-noel .search-icon {
+    color: #d1fae5 !important;
+}
+
+/* Badges - Christmas Green Neon */
+body.holiday-mode-noel .hero-badge {
+    background: rgba(0, 255, 13, 0.15) !important;
+    border-color: rgba(0, 255, 42, 0.6) !important;
+    color: #ffffff !important;
+}
+
+body.holiday-mode-noel .hero-badge:hover {
+    border-color: rgba(0, 255, 42, 0.9) !important;
+}
+
+body.holiday-mode-noel .hero-badge-soft {
+    background: rgba(15, 30, 20, 0.85) !important;
+    border-color: rgba(22, 163, 74, 0.4) !important;
+}
+
+body.holiday-mode-noel .hero-badge-soft strong {
+    color: #ffffff !important;
+}
+
+body.holiday-mode-noel .hero-badge-soft span {
+    color: #fbbf24 !important;
+}
+
+/* Sections - Christmas Theme */
+body.holiday-mode-noel .promotion-banner,
+body.holiday-mode-noel .dashboard-section,
+body.holiday-mode-noel .cta-box {
+    background: radial-gradient(ellipse at center, rgba(255, 0, 0, 0.08) 0%, rgba(15, 30, 20, 0.92) 70%) !important;
+    border: 1px solid rgba(22, 163, 74, 0.4) !important;
+}
+
+/* Category Tabs - Christmas Theme */
+body.holiday-mode-noel .category-tab {
+    background: rgba(15, 30, 20, 0.8) !important;
+    border-color: rgba(22, 163, 74, 0.3) !important;
+    color: #d1fae5 !important;
+}
+
+body.holiday-mode-noel .category-tab:hover {
+    transform: translateY(-2px) !important;
+}
+
+body.holiday-mode-noel .category-tab.active {
+    background: #ff0000 !important;
+    border-color: #ff0000 !important;
+    color: #fff !important;
+}
+
+/* Mobile Navigation */
+body.holiday-mode-noel .kai-mobile-drawer {
+    background: linear-gradient(to bottom, #14532d, #052e16) !important;
+    border-right: 2px solid #16a34a !important;
+}
+
+body.holiday-mode-noel .drawer-header {
+    border-bottom: 1px solid rgba(22, 163, 74, 0.4) !important;
+}
+
+body.holiday-mode-noel .drawer-title {
+    color: #16a34a !important;
+}
+
+body.holiday-mode-noel .drawer-close {
+    color: #16a34a !important;
+    background: rgba(22, 163, 74, 0.15) !important;
+}
+
+body.holiday-mode-noel .drawer-menu li a:hover {
+    background: #16a34a !important;
+    color: #ffffff !important;
+}
+
+body.holiday-mode-noel .drawer-menu li a i {
+    color: #16a34a !important;
+}
+
+body.holiday-mode-noel .drawer-menu li a:hover i {
+    color: #ffffff !important;
+}
+
+
+body.holiday-mode-noel .auth-header h1 {
+    color: #ffffff !important;
+}
+
+body.holiday-mode-noel .auth-header .subtitle {
+    color: #fbbf24 !important;
+}
+
+body.holiday-mode-noel .input-wrapper {
+    background: rgba(15, 30, 20, 0.85) !important;
+}
+
+body.holiday-mode-noel .input-wrapper:focus-within {
+    background: rgba(20, 35, 25, 0.95) !important;
+    border-color: #ff0000 !important;
+}
+
+body.holiday-mode-noel .input-icon,
+body.holiday-mode-noel .password-toggle {
+    color: #fbbf24 !important;
+}
+
+body.holiday-mode-noel .checkbox-wrapper input:checked+label::before {
+    background: #ff0000 !important;
+    border-color: #ff0000 !important;
+}
+
+/* Deposit Page - Christmas Theme */
+body.holiday-mode-noel .deposit-page {
+    background-color: #0a1f1a !important;
+    background-image: linear-gradient(rgba(10, 31, 26, 0.582), rgba(0, 27, 18, 0.712)),
+        url('/kaishop/assets/images/noel/noel.jpg') !important;
+    background-size: cover !important;
+    background-attachment: fixed !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+}
+
+body.holiday-mode-noel .page-badge {
+    background: rgba(0, 255, 13, 0.15) !important;
+    border-color: rgba(0, 255, 42, 0.6) !important;
+    color: #ffffff !important;
+}
+
+body.holiday-mode-noel .page-title {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+}
+
+body.holiday-mode-noel .page-subtitle {
+    color: #d1fae5 !important;
+}
+
+body.holiday-mode-noel .payment-card {
+    color: #ffffff !important;
+    background: rgba(15, 30, 20, 0.92) !important;
+    border: 1px solid rgba(22, 163, 74, 0.4) !important;
+}
+
+body.holiday-mode-noel .payment-card label {
+    color: #d1fae5 !important;
+}
+
+body.holiday-mode-noel .amount-btn {
+    background: rgba(20, 35, 25, 0.8) !important;
+    border: 1px solid rgba(22, 163, 74, 0.3) !important;
+    color: #d1fae5 !important;
+}
+
+body.holiday-mode-noel .amount-btn:hover {
+    transform: translateY(-2px) !important;
+}
+
+body.holiday-mode-noel .amount-btn.active {
+    background: #ff0000 !important;
+    border-color: #ff0000 !important;
+    color: #ffffff !important;
+}
+
+body.holiday-mode-noel .currency-input {
+    background: rgba(20, 35, 25, 0.9) !important;
+    border: 1px solid rgba(22, 163, 74, 0.3) !important;
+    color: #ffffff !important;
+}
+
+body.holiday-mode-noel .currency-input:focus {
+    border-color: #ff0000 !important;
+}
+
+body.holiday-mode-noel .currency-suffix {
+    color: #fbbf24 !important;
+}
+
+body.holiday-mode-noel .btn-submit {
+    background: #ff0000 !important;
+    background-color: #ff0000 !important;
+    background-image: none !important;
+    color: #ffffff !important;
+}
+
+body.holiday-mode-noel .btn-submit:hover {
+    transform: translateY(-2px) !important;
+    background: #cc0000 !important;
+}
+
+body.holiday-mode-noel .qr-wrapper {
+    background: #ffffff !important;
+}
+
+body.holiday-mode-noel .info-row {
+    background: rgba(20, 35, 25, 0.8) !important;
+    border: 1px solid rgba(22, 163, 74, 0.25) !important;
+}
+
+body.holiday-mode-noel .info-label {
+    color: #fbbf24 !important;
+}
+
+body.holiday-mode-noel .info-value {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+}
+
+body.holiday-mode-noel .code-highlight {
+    font-weight: 800 !important;
+}
+
+body.holiday-mode-noel .btn-copy {
+    background: rgba(251, 191, 36, 0.15) !important;
+    color: #fbbf24 !important;
+    border: 1px solid rgba(251, 191, 36, 0.3) !important;
+}
+
+body.holiday-mode-noel .btn-copy:hover {
+    transform: translateY(-2px) !important;
+}
+
+body.holiday-mode-noel .timer-box {
+    background: rgba(255, 0, 0, 0.15) !important;
+    border-color: rgba(255, 0, 0, 0.4) !important;
+}
+
+
+body.holiday-mode-noel .btn-download-qr {
+    background: #16a34a !important;
+    color: #ffffff !important;
+}
+
+body.holiday-mode-noel .btn-download-qr:hover {
+    transform: translateY(-2px) !important;
+}
+
+#displayAmount {
+    color: #00ff5e !important;
+}
+
+
+body.holiday-mode-noel .cancel-btn {
+    background: rgba(127, 29, 29, 0.2) !important;
+    border-color: rgba(185, 28, 28, 0.4) !important;
+    color: #ff0000 !important;
+    /* Changed to pure red */
+    font-size: 1rem !important;
+    /* Made larger */
+    font-weight: 800 !important;
+    /* Made bolder */
+}
+
+body.holiday-mode-noel .cancel-btn:hover {
+    background: #991b1b !important;
+    color: #ffffff !important;
+    transform: translateY(-2px) !important;
+}

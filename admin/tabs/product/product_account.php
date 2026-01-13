@@ -95,6 +95,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $variant_stocks = $_POST['variant_stock'] ?? [];
         $variant_mins = $_POST['variant_min'] ?? [];
         $variant_maxs = $_POST['variant_max'] ?? [];
+        $variant_requires_customer_info = $_POST['variant_requires_customer_info'] ?? [];
+        $variant_customer_info_label = $_POST['variant_customer_info_label'] ?? [];
 
         if (count($variant_names) < 2) {
             $errors[] = 'Phải có ít nhất 2 variants';
@@ -107,6 +109,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $vstock = intval($variant_stocks[$idx] ?? 0);
             $vmin = intval($variant_mins[$idx] ?? 1);
             $vmax = intval($variant_maxs[$idx] ?? 2);
+            $v_requires_info = isset($variant_requires_customer_info[$idx]) ? 1 : 0;
+            $v_info_label = trim($variant_customer_info_label[$idx] ?? '');
 
             if (empty($vname)) {
                 $errors[] = "Variant #" . ($idx + 1) . ": Tên không được trống";
@@ -131,7 +135,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'discount' => $vdiscount,
                 'stock' => $vstock,
                 'min' => $vmin,
-                'max' => $vmax
+                'max' => $vmax,
+                'requires_customer_info' => $v_requires_info,
+                'customer_info_label' => $v_info_label
             ];
         }
     }
@@ -268,8 +274,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             id, product_id, variant_name, price_vnd, price_usd,
                             discount_percent, discount_amount_vnd, discount_amount_usd,
                             final_price_vnd, final_price_usd, stock,
-                            min_purchase, max_purchase, sort_order
-                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                            min_purchase, max_purchase, sort_order,
+                            requires_customer_info, customer_info_label
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     ")->execute([
                                 $variant_id,
                                 $product_id,
@@ -284,7 +291,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 $vdata['stock'],
                                 $vdata['min'],
                                 $vdata['max'],
-                                $sort_order++
+                                $sort_order++,
+                                $vdata['requires_customer_info'],
+                                $vdata['customer_info_label']
                             ]);
                 }
             }
@@ -412,7 +421,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <i class="fas fa-money-bill-wave"></i>
                             Giá Gốc (VND) <span style="color: #ef4444;">*</span>
                         </label>
-                        <input type="number" name="price_vnd" class="form-control price-input" min="1000" step="1000"
+                        <input type="number" name="price_vnd" class="form-control price-input"
                             placeholder="" oninput="calculateOneOption()">
                         <small id="oneOptionUsd"
                             style="color: #10b981; font-weight: 600; display: block; margin-top: 0.5rem;">
