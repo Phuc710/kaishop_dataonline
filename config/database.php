@@ -6,16 +6,12 @@
 
 // Load env function if not already loaded
 if (!function_exists('env')) {
-    function env($key, $default = null) {
+    function env($key, $default = null)
+    {
         return $_ENV[$key] ?? getenv($key) ?: $default;
     }
 }
 
-define('DB_HOST', env('DB_HOST', 'localhost'));
-define('DB_NAME', env('DB_NAME', 'kaishop'));
-define('DB_USER', env('DB_USER', 'root'));
-define('DB_PASS', env('DB_PASS', ''));
-define('DB_CHARSET', 'utf8mb4');
 
 try {
     $pdo = new PDO(
@@ -31,4 +27,3 @@ try {
 } catch (PDOException $e) {
     die("Lỗi kết nối database: " . $e->getMessage());
 }
-?>

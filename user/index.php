@@ -93,7 +93,7 @@ $pageTitle = "Tài Khoản - " . SITE_NAME;
                     $frameImgSidebar = ($user['role'] === 'admin') ? 'khung_admin.webp' : 'khung_user.gif';
                     ?>
                     <div class="user-avatar-wrapper"
-                        style="position: relative; width: 96px; height: 96px; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center;">
+                        style="position: relative; width: 96px; height: 96px; display: flex; align-items: center; justify-content: center;">
                         <img src="<?= getUserAvatar($user) ?>" alt="Avatar" class="user-avatar-img"
                             style="width: 70px; height: 70px; object-fit: cover; border-radius: 50%; z-index: 1;">
                         <img src="<?= asset('images/' . $frameImgSidebar) ?>" alt="Frame" class="user-avatar-frame"
@@ -631,6 +631,9 @@ $pageTitle = "Tài Khoản - " . SITE_NAME;
             display: none !important;
         }
     </style>
+
+    <!-- Code Protection -->
+    <script src="<?= asset('js/code-protection.js') ?>"></script>
 </body>
 
 </html>

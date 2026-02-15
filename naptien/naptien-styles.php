@@ -202,6 +202,40 @@
         color: var(--primary-light);
     }
 
+    .amount-btn {
+        position: relative;
+        overflow: visible;
+    }
+
+    .bonus-badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        font-size: 0.7rem;
+        padding: 2px 6px;
+        border-radius: 8px;
+        font-weight: 800;
+        box-shadow: 0 2px 5px rgba(41, 128, 185, 0.4);
+        z-index: 10;
+        animation: badgePulse 2s infinite;
+    }
+
+    @keyframes badgePulse {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.1);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
     /* Input Area */
     .input-area {
         margin-bottom: 1.5rem;
@@ -406,8 +440,7 @@
         transition: var(--transition);
     }
 
-    .cancel-btn:hover {
-    }
+    .cancel-btn:hover {}
 
     /* Responsive */
     @media (max-width: 640px) {
@@ -425,5 +458,111 @@
             width: 100%;
             justify-content: space-between;
         }
+    }
+
+    /* ============================================
+       THEME-AWARE PROMOTION CARD STYLES
+       ============================================ */
+
+    /* Light Mode */
+    [data-theme="light"] .promotion-card {
+        background: #0082ff4d !important;
+    }
+
+    /* Noel Mode */
+    body.holiday-mode-noel .promotion-card {
+        background: #2980b9 !important;
+        border: 1px solid rgba(255, 215, 0, 0.3) !important;
+    }
+
+    body.holiday-mode-noel .promotion-card h3 {
+        color: #ffffff !important;
+    }
+
+    body.holiday-mode-noel .promotion-card .promo-items>div {
+        background: rgba(255, 255, 255, 0.15) !important;
+        border: 1px solid rgba(255, 215, 0, 0.2);
+    }
+
+    body.holiday-mode-noel .promotion-card .promo-items span {
+        color: white !important;
+    }
+
+    body.holiday-mode-noel .promotion-card .promo-items span[style*="background: white"] {
+        background: #ffffff !important;
+        color: #2980b9 !important;
+    }
+
+    body.holiday-mode-noel .bonus-badge {
+        background: linear-gradient(135deg, #ffd700, #fbbf24) !important;
+        color: #047857 !important;
+    }
+
+    /* Halloween Mode */
+    body.holiday-mode-halloween .promotion-card {
+        background: #2980b9 !important;
+        border: none !important;
+    }
+
+    body.holiday-mode-halloween .promotion-card h3 {
+        color: #ffffff !important;
+        text-shadow: none;
+    }
+
+    body.holiday-mode-halloween .promotion-card .promo-items>div {
+        background: rgba(255, 255, 255, 0.2) !important;
+        border: none;
+    }
+
+    body.holiday-mode-halloween .promotion-card .promo-items span {
+        color: white !important;
+    }
+
+    body.holiday-mode-halloween .promotion-card .promo-items span[style*="background: white"] {
+        background: #ffffff !important;
+        color: #2980b9 !important;
+    }
+
+    body.holiday-mode-halloween .bonus-badge {
+        background: linear-gradient(135deg, #3498db, #2980b9) !important;
+        color: white !important;
+        border: none;
+    }
+
+    /* Tết Mode */
+    body.holiday-mode-tet .promotion-card {
+        background: #2980b9 !important;
+        border: 2px solid #ffd700 !important;
+    }
+
+    body.holiday-mode-tet .promotion-card h3 {
+        color: #ffffff !important;
+        font-weight: 800;
+    }
+
+    body.holiday-mode-tet .promotion-card .promo-items>div {
+        background: rgba(255, 255, 255, 0.2) !important;
+        border: none;
+    }
+
+    body.holiday-mode-tet .promotion-card .promo-items span {
+        color: white !important;
+    }
+
+    body.holiday-mode-tet .promotion-card .promo-items span[style*="background: white"] {
+        background: #ffd700 !important;
+        color: #2980b9 !important;
+        font-weight: 800;
+    }
+
+    body.holiday-mode-tet .bonus-badge {
+        background: linear-gradient(135deg, #ffd700, #ffed4e) !important;
+        color: #8b0000 !important;
+        font-weight: 900;
+        border: 1px solid #c8102e;
+    }
+
+    body.holiday-mode-tet .promotion-card strong {
+        color: white !important;
     }
 </style>

@@ -1,283 +1,403 @@
 <?php
 /**
- * Popup Notification Component
- * Hiển thị popup thông báo với overlay mờ trên trang chủ
+ * Popup Notification Component - Multi-mode (Default, Image)
+ * Version: 6.0
  */
 
-// Get active popups from database
-$active_popups = [];
-try {
-    $stmt = $pdo->query("SELECT * FROM popup_notifications WHERE is_active = 1 ORDER BY display_order ASC LIMIT 1");
-    $active_popups = $stmt->fetchAll();
-} catch (Exception $e) {
-    // Table might not exist yet, ignore error
+// Get popup settings
+$active_template = get_setting('active_popup_template', '1');
+
+// If template is 0 (disabled), don't show anything
+if ($active_template === '0') {
+    return;
 }
 
-if (empty($active_popups)) {
-    return; // Don't display anything if no active popups
-}
+$siteName = get_setting('site_name', 'Kaishop');
+$telegramLink = get_setting('telegram_link', 'https://t.me/Biinj');
+$popupImage = get_setting('popup_custom_image', '');
 
-$popup = $active_popups[0]; // Get the first popup
+// If template 2 (image) but no image, fallback to default
+if ($active_template === '2' && empty($popupImage)) {
+    $active_template = '1';
+}
 ?>
 
-<!-- Popup Notification -->
-<div id="notification-popup-overlay" class="notification-popup-overlay" style="display:none;">
-    <div class="notification-popup-container">
-        <button class="popup-close-btn" onclick="closeNotificationPopup()">
-            <i class="fas fa-times"></i>
-        </button>
+<!-- Popup Notification Overlay -->
+<div id="notification-popup-overlay" class="light-popup-overlay" style="display:none;">
+    <div class="light-popup-container">
+        <!-- Header -->
+        <div class="light-popup-header">
+            <h3 class="light-popup-title">Thông báo</h3>
+            <button class="light-popup-close" onclick="closeNotificationPopup()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
 
-        <?php if (!empty($popup['link'])): ?>
-            <a href="<?= e($popup['link']) ?>" target="_blank" class="popup-content-link">
-            <?php endif; ?>
+        <!-- Content -->
+        <div class="light-popup-body">
 
-            <div class="popup-content">
-                <?php if (!empty($popup['image'])): ?>
-                    <div class="popup-image-bg" style="background-image: url('/kaishop/<?= e($popup['image']) ?>')">
-                        <div class="popup-overlay-gradient"></div>
-                        <div class="popup-text-overlay">
-                            <?php if (!empty($popup['title'])): ?>
-                                <div id="popup-html-content-wrapper">
-                                    <div class="popup-content-html"><?= nl2br($popup['title']) ?></div>
-                                        </div>
-                                <?php endif; ?>
+            <?php if ($active_template === '1'): // Default Popup ?>
+                <div class="lp-content">
+                    <!-- Fire GIF Header -->
+                    <div class="lp-gifs-row">
+                        <img src="https://media.giphy.com/media/kEhKBVTIMz6c10g3Lz/giphy.gif" alt="fire"
+                            class="lp-gif-fire">
+                        <span class="lp-text-teal lp-bold lp-uppercase">DỊCH VỤ THIẾT KẾ WEB - TÀI NGUYÊN - TỐI ƯU
+                            SEO</span>
+                        <img src="https://media.giphy.com/media/kEhKBVTIMz6c10g3Lz/giphy.gif" alt="fire"
+                            class="lp-gif-fire">
+                    </div>
+
+                    <p class="lp-text-red lp-bold">Chân thành cảm ơn quý khách đã tin tưởng
+                        <span class="lp-text-red"><?= htmlspecialchars($siteName) ?></span>!
+                    </p>
+
+                    <p class="lp-mt-2">
+                        Tham gia nhóm Tele: <a href="<?= htmlspecialchars($telegramLink) ?>" target="_blank"
+                            class="lp-link-red">TẠI ĐÂY</a>
+                    </p>
+                    <strong class="lp-text-blue lp-bold">NHÓM SHARE TOOL, FILE, BOT ZALO, TELE + SOUCER WEB</strong>
+
+
+                    <p class="lp-text-red lp-bold"><?= htmlspecialchars($siteName) ?> chuyên cung cấp Tài Nguyên, dịch vụ
+                        thiết kế
+                        website MMO</p>
+
+                    <!-- Deposit Promotion Box -->
+                    <div class="lp-promo-box lp-mt-2"
+                        style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border: 2px dashed #2980b9;">
+                        <div
+                            style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px;">
+                            <img src="https://media.giphy.com/media/xje7ITeGqNAFWyvZ7a/giphy.gif" alt="money"
+                                style="width: 24px; height: 24px; object-fit: contain;">
+                            <span class="lp-text-blue lp-bold" style="font-size: 1.1em;"> KHUYẾN MÃI NẠP TIỀN </span>
+                            <img src="https://media.giphy.com/media/xje7ITeGqNAFWyvZ7a/giphy.gif" alt="money"
+                                style="width: 24px; height: 24px; object-fit: contain;">
+                        </div>
+                        <div style="display: grid; gap: 6px; margin: 10px 0;">
+                            <div
+                                style="background: rgba(41, 128, 185, 0.1); padding: 6px 10px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
+                                <span style="color: #333; font-weight: 600;">Nạp từ 100.000đ</span>
+                                <span
+                                    style="background: #2980b9; color: white; padding: 2px 8px; border-radius: 12px; font-weight: 800; font-size: 0.9em;">+10%</span>
                             </div>
+                            <div
+                                style="background: rgba(41, 128, 185, 0.1); padding: 6px 10px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
+                                <span style="color: #333; font-weight: 600;">Nạp từ 200.000đ</span>
+                                <span
+                                    style="background: #2980b9; color: white; padding: 2px 8px; border-radius: 12px; font-weight: 800; font-size: 0.9em;">+15%</span>
                             </div>
-                <?php else: ?>
-                        <!-- Fallback for popups without image - use background code -->
-
-                                                    <div class="popup-image-bg" <?php if (!empty($popup['background_code'])): ?>style="<?= htmlspecialchars($popup['background_code']) ?>"<?php endif; ?>>
-                          <div   class="popup-text-overlay">
-                                <?php if (!empty($popup['title'])): ?>
-                                 <div    id="popup-html-content-wrapper">
-                                        <div class="popup-content-html"><?= nl2br($popup['title']) ?></div>
-                                    </div>
-                                <?php endif; ?>
+                            <div
+                                style="background: rgba(41, 128, 185, 0.1); padding: 6px 10px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
+                                <span style="color: #333; font-weight: 600;">Nạp từ 500.000đ</span>
+                                <span
+                                    style="background: #2980b9; color: white; padding: 2px 8px; border-radius: 12px; font-weight: 800; font-size: 0.9em;">+20%</span>
                             </div>
                         </div>
-                    <?php endif; ?>
+                    </div>
+
+                    <!-- Sale GIF + Policy Link -->
+                    <div class="lp-policy-row lp-mt-2">
+                        <img src="https://media.giphy.com/media/KBlX7iF04rYrtuvSHc/giphy.gif" alt="sale"
+                            class="lp-gif-sale">
+                        <span class="lp-text-teal lp-bold">Chính sách mua hàng của website: <a
+                                href="<?= url('chinhsach') ?>" target="_blank" class="lp-link-red">Tại Đây</a></span>
+                        <img src="https://media.giphy.com/media/KBlX7iF04rYrtuvSHc/giphy.gif" alt="sale"
+                            class="lp-gif-sale">
+                    </div>
+                    <p class="lp-text-muted">(Vui lòng đọc kĩ trước khi mua sản phẩm)</p>
+                </div>
+
+            <?php elseif ($active_template === '2'): // Image Popup ?>
+                <div class="lp-content lp-image-popup">
+                    <img src="<?= BASE_URL ?>/<?= htmlspecialchars($popupImage) ?>" alt="Popup" class="lp-popup-image">
+                </div>
+            <?php endif; ?>
+
+            <!-- Action Button -->
+            <div class="lp-footer-action">
+                <button onclick="closePopupFor2Hours()" class="lp-btn-close-2h">
+                    Không hiển thị lại trong 2 giờ
+                </button>
             </div>
- 
-           <?php if (!empty($popup['link'])): ?>
-                </a>
-        <?php endif; ?>
+        </div>
     </div>
 </div>
 
 <style>
-    .notification-popup-overlay {
+    /* ===== LIGHT POPUP STYLES ===== */
+    .light-popup-overlay {
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.85);
+        background: rgba(0, 0, 0, 0.5);
         z-index: 99999;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 1.5rem;
-        animation: fadeIn 0.4s ease;
-        backdrop-filter: blur(8px);
+        padding: 1rem;
+        animation: lpFadeIn 0.3s ease-out;
     }
 
-    .notification-popup-container {
-        position: relative;
-        width: 70vw;
-        max-width: 900px;
-        max-height: 90vh;
-        animation: popupSlideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .popup-close-btn {
-        position: absolute;
-        top: -18px;
-        right: -18px;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #ef4444, #dc2626);
-        border: 4px solid rgba(15, 23, 42, 0.8);
-        color: #ffffff;
-        font-size: 1.4rem;
-        cursor: pointer;
-        z-index: 10;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s ease;
-    }
-
-    .popup-close-btn:hover {
-        transform: rotate(90deg) scale(1.15);
-        background: linear-gradient(135deg, #dc2626, #b91c1c);
-    }
-
-    .popup-content-link {
-        display: block;
-        text-decoration: none;
-        color: inherit;
-    }
-
-    .popup-content {
-        border: 2px solid rgba(124, 58, 237, 0.4);
-        border-radius: 20px;
+    .light-popup-container {
+        width: 100%;
+        max-width: 650px;
+        /* Slightly wider */
+        background: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         overflow: hidden;
-        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7),
-            0 0 100px rgba(124, 58, 237, 0.3);
-        background: transparent;
+        animation: lpScaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        display: flex;
+        flex-direction: column;
     }
 
-    .popup-image-bg {
-        position: relative;
-        width: 100%;
-        min-height: 450px;
-        max-height: none;
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
+    /* Header */
+    .light-popup-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .light-popup-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #333;
+        margin: 0;
+    }
+
+    .light-popup-close {
+        background: #f0f0f0;
+        border: none;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        color: #666;
         display: flex;
         align-items: center;
         justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 0.9rem;
     }
 
-    .popup-overlay-gradient {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        backdrop-filter: blur(0px);
+    .light-popup-close:hover {
+        background: #e0e0e0;
+        color: #333;
     }
 
-    .popup-text-overlay {
-        position: relative;
-        z-index: 2;
+    /* Body */
+    .light-popup-body {
+        padding: 20px 30px;
         text-align: center;
-        max-width: 100%;
-        width: 100%;
     }
 
-    .popup-title-overlay {
-        font-size: 2.5rem;
-        font-weight: 900;
-        color: #ffffff;
-        margin: 0 0 1.5rem;
-        line-height: 1.2;
-        text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8),
-            0 0 60px rgba(124, 58, 237, 0.6),
-            0 2px 4px rgba(0, 0, 0, 0.4);
-        letter-spacing: -0.02em;
+    .lp-content p {
+        line-height: 1.6;
+        font-size: 1rem;
+        color: #333;
     }
 
-    .popup-description-overlay {
-        font-size: 1.25rem;
-        color: #ffffff;
-        margin: 0;
-        line-height: 1.8;
-        font-weight: 600;
-        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8),
-            0 0 40px rgba(249, 115, 22, 0.4),
-            0 1px 3px rgba(0, 0, 0, 0.5);
+    .lp-mt-2 {
+        margin-top: 15px !important;
     }
 
-    /* 1. Reset all global styles inside popup */
-    #popup-html-content-wrapper {
-        all: initial;
-        /* Reset toàn bộ */
-        font-family: inherit;
-        /* Giữ lại font chữ */
-        display: block;
-        width: 100%;
-        box-sizing: border-box;
+    /* Text Helpers */
+    .lp-bold {
+        font-weight: 700;
     }
 
-    #popup-html-content-wrapper * {
-        box-sizing: border-box;
+    .lp-uppercase {
+        text-transform: uppercase;
     }
 
-    /* 2. Style riêng cho các thẻ chuẩn HTML trong popup */
-    #popup-html-content-wrapper h1,
-    #popup-html-content-wrapper h2,
-    #popup-html-content-wrapper h3,
-    #popup-html-content-wrapper p,
-    #popup-html-content-wrapper div,
-    #popup-html-content-wrapper span {
-        margin: 0;
-        padding: 0;
-        border: 0;
-        vertical-align: baseline;
-        background: transparent;
-        line-height: 1.5;
+    .lp-italic {
+        font-style: italic;
+    }
+
+    .lp-text-orange {
+        color: #f59e0b;
+    }
+
+    .lp-text-red {
+        color: #ef4444;
+    }
+
+    .lp-text-green {
+        color: #10b981;
+    }
+
+    .lp-text-black {
+        color: #000;
+    }
+
+    .lp-text-teal {
+        color: #16a085;
+    }
+
+    .lp-text-blue {
+        color: #2980b9;
+    }
+
+    .lp-link-red {
+        color: #ef4444;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .lp-link-red:hover {
+        text-decoration: underline;
+    }
+
+    /* Promo Box */
+    .lp-promo-box {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        border: 2px dashed #f59e0b;
+        border-radius: 10px;
+        padding: 10px 15px;
+        margin: 12px 0;
+    }
+
+    .lp-promo-code {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
         color: #fff;
-        /* Mặc định text trắng */
-        text-shadow: none;
-        /* Xóa shadow mặc định của theme */
-        letter-spacing: normal;
-    }
-
-    #popup-html-content-wrapper h1 {
-        font-size: 2.5em;
-        font-weight: bold;
-        margin-bottom: 0.5em;
-    }
-
-    #popup-html-content-wrapper h2 {
-        font-size: 2em;
-        font-weight: bold;
-        margin-bottom: 0.5em;
-    }
-
-    #popup-html-content-wrapper p {
+        font-weight: 800;
+        padding: 4px 12px;
+        border-radius: 6px;
         font-size: 1.1em;
-        margin-bottom: 1em;
+        letter-spacing: 1px;
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+        animation: lpPulse 1.5s ease-in-out infinite;
     }
 
-    /* 3. Class Helper Riêng Biệt (Dùng ID để ưu tiên tuyệt đối) */
+    @keyframes lpPulse {
 
-    /* Gradient Text */
-    #popup-html-content-wrapper .popup-gradient-text {
-        font-size: 4rem !important;
-        font-weight: 900 !important;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-        color: transparent;
-        /* Fallback */
-        margin-bottom: 1rem;
-        filter: drop-shadow(0 4px 8px rgba(102, 126, 234, 0.5));
-        line-height: 1.2;
-        display: inline-block;
-        /* Fix lỗi text-clip trên một số trình duyệt */
-        width: 100%;
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
     }
 
-    /* White Text */
-    #popup-html-content-wrapper .popup-text-white {
-        color: #fff !important;
-        font-size: 1.3rem !important;
-        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8) !important;
-        margin: 0.5rem 0;
-        font-weight: 500;
+    /* Footer Button */
+    .lp-footer-action {
+        margin-top: 25px;
+        padding-top: 15px;
+        border-top: 1px solid #f0f0f0;
     }
 
-    /* Glow Text */
-    #popup-html-content-wrapper .popup-text-glow {
-        color: #fff !important;
-        font-size: 3.5rem !important;
-        font-weight: bold;
-        text-shadow:
-            0 0 10px #fff,
-            0 0 20px #fff,
-            0 0 30px #e60073,
-            0 0 40px #e60073,
-            0 0 50px #e60073 !important;
-        margin: 0;
-        line-height: 1.2;
+    .lp-btn-close-2h {
+        background: #ff6900;
+        border-radius: 10px;
+        border: 1px solid #ff6900;
+        -webkit-transition: all 0.7s;
+        -moz-transition: all 0.7s;
+        -o-transition: all 0.7s;
+        transition: all 0.7s;
+        padding: 8px 18px;
+        color: #fff;
+        font-weight: 600;
+        font-size: 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
     }
 
-    @keyframes fadeIn {
+    .lp-btn-close-2h:hover {
+        background: #e55d00;
+        border-color: #e55d00;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 105, 0, 0.4);
+    }
+
+    .lp-stickers {
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    /* GIF Styles */
+    .lp-gifs-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .lp-gif-fire {
+        width: 30px;
+        height: 30px;
+        object-fit: contain;
+    }
+
+    .lp-gif-sale {
+        width: 28px;
+        height: 28px;
+        object-fit: contain;
+    }
+
+    .lp-policy-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 8px 12px;
+        background: linear-gradient(135deg, #fff3cd 0%, #ffe4a0 100%);
+        border-radius: 8px;
+        border: 1px dashed #f59e0b;
+    }
+
+    .lp-gif-sticker {
+        width: 35px;
+        height: 35px;
+        object-fit: contain;
+        animation: lpBounce 1.5s ease-in-out infinite;
+    }
+
+    .lp-text-muted {
+        color: #888;
+        font-size: 0.85rem;
+        font-style: italic;
+        margin-top: 5px;
+    }
+
+    /* Image Popup */
+    .lp-image-popup {
+        text-align: center;
+        padding: 0;
+    }
+
+    .lp-popup-image {
+        max-width: 100%;
+        max-height: 400px;
+        object-fit: contain;
+        border-radius: 8px;
+    }
+
+    @keyframes lpBounce {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-5px);
+        }
+    }
+
+    /* Animations */
+    @keyframes lpFadeIn {
         from {
             opacity: 0;
         }
@@ -287,105 +407,353 @@ $popup = $active_popups[0]; // Get the first popup
         }
     }
 
-    @keyframes popupSlideUp {
+    @keyframes lpScaleIn {
         from {
             opacity: 0;
-            transform: translateY(50px) scale(0.9);
+            transform: scale(0.95);
         }
 
         to {
             opacity: 1;
-            transform: translateY(0) scale(1);
+            transform: scale(1);
         }
     }
 
-    /* Responsive */
+    @keyframes lpFadeOut {
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    /* Mobile Responsive - Compact to avoid scrolling */
     @media (max-width: 768px) {
-        .notification-popup-overlay {
-            padding: 1rem;
+        .light-popup-overlay {
+            padding: 0.3rem;
         }
 
-        .notification-popup-container {
-            width: 95vw;
-            max-width: 95vw;
+        .light-popup-container {
+            max-width: 95%;
+            max-height: 92vh;
+            overflow-y: auto;
         }
 
-        .popup-image-bg {
-            min-height: 250px;
-            padding: 2rem 1.5rem;
+        .light-popup-header {
+            padding: 8px 12px;
         }
 
-        .popup-title-overlay {
-            font-size: 1.75rem;
+        .light-popup-title {
+            font-size: 0.95rem;
         }
 
-        .popup-description-overlay {
-            font-size: 1rem;
+        .light-popup-body {
+            padding: 10px 15px;
         }
 
-        .popup-close-btn {
-            width: 42px;
-            height: 42px;
-            font-size: 1.1rem;
-            top: -14px;
-            right: -14px;
-            border-width: 3px;
+        .lp-content p {
+            font-size: 0.8rem;
+            margin: 5px 0;
+            line-height: 1.4;
+        }
+
+        .lp-content strong {
+            font-size: 0.8rem;
+        }
+
+        /* GIF sizes for mobile */
+        .lp-gif-fire {
+            width: 18px;
+            height: 18px;
+        }
+
+        .lp-gif-sale {
+            width: 16px;
+            height: 16px;
+        }
+
+        .lp-gif-sticker {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Layout adjustments */
+        .lp-gifs-row {
+            gap: 5px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+
+        .lp-gifs-row span {
+            font-size: 0.7rem;
+            line-height: 1.2;
+        }
+
+        .lp-policy-row {
+            gap: 4px;
+            padding: 5px 8px;
+            flex-wrap: wrap;
+            margin-top: 8px !important;
+        }
+
+        .lp-policy-row span {
+            font-size: 0.7rem;
+        }
+
+        /* Promo box mobile */
+        .lp-promo-box {
+            padding: 6px 10px;
+            margin: 8px 0;
+        }
+
+        .lp-promo-box div[style*="display: flex"] {
+            gap: 4px !important;
+            margin-bottom: 5px !important;
+        }
+
+        .lp-promo-box div[style*="display: flex"] img {
+            width: 16px !important;
+            height: 16px !important;
+        }
+
+        .lp-promo-box div[style*="display: flex"] span {
+            font-size: 0.8em !important;
+        }
+
+        .lp-promo-box div[style*="display: grid"] {
+            gap: 4px !important;
+            margin: 6px 0 !important;
+        }
+
+        .lp-promo-box div[style*="display: grid"]>div {
+            padding: 4px 6px !important;
+        }
+
+        .lp-promo-box div[style*="display: grid"]>div span:first-child {
+            font-size: 0.7rem;
+        }
+
+        .lp-promo-box div[style*="display: grid"]>div span:last-child {
+            font-size: 0.7em !important;
+            padding: 1px 5px !important;
+        }
+
+        /* Footer button */
+        .lp-btn-close-2h {
+            width: 100%;
+            padding: 8px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Image popup */
+        .lp-popup-image {
+            max-height: 280px;
+        }
+
+        .lp-footer-action {
+            margin-top: 10px;
+            padding-top: 10px;
+        }
+
+        .lp-mt-2 {
+            margin-top: 8px !important;
+        }
+
+        .lp-text-muted {
+            font-size: 0.7rem;
+            margin-top: 3px;
         }
     }
 
     @media (max-width: 480px) {
-        .popup-image-bg {
-            min-height: 200px;
-            padding: 1.5rem 1rem;
+        .light-popup-overlay {
+            padding: 0.2rem;
         }
 
-        .popup-title-overlay {
-            font-size: 1.4rem;
+        .light-popup-container {
+            max-width: 98%;
+            border-radius: 6px;
+            max-height: 94vh;
         }
 
-        .popup-description-overlay {
-            font-size: 0.9rem;
+        .light-popup-header {
+            padding: 6px 10px;
+        }
+
+        .light-popup-title {
+            font-size: 0.85rem;
+        }
+
+        .light-popup-close {
+            width: 24px;
+            height: 24px;
+            font-size: 0.75rem;
+        }
+
+        .light-popup-body {
+            padding: 8px 12px;
+        }
+
+        .lp-content p {
+            font-size: 0.72rem;
+            line-height: 1.3;
+            margin: 4px 0;
+        }
+
+        .lp-content strong {
+            font-size: 0.72rem;
+        }
+
+        /* Extra small GIFs */
+        .lp-gif-fire {
+            width: 14px;
+            height: 14px;
+        }
+
+        .lp-gif-sale {
+            width: 14px;
+            height: 14px;
+        }
+
+        .lp-gifs-row {
+            margin-bottom: 4px;
+            gap: 4px;
+        }
+
+        .lp-gifs-row span {
+            font-size: 0.65rem;
+        }
+
+        .lp-policy-row {
+            padding: 4px 6px;
+            gap: 3px;
+        }
+
+        .lp-policy-row span {
+            font-size: 0.65rem;
+        }
+
+        .lp-mt-2 {
+            margin-top: 6px !important;
+        }
+
+        /* Promo box adjustments */
+        .lp-promo-box {
+            padding: 5px 8px;
+            margin: 6px 0;
+        }
+
+        .lp-promo-box div[style*="display: flex"] {
+            margin-bottom: 4px !important;
+        }
+
+        .lp-promo-box div[style*="display: flex"] img {
+            width: 14px !important;
+            height: 14px !important;
+        }
+
+        .lp-promo-box div[style*="display: flex"] span {
+            font-size: 0.7em !important;
+        }
+
+        .lp-promo-box div[style*="display: grid"] {
+            gap: 3px !important;
+            margin: 4px 0 !important;
+        }
+
+        .lp-promo-box div[style*="display: grid"]>div {
+            padding: 3px 5px !important;
+        }
+
+        .lp-promo-box div[style*="display: grid"]>div span:first-child {
+            font-size: 0.65rem;
+        }
+
+        .lp-promo-box div[style*="display: grid"]>div span:last-child {
+            font-size: 0.65em !important;
+        }
+
+        .lp-btn-close-2h {
+            padding: 7px 10px;
+            font-size: 0.75rem;
+        }
+
+        .lp-popup-image {
+            max-height: 220px;
+            border-radius: 6px;
+        }
+
+        .lp-text-muted {
+            font-size: 0.65rem;
+        }
+
+        .lp-footer-action {
+            margin-top: 8px;
+            padding-top: 8px;
+        }
+    }
+
+    /* Very small screens */
+    @media (max-width: 360px) {
+        .light-popup-title {
+            font-size: 0.8rem;
+        }
+
+        .lp-content p {
+            font-size: 0.68rem;
+        }
+
+        .lp-gif-fire {
+            width: 12px;
+            height: 12px;
+        }
+
+        .lp-gifs-row span {
+            font-size: 0.6rem;
+        }
+
+        .lp-promo-box div[style*="display: grid"]>div span:first-child {
+            font-size: 0.6rem;
+        }
+
+        .lp-btn-close-2h {
+            font-size: 0.7rem;
+            padding: 6px 10px;
         }
     }
 </style>
 
 <script>
-    // Show popup - only close on X button, save to session
     (function () {
-        const popupId = 'popup_<?= $popup['id'] ?>';
+        const popupKey = 'kaishop_popup_closed_until';
 
-        // Check if user has closed this popup before (in this session)
-        if (sessionStorage.getItem(popupId + '_closed')) {
-            return; // Don't show popup
+        // Check local storage for timestamp
+        const closedUntil = localStorage.getItem(popupKey);
+        if (closedUntil && new Date().getTime() < parseInt(closedUntil)) {
+            return; // Still within closed period
         }
 
-        // Show popup immediately (no delay)
+        // Show popup
         document.getElementById('notification-popup-overlay').style.display = 'flex';
     })();
 
     function closeNotificationPopup() {
-        const popupId = 'popup_<?= $popup['id'] ?>';
         const overlay = document.getElementById('notification-popup-overlay');
-
-        // Save to session that user closed this popup
-        sessionStorage.setItem(popupId + '_closed', 'true');
-
-        // Animate and hide
-        overlay.style.animation = 'fadeOut 0.3s ease';
-        setTimeout(function () {
+        overlay.style.animation = 'lpFadeOut 0.2s ease forwards';
+        setTimeout(() => {
             overlay.style.display = 'none';
-        }, 300);
+        }, 200);
+    }
+
+    function closePopupFor2Hours() {
+        const popupKey = 'kaishop_popup_closed_until';
+
+        // Set expiry 2 hours from now
+        const expiry = new Date().getTime() + (2 * 60 * 60 * 1000);
+        localStorage.setItem(popupKey, expiry.toString());
+
+        closeNotificationPopup();
     }
 </script>
-
-<style>
-    @keyframes fadeOut {
-        from {
-            opacity: 1;
-        }
-
-        to {
-            opacity: 0;
-        }
-    }
-</style>

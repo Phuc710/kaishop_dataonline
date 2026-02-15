@@ -92,7 +92,21 @@ Khi chuyển domain, chỉ cần sửa file `.env`:
 APP_URL=https://your-new-domain.com
 ```
 
-Không cần sửa code PHP!
+**Lưu ý quan trọng:**
+- Tất cả URL trong code đã sử dụng biến `BASE_URL` từ file `.env`
+- Không hard-code domain trực tiếp trong code PHP/HTML
+- Khi cần sử dụng URL trong code, dùng: `<?= BASE_URL ?>` hoặc hàm `url()`
+- Trong JavaScript, dùng: `window.APP_URL` (đã được define trong HeaderComponent)
+
+**Ví dụ sử dụng:**
+```php
+// ✅ ĐÚNG - Dùng biến môi trường
+<a href="<?= BASE_URL ?>/sanpham">Sản phẩm</a>
+<img src="<?= BASE_URL ?>/assets/images/logo.png">
+
+// ❌ SAI - Hard-code domain
+<a href="https://kaishop.id.vn/sanpham">Sản phẩm</a>
+```
 
 ## 🔒 Bảo Mật
 

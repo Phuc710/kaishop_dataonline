@@ -79,6 +79,12 @@ class HeaderComponent
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+            <?php if (defined('GOOGLE_TRANSLATE_NOTRANSLATE') && GOOGLE_TRANSLATE_NOTRANSLATE): ?>
+                <meta name="google" content="notranslate">
+            <?php endif; ?>
+            <?php if (defined('GOOGLE_TRANSLATE_CUSTOMIZATION')): ?>
+                <meta name="google-translate-customization" content="<?= GOOGLE_TRANSLATE_CUSTOMIZATION ?>">
+            <?php endif; ?>
             <title><?= $GLOBALS['pageTitle'] ?? $this->siteName ?></title>
             <meta name="description"
                 content="<?= $GLOBALS['pageDescription'] ?? 'KaiShop - Website bán tài khoản uy tín #1 Việt Nam, giao dịch tự động 24/7, bảo hành rõ ràng, hỗ trợ nhanh chóng.' ?>">
@@ -152,7 +158,7 @@ class HeaderComponent
                         break;
                 }
                 if ($cssFile):
-                ?>
+                    ?>
                     <link rel="stylesheet" href="<?= asset('css/' . $cssFile) ?>?v=<?= time() ?>">
                 <?php endif; ?>
                 <script src="<?= asset('js/holiday-effects.js') ?>?v=<?= time() ?>"></script>
@@ -227,7 +233,8 @@ class HeaderComponent
 
                         <!-- Currency Switcher -->
                         <li class="desktop-only">
-                            <button id="currencySwitcher" class="kai-btn kai-btn-icon kai-currency-btn" title="Chuyển tiền tệ">
+                            <button id="currencySwitcher" class="kai-btn kai-btn-icon kai-currency-btn notranslate"
+                                title="Chuyển tiền tệ">
                                 <?php if ($currentCurrency === 'VND'): ?>
                                     <?php if ($vnFlagExists): ?>
                                         <img id="currencyFlag" src="<?= asset('images/vn.png') ?>" alt="VND">
@@ -321,25 +328,33 @@ class HeaderComponent
                 <!-- Mobile Drawer -->
                 <div class="kai-mobile-drawer" id="mobileDrawer">
                     <div class="drawer-header">
-                        <span class="drawer-title">Menu</span>
+                        <div class="drawer-header-brand">
+                            <img src="<?= asset($this->siteLogo) ?>" alt="<?= $this->siteName ?>" class="drawer-logo">
+                        </div>
                         <button class="drawer-close" id="drawerClose"><i class="fas fa-times"></i></button>
                     </div>
 
                     <div class="drawer-content">
                         <?php if (isLoggedIn()): ?>
-                            <div class="drawer-user-card">
-                                <?php
-                                $userRoleId = $this->currentUser['role'] ?? 'user';
-                                $frameImgId = ($userRoleId === 'admin') ? 'khung_admin.webp' : 'khung_user.gif';
-                                ?>
-                                <div class="kai-avatar-wrapper" style="width: 60px; height: 60px;">
-                                    <img src="<?= getUserAvatar($this->currentUser) ?>" alt="Avatar" class="kai-user-icon"
-                                        style="width: 42px; height: 42px;">
-                                    <img src="<?= asset('images/' . $frameImgId) ?>" alt="Frame" class="kai-avatar-frame">
+                            <!-- User Profile Card -->
+                            <div class="drawer-profile-card">
+                                <div class="drawer-profile-main">
+                                    <div class="drawer-avatar-wrapper">
+                                        <?php
+                                        $userRoleId = $this->currentUser['role'] ?? 'user';
+                                        $frameImgId = ($userRoleId === 'admin') ? 'khung_admin.webp' : 'khung_user.gif';
+                                        ?>
+                                        <img src="<?= getUserAvatar($this->currentUser) ?>" alt="Avatar" class="drawer-avatar">
+                                        <img src="<?= asset('images/' . $frameImgId) ?>" alt="Frame" class="drawer-avatar-frame">
+                                    </div>
+                                    <div class="drawer-user-details">
+                                        <h4 class="drawer-username"><?= e($this->currentUser['username']) ?></h4>
+                                        <div class="drawer-user-badge"><?= ucfirst($userRoleId) ?></div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h4><?= e($this->currentUser['username']) ?></h4>
-                                    <span class="kai-wallet" style="font-size: 14px; font-weight: 700; color: #10b981;">
+                                <div class="drawer-balance-card">
+                                    <span class="balance-label">Số dư hiện tại</span>
+                                    <div class="balance-amount">
                                         <i class="fas fa-wallet"></i>
                                         <?php
                                         if ($currentCurrency === 'USD'):
@@ -350,73 +365,93 @@ class HeaderComponent
                                         <?php else: ?>
                                             <?= number_format($this->currentUser['balance_vnd'] ?? 0) ?>đ
                                         <?php endif; ?>
-                                    </span>
+                                    </div>
                                 </div>
                             </div>
                         <?php endif; ?>
 
-                        <ul class="drawer-menu">
-                            <?php if (isLoggedIn()): ?>
-                                <?php if ($this->currentUser['role'] === 'admin'): ?>
-                                    <li><a href="<?= url('admin/index.php') ?>" style="color: #fbbf24;"><i
-                                                class="fas fa-user-shield"></i> Quản Trị</a></li>
-                                    <li style="margin: 8px 0; border-top: 1px solid rgba(251, 191, 36, 0.3); padding-top: 8px;"></li>
-                                <?php endif; ?>
-                                <li><a href="<?= url('user') ?>"><i class="fas fa-user-circle"></i> Tài Khoản</a></li>
-                                <li style="margin: 16px 0; border-top: 1px solid rgba(139, 92, 246, 0.15); padding-top: 16px;"></li>
-                            <?php endif; ?>
-                            <li><a href="<?= url('') ?>"><i class="fas fa-home"></i> Trang Chủ</a></li>
-                            <li><a href="<?= url('sanpham') ?>"><i class="fas fa-shopping-bag"></i> Sản Phẩm</a></li>
-                            <li><a href="<?= url('naptien') ?>"><i class="fas fa-wallet"></i> Nạp Tiền</a></li>
+                        <!-- Menu Sections -->
+                        <div class="drawer-sections">
+                            <!-- Navigation Section -->
+                            <div class="drawer-section">
+                                <span class="section-label">Điều hướng</span>
+                                <ul class="drawer-menu">
+                                    <li><a href="<?= url('') ?>"><i class="fas fa-home"></i> Trang Chủ</a></li>
+                                    <li><a href="<?= url('sanpham') ?>"><i class="fas fa-shopping-bag"></i> Sản Phẩm</a></li>
+                                    <li><a href="<?= url('naptien') ?>"><i class="fas fa-wallet"></i> Nạp Tiền</a></li>
+                                </ul>
+                            </div>
 
                             <?php if (isLoggedIn()): ?>
-                                <li
-                                    style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(139,92,246,0.15); font-size: 0.8rem; color: #94a3b8; font-weight: 700; padding-left: 12px; letter-spacing: 0.5px;">
-                                    LỊCH SỬ</li>
-                                <li><a href="<?= url('user?tab=deposit_history') ?>"><i class="fas fa-history"></i> Lịch Sử Nạp</a>
-                                </li>
-                                <li><a href="<?= url('user?tab=transactions') ?>"><i class="fas fa-exchange-alt"></i> Biến Động Số
-                                        Dư</a></li>
-                                <li><a href="<?= url('user?tab=orders') ?>"><i class="fas fa-shopping-cart"></i> Lịch Sử Đơn
-                                        Hàng</a></li>
-                            <?php endif; ?>
-                            <?php if (isLoggedIn()): ?>
-                                <li style="margin: 16px 0; border-top: 1px solid rgba(139, 92, 246, 0.15); padding-top: 16px;"></li>
-                                <li><a href="<?= url('dangxuat.php') ?>" style="color: #ef4444;"><i class="fas fa-sign-out-alt"></i>
-                                        Đăng Xuất</a></li>
-                            <?php else: ?>
+                                <!-- Account Section -->
+                                <div class="drawer-section">
+                                    <span class="section-label">Tài khoản</span>
+                                    <ul class="drawer-menu">
+                                        <?php if ($this->currentUser['role'] === 'admin'): ?>
+                                            <li><a href="<?= url('admin/index.php') ?>" class="admin-link"><i
+                                                        class="fas fa-user-shield"></i> Quản Trị</a></li>
+                                        <?php endif; ?>
+                                        <li><a href="<?= url('user') ?>"><i class="fas fa-user-circle"></i> Trang cá nhân</a></li>
+                                        <li><a href="<?= url('user?tab=settings') ?>"><i class="fas fa-cog"></i> Cài đặt</a></li>
+                                    </ul>
+                                </div>
 
-                                <li><a href="<?= url('auth') ?>" class="kai-mobile-login">
-                                        Đăng Nhập 👻</a></li>
-                            <?php endif; ?>
-                        </ul>
-
-                        <div class="drawer-footer">
-                            <!-- Theme Toggle Button -->
-                            <?php if (!HolidayModeManager::isActive()): ?>
-                                <button onclick="toggleTheme()" class="kai-btn kai-btn-secondary"
-                                    style="width: 100%; justify-content: center; display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-                                    <img id="mobile-theme-icon" src="<?= asset('images/moon.png') ?>" alt="Theme"
-                                        style="width: 20px; height: 20px; object-fit: contain;">
-                                    <span id="mobile-theme-text">Dark</span>
-                                </button>
+                                <!-- History Section -->
+                                <div class="drawer-section">
+                                    <span class="section-label">Lịch sử giao dịch</span>
+                                    <ul class="drawer-menu">
+                                        <li><a href="<?= url('user?tab=deposit_history') ?>"><i class="fas fa-history"></i> Lịch Sử
+                                                Nạp</a></li>
+                                        <li><a href="<?= url('user?tab=transactions') ?>"><i class="fas fa-exchange-alt"></i> Biến
+                                                Động Số Dư</a></li>
+                                        <li><a href="<?= url('user?tab=orders') ?>"><i class="fas fa-shopping-cart"></i> Đơn
+                                                Hàng</a></li>
+                                    </ul>
+                                </div>
                             <?php endif; ?>
 
-                            <!-- Currency Switcher -->
-                            <button id="mobileCurrencySwitcher" class="kai-btn kai-btn-secondary kai-currency-btn-mobile"
-                                style="width: 100%; justify-content: center; display: flex; align-items: center; gap: 8px;">
-                                <?php if ($currentCurrency === 'VND'): ?>
-                                    <?php if ($vnFlagExists): ?>
-                                        <img src="<?= asset('images/vn.png') ?>" alt="VND"
-                                            style="width: 20px; height: 20px; border-radius: 4px;">
-                                    <?php else: ?>
-                                        <span class="currency-flag">🇻🇳</span>
+                            <!-- Quick Actions -->
+                            <div class="drawer-section">
+                                <span class="section-label">Tiện ích nhanh</span>
+                                <div class="drawer-quick-actions">
+                                    <?php if (!HolidayModeManager::isActive()): ?>
+                                        <button onclick="toggleTheme()" class="quick-action-btn theme-toggle">
+                                            <div class="btn-content">
+                                                <img id="mobile-theme-icon" src="<?= asset('images/moon.png') ?>" alt="Theme">
+                                                <span id="mobile-theme-text">Tối</span>
+                                            </div>
+                                        </button>
                                     <?php endif; ?>
+
+                                    <button id="mobileCurrencySwitcher" class="quick-action-btn currency-switcher notranslate">
+                                        <div class="btn-content">
+                                            <?php if ($currentCurrency === 'VND'): ?>
+                                                <?php if ($vnFlagExists): ?>
+                                                    <img src="<?= asset('images/vn.png') ?>" alt="VND">
+                                                <?php else: ?>
+                                                    <span class="currency-flag">🇻🇳</span>
+                                                <?php endif; ?>
+                                            <?php else: ?>
+                                                <span class="currency-flag">🌍</span>
+                                            <?php endif; ?>
+                                            <span><?= $currentCurrency ?></span>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Logout / Auth -->
+                            <div class="drawer-auth-section">
+                                <?php if (isLoggedIn()): ?>
+                                    <a href="<?= url('dangxuat.php') ?>" class="drawer-logout-btn">
+                                        <i class="fas fa-sign-out-alt"></i> Đăng Xuất
+                                    </a>
                                 <?php else: ?>
-                                    <span class="currency-flag">🌍</span>
+                                    <a href="<?= url('auth') ?>" class="drawer-login-btn">
+                                        Đăng Nhập <i class="fas fa-ghost"></i>
+                                    </a>
                                 <?php endif; ?>
-                                <span><?= $currentCurrency ?></span>
-                            </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -424,16 +459,22 @@ class HeaderComponent
             </header>
 
             <!-- GTranslate Widget -->
-            <div class="gtranslate_wrapper"></div>
-            <script>
-                window.gtranslateSettings = {
-                    "default_language": "vi",
-                    "detect_browser_language": true,
-                    "languages": ["vi", "en", "ru", "th", "km", "lo", "id", "fr", "de", "ja", "pt", "ko"],
-                    "wrapper_selector": ".gtranslate_wrapper"
-                }
-            </script>
-            <script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
+            <?php if (defined('GTRANSLATE_ENABLED') && GTRANSLATE_ENABLED): ?>
+                <div
+                    class="<?= defined('GTRANSLATE_WRAPPER_SELECTOR') ? ltrim(GTRANSLATE_WRAPPER_SELECTOR, '.') : 'gtranslate_wrapper' ?>">
+                </div>
+                <script>
+                    window.gtranslateSettings = {
+                        "default_language": "<?= defined('GTRANSLATE_DEFAULT_LANGUAGE') ? GTRANSLATE_DEFAULT_LANGUAGE : 'vi' ?>",
+                        "detect_browser_language": <?= defined('GTRANSLATE_DETECT_BROWSER') && GTRANSLATE_DETECT_BROWSER ? 'true' : 'false' ?>,
+                        "languages": <?= json_encode(defined('GTRANSLATE_LANGUAGES') ? explode(',', GTRANSLATE_LANGUAGES) : ['vi', 'en']) ?>,
+                        "wrapper_selector": "<?= defined('GTRANSLATE_WRAPPER_SELECTOR') ? GTRANSLATE_WRAPPER_SELECTOR : '.gtranslate_wrapper' ?>"
+                    }
+                </script>
+                <script
+                    src="<?= defined('GTRANSLATE_CDN_URL') ? GTRANSLATE_CDN_URL : 'https://cdn.gtranslate.net/widgets/latest/float.js' ?>"
+                    defer></script>
+            <?php endif; ?>
             <style>
                 /* Hide Google Translate Toolbar & Tooltip */
                 .goog-te-banner-frame.skiptranslate {
@@ -457,17 +498,21 @@ class HeaderComponent
                     box-shadow: none !important;
                 }
 
-                /* Compact GTranslate Widget */
-                .gtranslate_wrapper {
+                /* FORCE GTranslate to bottom-right */
+                .gtranslate_wrapper,
+                .gt_float_switcher {
                     position: fixed !important;
-                    bottom: 20px !important;
                     right: 20px !important;
-                    z-index: 99999 !important;
+                    left: auto !important;
+                    bottom: 20px !important;
+                    top: auto !important;
+                    z-index: 999999 !important;
                 }
 
-                /* Override GTranslate Default Styles for Compact Look */
+                /* Override GTranslate Default Styles */
                 .gt_float_switcher {
                     font-family: inherit !important;
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
                     border-radius: 30px !important;
                     overflow: hidden !important;
                     padding: 0 !important;
@@ -477,6 +522,11 @@ class HeaderComponent
                     transition: all 0.3s ease !important;
                     transform: scale(0.85) !important;
                     transform-origin: bottom right !important;
+                }
+
+                .gt_float_switcher:hover {
+                    transform: scale(0.9) !important;
+                    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
                 }
 
                 .gt_float_switcher .gt_selected {
@@ -495,6 +545,7 @@ class HeaderComponent
                     height: 20px !important;
                     border-radius: 50% !important;
                     margin: 0 !important;
+                    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
                 }
 
                 /* Dropdown list styling */
@@ -525,9 +576,7 @@ class HeaderComponent
 
                 .gt_float_switcher .gt_options a:hover {
                     background: #f1f5f9 !important;
-                    /* Light gray hover */
                     color: #0f172a !important;
-                    /* Black text on hover */
                 }
 
                 /* Scrollbar */
@@ -537,18 +586,15 @@ class HeaderComponent
 
                 .gt_float_switcher .gt_options::-webkit-scrollbar-track {
                     background: transparent;
-                    /* Ẩn track */
                 }
 
                 .gt_float_switcher .gt_options::-webkit-scrollbar-thumb {
                     background: #334155;
-                    /* Dark gray/black thumb */
                     border-radius: 4px;
                 }
 
                 .gt_float_switcher .gt_options::-webkit-scrollbar-thumb:hover {
                     background: #1e293b;
-                    /* Darker on hover */
                 }
             </style>
 
@@ -565,6 +611,47 @@ class HeaderComponent
                     margin: 0;
                     padding: 0;
                     box-sizing: border-box;
+                }
+
+                /* ============================================
+                           Custom Cursor Styles
+                           ============================================ */
+
+                /* Default cursor for entire page */
+                * {
+                    cursor: url('<?= BASE_URL ?>/assets/images/cursor/default.cur'), auto;
+                }
+
+                /* Pointer cursor for interactive elements */
+                a,
+                button,
+                input[type="button"],
+                input[type="submit"],
+                input[type="reset"],
+                input[type="checkbox"],
+                input[type="radio"],
+                select,
+                label,
+                .btn,
+                .kai-btn,
+                .kai-link,
+                .clickable,
+                [role="button"],
+                [onclick] {
+                    cursor: url('<?= BASE_URL ?>/assets/images/cursor/link.cur'), pointer !important;
+                }
+
+                /* Text cursor for text inputs */
+                input[type="text"],
+                input[type="email"],
+                input[type="password"],
+                input[type="search"],
+                input[type="tel"],
+                input[type="url"],
+                input[type="number"],
+                textarea,
+                [contenteditable="true"] {
+                    cursor: url('<?= BASE_URL ?>/assets/images/cursor/Text-Select.cur'), text !important;
                 }
 
                 body {
@@ -996,31 +1083,23 @@ class HeaderComponent
                     display: none;
                 }
 
-                /* Mobile Drawer */
+                /* Mobile Drawer Premium Refactor */
                 .kai-mobile-drawer {
                     position: fixed;
                     top: 0;
                     left: 0;
-                    width: 300px;
+                    width: 320px;
                     height: 100vh;
-                    background: #020617;
-                    z-index: 3000;
+                    background: rgba(2, 6, 23, 0.85);
+                    backdrop-filter: blur(25px) saturate(180%);
+                    -webkit-backdrop-filter: blur(25px) saturate(180%);
+                    z-index: 9000;
                     transform: translateX(-100%);
-                    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-                    border-right: 1px solid rgba(139, 92, 246, 0.2);
+                    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+                    border-right: 1px solid rgba(255, 255, 255, 0.1);
                     display: flex;
                     flex-direction: column;
-                }
-
-                .kai-mobile-drawer::before {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    right: 0;
-                    width: 1px;
-                    height: 100%;
-                    background: linear-gradient(180deg, rgba(139, 92, 246, 0) 0%, rgba(139, 92, 246, 0.6) 30%, rgba(236, 72, 153, 0.6) 70%, rgba(236, 72, 153, 0) 100%);
-                    opacity: 0.8;
+                    box-shadow: 20px 0 50px rgba(0, 0, 0, 0.3);
                 }
 
                 .kai-mobile-drawer.active {
@@ -1028,195 +1107,307 @@ class HeaderComponent
                 }
 
                 .drawer-header {
-                    padding: 30px 24px;
+                    padding: 24px;
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    margin-bottom: 10px;
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
                 }
 
-                .drawer-title {
-                    font-size: 1.5rem;
-                    font-weight: 800;
-                    color: white;
-                    letter-spacing: -0.5px;
-                    background: linear-gradient(135deg, #a78bfa 0%, #ec4899 100%);
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
+                .drawer-header-brand {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
                 }
+
+                .drawer-logo {
+
+                    position: absolute;
+                    left: 90px;
+                    top: 7%;
+                    transform: translateY(-50%);
+                    width: 100px;
+                    height: auto;
+                    filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.3));
+                }
+
 
                 .drawer-close {
-                    width: 36px;
-                    height: 36px;
+                    width: 40px;
+                    height: 40px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    background: rgba(139, 92, 246, 0.1);
-                    border: 1px solid rgba(139, 92, 246, 0.2);
-                    border-radius: 10px;
-                    color: #a78bfa;
-                    font-size: 1.1rem;
-                    cursor: pointer;
-                    transition: all 0.2s ease;
+                    background: rgba(255, 255, 255, 0.05);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 99px;
+                    color: white;
+                    transition: all 0.3s ease;
                 }
 
-                .drawer-close:hover {
-                    background: rgba(139, 92, 246, 0.2);
-                    border-color: rgba(139, 92, 246, 0.4);
-                    color: white;
+                .drawer-close:active {
+                    transform: scale(0.9);
+                    background: rgba(255, 255, 255, 0.1);
                 }
 
                 .drawer-content {
-                    padding: 0 20px 20px 20px;
+                    padding: 24px;
                     flex: 1;
                     overflow-y: auto;
-                    display: flex;
-                    flex-direction: column;
+                    scrollbar-width: none;
                 }
 
-                .drawer-user-card {
+                .drawer-content::-webkit-scrollbar {
+                    display: none;
+                }
+
+                /* Profile Card */
+                .drawer-profile-card {
+                    background: linear-gradient(135deg, rgb(87 87 87 / 20%), rgba(236, 72, 153, 0.1));
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 24px;
+                    padding: 20px;
+                    margin-bottom: 24px;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .drawer-profile-card::before {
+                    content: '';
+                    position: absolute;
+                    top: -50%;
+                    left: -50%;
+                    width: 200%;
+                    height: 200%;
+                    background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+                    pointer-events: none;
+                }
+
+                .drawer-profile-main {
                     display: flex;
                     align-items: center;
-                    gap: 16px;
-                    padding: 20px;
-                    background: rgba(139, 92, 246, 0.05);
-                    border: 1px solid rgba(139, 92, 246, 0.15);
-                    border-radius: 16px;
-                    margin-bottom: 20px;
+                    gap: 15px;
+                    margin-bottom: 18px;
                 }
 
-                .drawer-user-card img {
-                    width: 48px;
-                    height: 48px;
-                    border-radius: 50%;
-                    border: 2px solid #ffffff;
+                .drawer-avatar-wrapper {
+                    position: relative;
+                    width: 56px;
+                    height: 56px;
                 }
 
-                .drawer-user-card h4 {
-                    margin: 0 0 4px 0;
+                .drawer-avatar {
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 99px;
+                    object-fit: cover;
+                    border: 2px solid rgba(255, 255, 255, 0.2);
+                }
+
+                .drawer-avatar-frame {
+                    position: absolute;
+                    inset: -5px;
+                    width: calc(100% + 10px);
+                    height: calc(100% + 10px);
+                    pointer-events: none;
+                }
+
+                .drawer-username {
                     font-size: 1.1rem;
-                    color: white;
                     font-weight: 700;
-                    max-width: 180px;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
+                    color: white;
+                    margin: 0;
+                }
+
+                .drawer-user-badge {
+                    display: inline-block;
+                    font-size: 10px;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    padding: 2px 8px;
+                    background: rgb(255 255 255 / 86%);
+                    border-radius: 99px;
+                    color: #000000;
+                    margin-top: 4px;
+                }
+
+                .drawer-balance-card {
+                    background: rgba(0, 0, 0, 0.2);
+                    border-radius: 16px;
+                    padding: 12px 16px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+
+                .balance-label {
+                    font-size: 12px;
+                    color: #94a3b8;
+                }
+
+                .balance-amount {
+                    font-size: 1.1rem;
+                    font-weight: 800;
+                    color: #10b981;
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                }
+
+                /* Menu Sections */
+                .drawer-sections {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 24px;
+                }
+
+                .section-label {
+                    display: inline-block;
+                    color: #ffc300;
+                    font-weight: 700;
+                    font-size: 0.75rem;
+                    letter-spacing: 2px;
+                    text-transform: uppercase;
+                    margin-bottom: 12px;
                 }
 
                 .drawer-menu {
                     list-style: none;
                     display: flex;
                     flex-direction: column;
-                    gap: 12px;
+                    gap: 6px;
                 }
 
                 .drawer-menu a {
                     display: flex;
                     align-items: center;
-                    gap: 16px;
-                    color: #e2e8f0;
+                    gap: 12px;
+                    padding: 14px 16px;
+                    color: #cbd5e1;
                     text-decoration: none;
-                    font-size: 0.95rem;
                     font-weight: 600;
-                    padding: 16px 20px;
-                    background: rgba(139, 92, 246, 0.05);
-                    border: 1px solid rgba(139, 92, 246, 0.15);
-                    border-radius: 16px;
-                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                    position: relative;
-                    overflow: hidden;
+                    font-size: 14px;
+                    border-radius: 99px;
+                    transition: all 0.3s ease;
+                    background: rgba(255, 255, 255, 0.02);
                 }
 
                 .drawer-menu a i {
-                    font-size: 1.1rem;
-                    color: #a78bfa;
-                    transition: all 0.3s ease;
-                    width: 24px;
+                    font-size: 16px;
+                    width: 20px;
                     text-align: center;
+                    color: #a78bfa;
+                    transition: transform 0.3s ease;
                 }
 
-                .drawer-menu a:hover {
+                .drawer-menu a:active {
                     background: rgba(139, 92, 246, 0.15);
                     color: white;
-                    border-color: rgba(139, 92, 246, 0.4);
-                    transform: translateX(4px);
+                    transform: scale(0.98);
                 }
 
-                .drawer-menu a:hover i {
-                    color: #ec4899;
-                    filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.5));
+                .drawer-menu a:active i {
+                    transform: scale(1.2);
                 }
 
-                .drawer-menu a.active {
-                    background: rgba(139, 92, 246, 0.15);
-                    color: #a78bfa;
-                    border-color: #ffffff;
+                .admin-link {
+                    color: #fbbf24 !important;
+                    background: rgba(251, 191, 36, 0.05) !important;
                 }
 
-                .drawer-menu li:has(.kai-mobile-login) {
-                    margin-top: 24px;
-                    padding-top: 24px;
-                    border-top: 1px solid rgba(139, 92, 246, 0.15) !important;
+
+                .quick-action-btn {
+                    background: rgba(255, 255, 255, 0.05);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 99px;
+                    padding: 12px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    width: 100%;
                 }
 
-                .kai-mobile-login {
-                    background: linear-gradient(135deg, #0606d4ff 0%, #0890b2ff 100%);
-                    ;
-                    color: white !important;
-                    padding: 14px;
-                    border-radius: 14px;
-                    text-align: center;
+                .quick-action-btn:active {
+                    background: rgba(255, 255, 255, 0.1);
+                    transform: scale(0.95);
+                }
+
+                .btn-content {
                     display: flex;
-                    justify-content: center;
                     align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    color: white;
                     font-weight: 600;
-                    font-size: 15px;
-                    letter-spacing: 0.3px;
-                    border: 1px solid #ffffff;
+                    font-size: 13px;
                 }
 
+                .quick-action-btn img {
+                    width: 20px;
+                    height: 20px;
+                    object-fit: contain;
+                }
+
+                /* Auth Section */
+                .drawer-auth-section {
+                    margin-top: 10px;
+                    padding-bottom: 40px;
+                }
+
+                .drawer-logout-btn {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    width: 100%;
+                    padding: 16px;
+                    background: rgba(239, 68, 68, 0.1);
+                    border: 1px solid rgba(239, 68, 68, 0.2);
+                    border-radius: 99px;
+                    color: #ef4444;
+                    font-weight: 700;
+                    text-decoration: none;
+                    transition: all 0.3s ease;
+                }
+
+                .drawer-logout-btn:active {
+                    background: rgba(239, 68, 68, 0.2);
+                    transform: scale(0.98);
+                }
+
+                .drawer-login-btn {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+                    width: 100%;
+                    padding: 16px;
+                    background: linear-gradient(135deg, #0606d4, #0890b2);
+                    border-radius: 99px;
+                    color: white;
+                    font-weight: 700;
+                    text-decoration: none;
+                    box-shadow: 0 4px 15px rgba(6, 6, 212, 0.3);
+                }
+
+                .drawer-login-btn i {
+                    font-size: 1.1rem;
+                }
+
+                /* Mobile Overlay */
                 .kai-mobile-overlay {
                     position: fixed;
                     inset: 0;
-                    z-index: 2900;
+                    z-index: 8900;
                     opacity: 0;
                     visibility: hidden;
-                    transition: all 0.3s ease;
-                    backdrop-filter: blur(8px);
+                    transition: all 0.4s ease;
+                    background: rgba(0, 0, 0, 0.4);
+                    backdrop-filter: blur(4px);
                 }
 
                 .kai-mobile-overlay.active {
                     opacity: 1;
                     visibility: visible;
-                }
-
-                .drawer-footer {
-                    margin-top: auto;
-                    padding-top: 20px;
-                }
-
-                .kai-currency-btn-mobile {
-                    background: rgba(139, 92, 246, 0.1);
-                    border: 1px solid rgba(139, 92, 246, 0.2);
-                    color: #a78bfa;
-                    height: 48px;
-                    border-radius: 12px;
-                    font-weight: 600;
-                    transition: all 0.2s;
-                }
-
-                .kai-currency-btn-mobile:hover {
-                    background: rgba(139, 92, 246, 0.2);
-                    color: white;
-                    border-color: rgba(139, 92, 246, 0.4);
-                }
-
-                .kai-currency-btn-mobile img {
-                    width: 20px;
-                    height: 20px;
-                    border-radius: 4px;
-                    user-select: none;
-                    pointer-events: auto;
                 }
 
                 /* Responsive Media Queries */
@@ -1239,14 +1430,6 @@ class HeaderComponent
                         justify-content: space-between;
                     }
 
-                    .kai-logo-img {
-                        height: 80px;
-                        min-width: 80px;
-                        width: auto;
-                        position: static;
-                        margin: 0;
-                    }
-
                     /* Center Logo on mobile */
                     .kai-logo {
                         position: absolute;
@@ -1256,6 +1439,14 @@ class HeaderComponent
                         display: flex;
                         align-items: center;
                         justify-content: center;
+                    }
+
+                    .kai-logo-img {
+                        height: 100px;
+                        min-width: 50px;
+                        width: auto;
+                        position: static;
+                        margin: 0;
                     }
 
                     .kai-actions {
@@ -1274,8 +1465,18 @@ class HeaderComponent
                         width: 40px;
                         height: 40px;
                         justify-content: center;
+                        background: rgba(139, 92, 246, 0.1);
+                        border-radius: 99px;
                     }
-                }
+
+                    /* Holiday Mode Overrides for Drawer Close */
+                    body.holiday-mode-noel .drawer-close,
+                    body.holiday-mode-tet .drawer-close,
+                    body.holiday-mode-halloween .drawer-close {
+                        color: #ffffff !important;
+                        background: rgb(0 0 0 / 15%) !important;
+                        border-color: rgba(255, 255, 255, 0.3) !important;
+                    }
             </style>
             <?php
     }

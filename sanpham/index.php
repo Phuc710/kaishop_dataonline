@@ -10,10 +10,25 @@ $page = max(1, (int) ($_GET['page'] ?? 1));
 $limit = ITEMS_PER_PAGE;
 $offset = ($page - 1) * $limit;
 
-// Search & Filter
-$search = trim($_GET['search'] ?? '');
-$categorySlug = $_GET['category'] ?? '';
-$labelFilter = $_GET['label'] ?? '';
+// Search & Filter - Force Reset on Page Load (non-AJAX)
+$isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+
+if ($isAjax) {
+    $search = trim($_GET['search'] ?? '');
+    $categorySlug = $_GET['category'] ?? '';
+    $labelFilter = $_GET['label'] ?? '';
+    $minPrice = $_GET['min_price'] ?? '';
+    $maxPrice = $_GET['max_price'] ?? '';
+    $sort = $_GET['sort'] ?? 'newest';
+} else {
+    // Standard Load: Force Default State
+    $search = '';
+    $categorySlug = '';
+    $labelFilter = '';
+    $minPrice = '';
+    $maxPrice = '';
+    $sort = 'newest';
+}
 
 // Convert category slug to ID if provided
 $categoryId = '';
@@ -41,10 +56,39 @@ if ($categoryId !== '') {
     $params[] = $categoryId;
 }
 if ($labelFilter !== '') {
-    $where[] = "p.label_id = ?";
+    $where[] = "p.label = ?";
     $params[] = $labelFilter;
 }
+
+// Price range (Filtered based on base price or final price - usually final price is what matters to user)
+if ($minPrice !== '' && is_numeric($minPrice)) {
+    $where[] = "p.final_price_vnd >= ?";
+    $params[] = (float) $minPrice;
+}
+if ($maxPrice !== '' && is_numeric($maxPrice)) {
+    $where[] = "p.final_price_vnd <= ?";
+    $params[] = (float) $maxPrice;
+}
+
 $whereClause = implode(' AND ', $where);
+
+// Sorting logic
+$orderBy = "p.is_pinned DESC, p.created_at DESC"; // Default
+switch ($sort) {
+    case 'price_asc':
+        $orderBy = "p.is_pinned DESC, p.final_price_vnd ASC";
+        break;
+    case 'price_desc':
+        $orderBy = "p.is_pinned DESC, p.final_price_vnd DESC";
+        break;
+    case 'name_asc':
+        $orderBy = "p.is_pinned DESC, p.name ASC";
+        break;
+    case 'newest':
+    default:
+        $orderBy = "p.is_pinned DESC, p.created_at DESC";
+        break;
+}
 
 // Count total
 $stmt = $pdo->prepare("SELECT COUNT(*) FROM products p WHERE $whereClause");
@@ -55,7 +99,6 @@ $totalPages = max(1, (int) ceil($total / $limit));
 // Fetch products - Chỉ lấy data từ variants CÓ HÀNG (stock > 0)
 $stmt = $pdo->prepare("
     SELECT p.*,
-        pl.name as db_label_name, pl.image_url as db_label_image,
         (SELECT COUNT(*) FROM product_variants pv WHERE pv.product_id = p.id AND pv.is_active = 1) as variant_count,
         COALESCE((SELECT pv.price_vnd FROM product_variants pv WHERE pv.product_id = p.id AND pv.is_active = 1 AND pv.stock > 0 ORDER BY pv.final_price_vnd ASC LIMIT 1), p.price_vnd) as display_price_vnd,
         COALESCE((SELECT pv.price_usd FROM product_variants pv WHERE pv.product_id = p.id AND pv.is_active = 1 AND pv.stock > 0 ORDER BY pv.final_price_vnd ASC LIMIT 1), p.price_usd) as display_price_usd,
@@ -64,9 +107,8 @@ $stmt = $pdo->prepare("
         COALESCE((SELECT pv.discount_percent FROM product_variants pv WHERE pv.product_id = p.id AND pv.is_active = 1 AND pv.stock > 0 ORDER BY pv.final_price_vnd ASC LIMIT 1), p.discount_percent) as display_discount_percent,
         COALESCE((SELECT SUM(pv.stock) FROM product_variants pv WHERE pv.product_id = p.id AND pv.is_active = 1), p.stock) as display_stock
     FROM products p
-    LEFT JOIN product_labels pl ON p.label_id = pl.id
     WHERE $whereClause
-    ORDER BY p.is_pinned DESC, p.created_at DESC
+    ORDER BY $orderBy
     LIMIT $limit OFFSET $offset
 ");
 $stmt->execute($params);
@@ -90,17 +132,13 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQ
             : url('sanpham/view?id=' . $product['id']);
 
 
-        // Label HTML
+        // Label HTML - Text-based hardcoded labels
         $labelHTML = '';
-        if ($product['db_label_name'] && $product['db_label_image']) {
-            $labelHTML = '<span class="sp-card-label-image" style="position: absolute; top: 12px; right: 12px; z-index: 5;"><img src="' . asset('images/uploads/' . $product['db_label_image']) . '" style="max-height: 35px; object-fit: contain;"></span>';
-        } else if ($product['label']) {
-            // Old fallback for text labels
+        if (!empty($product['label'])) {
             $labelColor = htmlspecialchars($product['label_text_color'] ?? '#ffffff');
             $labelBg = htmlspecialchars($product['label_bg_color'] ?? '#8b5cf6');
             $labelHTML = '<span class="sp-card-label" style="color: ' . $labelColor . '; background: ' . $labelBg . ';">' . htmlspecialchars($product['label']) . '</span>';
         }
-
         // Rating stars
         $starsHTML = '';
         for ($i = 1; $i <= 5; $i++) {
@@ -131,8 +169,7 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQ
             $outOfStockHTML = '<div class="out-of-stock-overlay">
                 <div class="oos-content">
                     <i class="fas fa-box-open oos-icon"></i>
-                    <span class="oos-text">Tạm hết hàng</span>
-                    <span class="oos-subtext">Sẽ sớm có lại</span>
+                    <span class="oos-text">Hết hàng</span>
                 </div>
             </div>';
         }
@@ -290,7 +327,7 @@ require_once __DIR__ . '/../includes/header.php';
     /* Header Section */
     .sp-header {
         text-align: center;
-        margin-bottom: 50px;
+        margin-bottom: 20px;
         animation: fadeInDown 0.8s ease;
         position: relative;
     }
@@ -327,7 +364,7 @@ require_once __DIR__ . '/../includes/header.php';
     }
 
     .sp-header p {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         color: #94a3b8;
         max-width: 600px;
         margin: 0 auto;
@@ -660,7 +697,6 @@ require_once __DIR__ . '/../includes/header.php';
         display: flex;
         flex-wrap: wrap;
         gap: 12px;
-        margin-bottom: 25px;
         justify-content: center;
     }
 
@@ -1026,8 +1062,8 @@ require_once __DIR__ . '/../includes/header.php';
     }
 
     .sp-filter-select option {
-        background: #0f172a;
-        color: #fff;
+        background: #000000ff;
+        color: #ffffffff;
     }
 
     .sp-card-label-image img {
@@ -1056,7 +1092,6 @@ require_once __DIR__ . '/../includes/header.php';
         display: flex;
         gap: 10px;
         overflow-x: auto;
-        padding: 8px 0;
         scrollbar-width: none;
         -ms-overflow-style: none;
     }
@@ -1117,7 +1152,7 @@ require_once __DIR__ . '/../includes/header.php';
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(15, 23, 42, 0.97);
+        background: rgba(0, 0, 0, 0.97);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1135,7 +1170,7 @@ require_once __DIR__ . '/../includes/header.php';
 
     .oos-icon {
         font-size: 3rem;
-        color: #475569;
+        color: #ffffffff;
     }
 
     .oos-text {
@@ -1177,7 +1212,7 @@ require_once __DIR__ . '/../includes/header.php';
 
     @media (max-width: 768px) {
         .sp-header h1 {
-            font-size: 2rem;
+            font-size: 2.4rem;
         }
 
         .sp-filter-form {
@@ -1222,13 +1257,143 @@ require_once __DIR__ . '/../includes/header.php';
         }
 
         .sp-header h1 {
-            font-size: 1.5rem;
+            font-size: 2rem;
         }
     }
 
-    /* Smooth card animations */
-    .sp-card {
-        transition: opacity 0.5s ease, transform 0.5s ease;
+    /* Advanced Filter Panel */
+    .advanced-filters {
+        max-height: 0;
+        overflow: hidden;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 0;
+        padding: 0 5px;
+        margin-top: 0;
+    }
+
+    .advanced-filters.active {
+        max-height: 500px;
+        opacity: 1;
+        margin-top: 20px;
+        padding: 15px 5px;
+    }
+
+    .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(10px);
+        padding: 20px;
+        border-radius: 16px;
+        border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .filter-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .filter-inputs {
+        display: flex;
+        gap: 10px;
+    }
+
+    .filter-input {
+        background: rgba(30, 41, 59, 0.5);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        border-radius: 8px;
+        padding: 10px;
+        color: #f8fafc;
+        font-size: 14px;
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+
+    .filter-input:focus {
+        border-color: #000000ff;
+        box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+        outline: none;
+    }
+
+    /* Black Labels for Filters */
+    .filter-labels {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 5px;
+    }
+
+    .label-pill {
+        background: #000;
+        color: #fff;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid #333;
+        transition: all 0.3s ease;
+    }
+
+    .label-pill:hover {
+        background: #111;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .label-pill.active {
+        background: #fff;
+        color: #000;
+        border-color: #fff;
+    }
+
+    /* Filter Icon Animation */
+    #filter-icon {
+        cursor: pointer;
+        transition: all 0.4s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #filter-icon.active {
+        transform: rotate(90deg);
+    }
+
+    #filter-icon.active svg path {
+        stroke: #ffffffff;
+    }
+
+    .reset-filters-btn {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        padding: 10px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        margin-top: auto;
+    }
+
+    .reset-filters-btn:hover {
+        background: #ef4444;
+        color: #fff;
     }
 </style>
 
@@ -1240,8 +1405,6 @@ require_once __DIR__ . '/../includes/header.php';
         <!-- Header -->
         <div class="sp-header">
             <h1>All sản phẩm KaiShop</h1>
-            <p>“KaiShop – Sản phẩm đa dạng, giá tốt nhất thị trường <br>chất lượng đảm bảo, uy tín tạo nên thương hiệu.”
-            </p>
         </div>
 
         <!-- Filter -->
@@ -1262,7 +1425,7 @@ require_once __DIR__ . '/../includes/header.php';
                         <div id="input-mask"></div>
                         <div id="pink-mask"></div>
                         <div class="filterBorder"></div>
-                        <div id="filter-icon" onclick="toggleCategoryFilter()">
+                        <div id="filter-icon" onclick="toggleAdvancedFilters()">
                             <svg preserveAspectRatio="none" height="27" width="27" viewBox="4.8 4.56 14.832 15.408"
                                 fill="none">
                                 <path
@@ -1292,14 +1455,61 @@ require_once __DIR__ . '/../includes/header.php';
                     </div>
                 </div>
 
+                <!-- Advanced Filters Panel -->
+                <div class="advanced-filters" id="advanced-filters-panel">
+                    <div class="filter-grid">
+                        <!-- Price Filtering -->
+                        <div class="filter-group">
+                            <label class="filter-label">Khoảng giá (VND)</label>
+                            <div class="filter-inputs">
+                                <input type="number" name="min_price" id="min_price" placeholder="Từ"
+                                    class="filter-input"
+                                    value="<?= isset($_GET['min_price']) ? e($_GET['min_price']) : '' ?>">
+                                <input type="number" name="max_price" id="max_price" placeholder="Đến"
+                                    class="filter-input"
+                                    value="<?= isset($_GET['max_price']) ? e($_GET['max_price']) : '' ?>">
+                            </div>
+                        </div>
 
-                <input type="hidden" name="label" id="label-input" value="<?= $labelFilter ?>">
+                        <!-- Sorting -->
+                        <div class="filter-group">
+                            <label class="filter-label">Sắp xếp theo</label>
+                            <select name="sort" id="sort-select" class="filter-input">
+                                <option value="newest" <?= $sort == 'newest' ? 'selected' : '' ?>>Mới nhất</option>
+                                <option value="price_asc" <?= $sort == 'price_asc' ? 'selected' : '' ?>>Giá: Thấp đến Cao
+                                </option>
+                                <option value="price_desc" <?= $sort == 'price_desc' ? 'selected' : '' ?>>Giá: Cao đến Thấp
+                                </option>
+                            </select>
+                        </div>
 
-                <div class="category-tabs-container">
-                    <div onclick="selectCategory('')" class="category-tab <?= empty($category) ? 'active' : '' ?>"
-                        id="cat-tab-all">
-                        <span class="cat-icon">🎯</span>
-                        <span class="cat-name">Tất Cả</span>
+                        <!-- Labels Selection (Changed to Select) -->
+                        <div class="filter-group">
+                            <label class="filter-label">Loại sản phẩm</label>
+                            <select name="label" id="label-select" class="filter-input">
+                                <option value="">Tất cả loại</option>
+                                <option value="Free" <?= $labelFilter == 'Free' ? 'selected' : '' ?>>Free</option>
+                                <option value="Source" <?= $labelFilter == 'Source' ? 'selected' : '' ?>>Source</option>
+                                <option value="Account" <?= $labelFilter == 'Account' ? 'selected' : '' ?>>Account</option>
+                                <option value="Other" <?= $labelFilter == 'Other' ? 'selected' : '' ?>>Other</option>
+                            </select>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="filter-group" style="flex-direction: row; gap: 10px; align-items: flex-end;">
+                            <button type="button" class="reset-filters-btn" onclick="resetAllFilters()"
+                                style="flex: 1; height: 44px; border-radius: 8px; margin-top: 0;">
+                                <i class="fas fa-undo"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <input type="hidden" name="category" id="category-input" value="<?= $categorySlug ?>">
+                <div class="category-tabs-container" style="margin-top: 20px;">
+                    <div onclick="selectCategory('')" class="category-tab active" id="cat-tab-all">
+                        Tất cả
                     </div>
                     <?php foreach ($categories as $c):
                         $iconValue = $c['icon_value'] ?? '📦';
@@ -1329,9 +1539,7 @@ require_once __DIR__ . '/../includes/header.php';
                     <div class="sp-card-img-wrap" style="position: relative;">
                         <?php
                         $labelHTML = '';
-                        if ($product['db_label_name'] && $product['db_label_image']) {
-                            $labelHTML = '<span class="sp-card-label-image" style="position: absolute; top: 12px; right: 12px; z-index: 5;"><img src="' . asset('images/uploads/' . $product['db_label_image']) . '" style="max-height: 35px; object-fit: contain;"></span>';
-                        } else if ($product['label']) {
+                        if (!empty($product['label'])) {
                             $labelColor = htmlspecialchars($product['label_text_color'] ?? '#ffffff');
                             $labelBg = htmlspecialchars($product['label_bg_color'] ?? '#8b5cf6');
                             $labelHTML = '<span class="sp-card-label" style="color: ' . $labelColor . '; background: ' . $labelBg . ';">' . htmlspecialchars($product['label']) . '</span>';
@@ -1342,8 +1550,7 @@ require_once __DIR__ . '/../includes/header.php';
                             <div class="out-of-stock-overlay">
                                 <div class="oos-content">
                                     <i class="fas fa-box-open oos-icon"></i>
-                                    <span class="oos-text">Tạm hết hàng</span>
-                                    <span class="oos-subtext">Sẽ sớm có lại</span>
+                                    <span class="oos-text">Hết hàng</span>
                                 </div>
                             </div>
                         <?php endif; ?>
@@ -1506,12 +1713,21 @@ require_once __DIR__ . '/../includes/header.php';
                 } else {
                     url.searchParams.delete('category');
                 }
-                const labelInput = document.getElementById('label-input');
-                if (labelInput && labelInput.value) {
-                    url.searchParams.set('label', labelInput.value);
+                const labelSelect = document.getElementById('label-select');
+                if (labelSelect && labelSelect.value) {
+                    url.searchParams.set('label', labelSelect.value);
                 } else {
                     url.searchParams.delete('label');
                 }
+
+                // Sync Price Range to URL
+                const minPrice = document.getElementById('min_price');
+                const maxPrice = document.getElementById('max_price');
+                if (minPrice && minPrice.value) url.searchParams.set('min_price', minPrice.value);
+                else url.searchParams.delete('min_price');
+                if (maxPrice && maxPrice.value) url.searchParams.set('max_price', maxPrice.value);
+                else url.searchParams.delete('max_price');
+
                 window.history.pushState({}, '', url);
             }
 
@@ -1533,18 +1749,53 @@ require_once __DIR__ . '/../includes/header.php';
         }, 600); // 600ms debounce
     });
 
-    // Select Label Function
-    function selectLabel(id) {
-        const labelInput = document.getElementById('label-input');
-        if (labelInput) labelInput.value = id;
+    // Price input with debounce
+    ['min_price', 'max_price'].forEach(id => {
+        document.getElementById(id)?.addEventListener('input', function () {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                fetchProducts();
+            }, 800);
+        });
+    });
+
+    // Sort & Label select change
+    ['sort-select', 'label-select'].forEach(id => {
+        document.getElementById(id)?.addEventListener('change', fetchProducts);
+    });
+
+    // Toggle Advanced Filters
+    function toggleAdvancedFilters() {
+        const panel = document.getElementById('advanced-filters-panel');
+        const icon = document.getElementById('filter-icon');
+        panel.classList.toggle('active');
+        icon.classList.toggle('active');
+    }
+
+    // Reset all filters
+    function resetAllFilters() {
+        // Reset inputs
+        const minPrice = document.getElementById('min_price');
+        const maxPrice = document.getElementById('max_price');
+        const sortSelect = document.getElementById('sort-select');
+        const labelSelect = document.getElementById('label-select');
+
+        if (minPrice) minPrice.value = '';
+        if (maxPrice) maxPrice.value = '';
+        if (sortSelect) sortSelect.value = 'newest';
+        if (labelSelect) labelSelect.value = '';
+        if (searchInput) searchInput.value = '';
+
+        // Fetch
         fetchProducts();
     }
 
     // Select Category Function
     function selectCategory(id) {
         // Update hidden input
-        if (categoryInput) {
-            categoryInput.value = id;
+        const catInput = document.getElementById('category-input');
+        if (catInput) {
+            catInput.value = id;
         }
 
         // Update active visual state
@@ -1562,17 +1813,15 @@ require_once __DIR__ . '/../includes/header.php';
         fetchProducts();
     }
 
-    // Toggle category filter visibility (Removed as no longer needed for tabs)
-    function toggleCategoryFilter() {
-        // Optional: maybe scroll to tabs or highlight them
-        const tabs = document.querySelector('.category-tabs-container');
-        if (tabs) {
-            tabs.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-    }
-
-    // Smooth animations on load
+    // Smooth animations on load & Auto Reset URL
     document.addEventListener('DOMContentLoaded', function () {
+        // Clean URL if it's a standard load with parameters (matching PHP forced reset)
+        const isAjax = <?= json_encode($isAjax) ?>;
+        if (!isAjax && window.location.search) {
+            const cleanUrl = window.location.pathname;
+            window.history.replaceState({}, '', cleanUrl);
+        }
+
         const cards = document.querySelectorAll('.sp-card');
         cards.forEach((card, index) => {
             card.style.opacity = '0';
@@ -1585,5 +1834,8 @@ require_once __DIR__ . '/../includes/header.php';
         });
     });
 </script>
+
+<!-- Code Protection -->
+<script src="<?= asset('js/code-protection.js') ?>"></script>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

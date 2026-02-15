@@ -192,9 +192,9 @@ class EmailSender
                                     <!-- Contact Support -->
                                     <p style='font-size:14px; color:{$text_secondary}; text-align:center; margin:0 0 32px;'>
                                         Mọi thắc mắc vui lòng liên hệ qua Telegram:<br>
-                                        <a href='https://t.me/Biinj' target='_blank' style='color:{$accent}; text-decoration:none; display:inline-flex; align-items:center; gap:6px; margin-top:8px;'>
+                                        <a href='" . (defined('CONTACT_TELEGRAM') ? CONTACT_TELEGRAM : 'https://t.me/kaishop25') . "' target='_blank' style='color:{$accent}; text-decoration:none; display:inline-flex; align-items:center; gap:6px; margin-top:8px;'>
                                             <img src='https://img.icons8.com/color/20/telegram-app--v1.png' alt='Telegram' style='width:20px; height:20px; vertical-align:middle;'>
-                                            @Biinj
+                                            @" . (defined('CONTACT_TELEGRAM') ? basename(CONTACT_TELEGRAM) : 'kaishop25') . "
                                         </a>
                                     </p>
 

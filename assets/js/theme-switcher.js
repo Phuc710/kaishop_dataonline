@@ -1,7 +1,30 @@
 
 (function () {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
+    // Function to check if holiday mode is active
+    function isHolidayActive() {
+        const body = document.body || document.getElementsByTagName('body')[0];
+        const html = document.documentElement;
+
+        // Check both body and html for holiday classes
+        const hasHolidayClass = (element) => {
+            if (!element || !element.classList) return false;
+            return element.classList.contains('holiday-mode-noel') ||
+                element.classList.contains('holiday-mode-tet') ||
+                element.classList.contains('holiday-mode-halloween');
+        };
+
+        return hasHolidayClass(body) || hasHolidayClass(html);
+    }
+
+    const isHolidayMode = isHolidayActive();
+
+    // Force dark theme during holiday mode
+    const savedTheme = isHolidayMode ? 'dark' : (localStorage.getItem('theme') || 'dark');
     document.documentElement.setAttribute('data-theme', savedTheme);
+
+    if (isHolidayMode) {
+        localStorage.setItem('theme', 'dark');
+    }
 
     // Force repaint on mobile to ensure theme is applied
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -16,14 +39,36 @@
  * Handles light/dark mode toggling with persistence
  */
 
+// Global helper function to check if holiday mode is active
+function isHolidayModeActive() {
+    const body = document.body || document.getElementsByTagName('body')[0];
+    const html = document.documentElement;
+
+    const hasHolidayClass = (element) => {
+        if (!element || !element.classList) return false;
+        return element.classList.contains('holiday-mode-noel') ||
+            element.classList.contains('holiday-mode-tet') ||
+            element.classList.contains('holiday-mode-halloween');
+    };
+
+    return hasHolidayClass(body) || hasHolidayClass(html);
+}
+
 const ThemeManager = {
     init() {
-        // Check local storage or system preference
-        const savedTheme = localStorage.getItem('theme');
-        // Default to dark if no preference (as per KaiShop original design)
-        const theme = savedTheme || 'dark';
+        // Check if holiday mode is active
+        const isHolidayMode = isHolidayModeActive();
 
-        this.applyTheme(theme);
+        // Force dark theme during holiday mode
+        if (isHolidayMode) {
+            this.applyTheme('dark');
+        } else {
+            // Check local storage or system preference
+            const savedTheme = localStorage.getItem('theme');
+            // Default to dark if no preference (as per KaiShop original design)
+            const theme = savedTheme || 'dark';
+            this.applyTheme(theme);
+        }
 
         // Expose toggle function globally
         window.toggleTheme = () => this.toggle();
@@ -39,6 +84,17 @@ const ThemeManager = {
     },
 
     applyTheme(theme) {
+        // Check if holiday mode is active
+        const isHolidayMode = isHolidayModeActive();
+
+        // If holiday mode is active, force dark theme and don't allow switching
+        if (isHolidayMode) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            this.updateIcon('dark');
+            return;
+        }
+
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem('theme', theme);
 
@@ -50,13 +106,21 @@ const ThemeManager = {
     },
 
     toggle() {
+        // Check if holiday mode is active - don't allow toggle
+        const isHolidayMode = isHolidayModeActive();
+
+        if (isHolidayMode) {
+            console.log('Theme switching is disabled during holiday mode');
+            return;
+        }
+
         const current = document.documentElement.getAttribute('data-theme') || 'dark';
         const newTheme = current === 'dark' ? 'light' : 'dark';
         this.applyTheme(newTheme);
     },
 
     updateIcon(theme) {
-        let baseUrl = '/kaishop'; // Fallback
+        let baseUrl = window.APP_CONFIG?.baseUrl || '';
         if (window.APP_CONFIG && window.APP_CONFIG.baseUrl) {
             baseUrl = window.APP_CONFIG.baseUrl;
         }
@@ -115,7 +179,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 (function () {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
+    // Check if holiday mode is active
+    const isHolidayMode = isHolidayModeActive();
+
+    const savedTheme = isHolidayMode ? 'dark' : (localStorage.getItem('theme') || 'dark');
     document.documentElement.setAttribute('data-theme', savedTheme);
 })();
 

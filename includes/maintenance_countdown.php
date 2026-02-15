@@ -41,7 +41,7 @@ try {
                     session_destroy();
                     session_start();
                 }
-                header('Location: /kaishop/maintenance');
+                header('Location: ' . BASE_URL . '/maintenance');
                 exit;
             }
         } else {
@@ -103,7 +103,7 @@ try {
                         if (remaining <= 0) {
                             // Time's up - redirect to maintenance (unless admin)
                             <?php if (!$is_admin): ?>
-                                window.location.href = '/kaishop/maintenance';
+                                window.location.href = '<?= BASE_URL ?>/maintenance';
                                 return;
                             <?php else: ?>
                                 // Admin - just show 00:00
@@ -129,11 +129,11 @@ try {
 
                     // Also check server-side every 10 seconds
                     setInterval(() => {
-                        fetch('/kaishop/api/check-maintenance')
-                            .then(r => r.json())
+                        fetch('<?= BASE_URL ?>/api/check-maintenance')
+                            .then(res => res.json())
                             .then(data => {
-                                if (data.should_kick) {
-                                    window.location.href = '/kaishop/maintenance';
+                                if (data.maintenance_mode) {
+                                    window.location.href = '<?= BASE_URL ?>/maintenance';
                                 }
                             })
                             .catch(e => console.error('Maintenance check failed:', e));

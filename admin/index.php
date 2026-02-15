@@ -48,6 +48,10 @@ $pageTitle = "Admin - " . SITE_NAME;
         // Global config from .env
         window.APP_URL = '<?= BASE_URL ?>';
         window.API_URL = '<?= BASE_URL ?>/api';
+        window.APP_CONFIG = {
+            baseUrl: '<?= BASE_URL ?>',
+            siteName: '<?= SITE_NAME ?>'
+        };
     </script>
     <script src="<?= asset('js/loading.js') ?>?v=<?= time() ?>"></script>
     <script src="<?= asset('js/notify.js') ?>?v=<?= time() ?>"></script>
@@ -115,14 +119,6 @@ $pageTitle = "Admin - " . SITE_NAME;
                     $user_avatar = asset($user_avatar);
                 }
                 ?>
-                <div class="user-profile-header" style="text-align: center; margin-bottom: 1rem;">
-                    <img src="<?= $user_avatar ?>" alt="Avatar"
-                        style="width: 60px; height: 60px; border-radius: 50%; border: 2px solid #8b5cf6; object-fit: cover; margin-bottom: 0.5rem; display: block; margin-left: auto; margin-right: auto;">
-                    <h2 style="font-size: 1rem; margin: 0; justify-content: center;"><?= e($display_name) ?></h2>
-                </div>
-                <div style="text-align: center;">
-                    <span class="admin-badge">ADMIN</span>
-                </div>
             </div>
 
             <nav class="sidebar-menu">
@@ -145,10 +141,6 @@ $pageTitle = "Admin - " . SITE_NAME;
                     <div class="dropdown-content">
                         <a href="?tab=products" class="dropdown-item">
                             <i class="fas fa-list"></i> Danh Sách Tất Cả
-                        </a>
-
-                        <a href="?tab=labels" class="dropdown-item">
-                            <i class="fas fa-bookmark"></i> Quản Lý Nhãn
                         </a>
                         <a href="?tab=categories" class="dropdown-item">
                             <i class="fas fa-layer-group"></i> Quản Lý Danh Mục
@@ -263,7 +255,7 @@ $pageTitle = "Admin - " . SITE_NAME;
                     <i class="fas fa-shopping-cart"></i>
                     <span>Đơn Hàng</span>
                     <span id="pending-orders-badge"
-                        style="background:linear-gradient(135deg, #ef4444, #dc2626);display:<?= $order_count > 0 ? 'inline-block' : 'none' ?>;padding:0.2rem 0.6rem;border-radius:12px;font-size:0.75rem;font-weight:700;min-width:20px;text-align:center;margin-left:auto"><?= $order_count ?></span>
+                        style="background:red;color:white;display:<?= $order_count > 0 ? 'inline-block' : 'none' ?>;padding:0.2rem 0.6rem;border-radius:12px;font-size:0.75rem;font-weight:700;min-width:20px;text-align:center;margin-left:auto"><?= $order_count ?></span>
                 </a>
 
                 <div class="menu-section"> - Hệ Thống - </div>
@@ -566,12 +558,14 @@ $pageTitle = "Admin - " . SITE_NAME;
             body.admin-sidebar-collapsed .admin-content {
                 margin-left: 70px !important;
             }
-            .menu-section{
-                color:#8b5cf6;
+
+            .menu-section {
+                color: #8b5cf6;
                 font-size: 13px;
-                font-weight:bolder;
+                font-weight: bolder;
 
             }
+
             /* Hide text content when collapsed */
             body.admin-sidebar-collapsed .admin-sidebar .sidebar-header h2,
             body.admin-sidebar-collapsed .admin-sidebar .admin-badge,

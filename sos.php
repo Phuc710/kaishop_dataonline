@@ -1,9 +1,7 @@
 <?php
 /**
- * EMERGENCY MAINTENANCE MODE DISABLE
- * Sử dụng file này khi bị khóa ngoài do quên tắt bảo trì
- * 
- * Cách dùng: Truy cập http://localhost/kaishop/disable_maintenance.php
+
+ * Cách dùng: Truy cập {YOUR_DOMAIN}/sos.php
  */
 
 require_once __DIR__ . '/config/database.php';
@@ -12,7 +10,7 @@ try {
     // Tắt maintenance mode
     $stmt = $pdo->prepare("UPDATE settings SET setting_value = '0' WHERE setting_key = 'maintenance_mode'");
     $stmt->execute();
-    
+
     echo '<!DOCTYPE html>
     <html lang="vi">
     <head>
@@ -91,7 +89,7 @@ try {
             <div class="success-icon">✓</div>
             <h1>Tắt Bảo Trì Thành Công!</h1>
             <p>Chế độ bảo trì đã được <strong>TẮT</strong>.<br>Bạn có thể đăng nhập bình thường ngay bây giờ.</p>
-            <a href="/kaishop/auth/" class="btn">🔐 Đăng Nhập Ngay</a>
+            <a href="<?= BASE_URL ?>/auth/" class="btn">🔐 Đăng Nhập Ngay</a>
             <div class="warning">
                 <strong>⚠️ Lưu ý bảo mật:</strong><br>
                 Nên xóa file <code>disable_maintenance.php</code> sau khi đăng nhập để tránh lỗ hổng bảo mật!
@@ -99,7 +97,7 @@ try {
         </div>
     </body>
     </html>';
-    
+
 } catch (Exception $e) {
     echo '<!DOCTYPE html>
     <html lang="vi">

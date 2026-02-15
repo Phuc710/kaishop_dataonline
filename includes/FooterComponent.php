@@ -120,6 +120,9 @@ class FooterComponent
         <?php endif; ?>
 
 
+        <!-- Security: Anti-Debug Protection -->
+        <script src="<?= asset('js/anti-debug.js') ?>"></script>
+
         <!-- Security: Image Protection Only -->
         <script src="<?= asset('js/content-protection.js') ?>"></script>
 
@@ -339,51 +342,70 @@ class FooterComponent
                 }
             }
 
-            /* Scroll to Top Button (Redesigned) */
+            /* Scroll to Top Button (Premium Rebuild) */
             .scroll-to-top {
                 position: fixed;
-                bottom: 30px;
+                bottom: 70px;
                 right: 30px;
-                width: 50px;
-                height: 50px;
-                background: rgba(15, 23, 42, 0.8);
-                backdrop-filter: blur(10px);
-                border-radius: 50%;
+                width: 48px;
+                height: 48px;
+                background: linear-gradient(135deg, rgba(124, 58, 237, 0.9) 0%, rgba(99, 102, 241, 0.9) 100%);
+                backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 66px;
                 color: #fff;
-                font-size: 20px;
+                font-size: 18px;
                 cursor: pointer;
                 opacity: 0;
                 visibility: hidden;
-                transform: translateY(20px) scale(0.8);
-                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                z-index: 1000;
+                transform: translateY(30px) rotate(-15deg) scale(0.7);
+                transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+                z-index: 999999;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+                box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
             }
 
             .scroll-to-top.show {
                 opacity: 1;
                 visibility: visible;
-                transform: translateY(0) scale(1);
+                transform: translateY(0) rotate(0deg) scale(1);
+            }
+
+            .scroll-to-top i {
+                transition: transform 0.3s ease;
             }
 
             .scroll-to-top:hover {
-                background: #7c3aed;
-                border-color: rgba(124, 58, 237, 0.5);
-                transform: translateY(-5px) scale(1.1);
-                box-shadow: 0 15px 30px rgba(124, 58, 237, 0.4);
-                color: #fff;
+                background: linear-gradient(135deg, rgba(139, 92, 246, 1) 0%, rgba(129, 140, 248, 1) 100%);
+                transform: translateY(-8px) scale(1.05);
+                box-shadow: 0 12px 40px rgba(124, 58, 237, 0.5);
+                border-color: rgba(255, 255, 255, 0.4);
+            }
+
+            .scroll-to-top:hover i {
+                transform: translateY(-3px);
             }
 
             .scroll-to-top:active {
-                transform: translateY(-2px) scale(1);
+                transform: translateY(-4px) scale(0.95);
+            }
+
+            /* Pulse animation for visibility */
+            @keyframes scroll-pulse {
+                0% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.4); }
+                70% { box-shadow: 0 0 0 15px rgba(124, 58, 237, 0); }
+                100% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0); }
+            }
+
+            .scroll-to-top.show:hover {
+                animation: scroll-pulse 2s infinite;
             }
 
             @media (max-width: 768px) {
                 .scroll-to-top {
-                    bottom: 20px;
+                    bottom: 70px;
                     right: 20px;
                     width: 45px;
                     height: 45px;

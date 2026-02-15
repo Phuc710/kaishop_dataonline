@@ -35,7 +35,7 @@ body.holiday-mode-halloween .theme-toggle {
 body.holiday-mode-halloween {
     background-color: var(--holiday-bg);
     background-image: linear-gradient(to bottom, rgba(10, 0, 0, 0.541) 0%, rgba(5, 0, 0, 0.673) 100%),
-        url('/kaishop/assets/images/halloween.png');
+        url('../images/halloween.png');
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
@@ -56,7 +56,7 @@ body.holiday-mode-halloween .page-wrapper::before {
 /* Halloween Ghost Decoration (bottom right) */
 body.holiday-mode-halloween .page-wrapper::after {
     content: '' !important;
-    background-image: url('/kaishop/assets/images/halloween/ghost.png') !important;
+    background-image: url('../images/halloween/ghost.png') !important;
     background-size: 400px auto !important;
     background-attachment: fixed !important;
     background-position: bottom right !important;
@@ -373,10 +373,6 @@ body.holiday-mode-halloween .drawer-title {
     text-shadow: 0 0 5px rgba(234, 88, 12, 0.5);
 }
 
-body.holiday-mode-halloween .drawer-close {
-    color: #ea580c !important;
-    background: rgba(234, 88, 12, 0.1) !important;
-}
 
 body.holiday-mode-halloween .drawer-menu li a:hover {
     background: #ea580c !important;
@@ -430,7 +426,7 @@ body.holiday-mode-halloween .checkbox-wrapper input:checked+label::before {
 /* Deposit Page */
 body.holiday-mode-halloween .deposit-page {
     background-image: linear-gradient(rgba(20, 15, 10, 0), rgba(30, 20, 15, 0.85)),
-        url('/kaishop/assets/images/halloween.png');
+        url('../images/halloween.png');
 }
 
 body.holiday-mode-halloween .page-badge {
@@ -547,15 +543,34 @@ body.holiday-mode-halloween .info-value {
     color: #ffffff !important;
 }
 
-/* Halloween Mode Scroll to Top */
+/* Halloween Mode Scroll to Top (Premium Rebuild) */
 body.holiday-mode-halloween .scroll-to-top {
-    background: #000000 !important;
-    border: 2px solid #ea580c !important;
-    box-shadow: 0 0 15px rgba(234, 88, 12, 0.5) !important;
+    background: linear-gradient(135deg, #000000 0%, #1a0a05 100%) !important;
+    border: 1px solid #ea580c !important;
+    box-shadow: 0 8px 32px rgba(234, 88, 12, 0.4), inset 0 0 0 1px rgba(234, 88, 12, 0.2) !important;
 }
 
 body.holiday-mode-halloween .scroll-to-top:hover {
     background: #ea580c !important;
     color: #000000 !important;
-    box-shadow: 0 0 30px rgba(234, 88, 12, 0.8) !important;
+    box-shadow: 0 12px 40px rgba(234, 88, 12, 0.8) !important;
+    border-color: #fff !important;
+}
+
+@keyframes halloween-scroll-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(234, 88, 12, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 15px rgba(234, 88, 12, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(234, 88, 12, 0);
+    }
+}
+
+body.holiday-mode-halloween .scroll-to-top.show:hover {
+    animation: halloween-scroll-pulse 2s infinite !important;
 }

@@ -71,20 +71,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_product'])) {
         $category_id = $cat_id;
     }
 
-    // Handle image upload
+    // Handle image uploads (multi-image support)
     $image_name = $product['image'];
+    $additional_images = [];
+
+    // Process main image replacement
     if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp'];
+        $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
         $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
 
         if (in_array($ext, $allowed) && $_FILES['image']['size'] <= 10 * 1024 * 1024) {
-            if ($product['image'] && file_exists(__DIR__ . '/../../../assets/images/uploads/' . $product['image'])) {
-                @unlink(__DIR__ . '/../../../assets/images/uploads/' . $product['image']);
-            }
             $image_name = uniqid() . '.' . $ext;
             move_uploaded_file($_FILES['image']['tmp_name'], __DIR__ . '/../../../assets/images/uploads/' . $image_name);
         }
     }
+
+    // Process additional images
+    if (isset($_FILES['additional_images']) && is_array($_FILES['additional_images']['name'])) {
+        $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        $count = count($_FILES['additional_images']['name']);
+
+        for ($i = 0; $i < $count; $i++) {
+            if ($_FILES['additional_images']['error'][$i] === UPLOAD_ERR_OK) {
+                $filename = $_FILES['additional_images']['name'][$i];
+                $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+                if (in_array($ext, $allowed) && $_FILES['additional_images']['size'][$i] <= 10 * 1024 * 1024) {
+                    $img_name = uniqid() . '_' . $i . '.' . $ext;
+                    if (move_uploaded_file($_FILES['additional_images']['tmp_name'][$i], __DIR__ . '/../../../assets/images/uploads/' . $img_name)) {
+                        if (empty($image_name)) {
+                            $image_name = $img_name;
+                        } else {
+                            $additional_images[] = $img_name;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Merge with existing images to keep
+    $images_json_input = $_POST['images_json'] ?? '[]';
+    $existing_to_keep = json_decode($images_json_input, true) ?: [];
+    $all_images = array_merge($existing_to_keep, $additional_images);
+    $images_json = json_encode(array_values($all_images));
 
     if (empty($errors)) {
         try {
@@ -102,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_product'])) {
                 discount_percent=?, discount_amount_vnd=?, discount_amount_usd=?,
                 final_price_vnd=?, final_price_usd=?, stock=9999, category_id=?,
                 min_purchase=1, max_purchase=1,
-                label=?, label_text_color=?, label_bg_color=?, image=?,
+                label=?, label_text_color=?, label_bg_color=?, image=?, images=?,
                 delivery_content=?, label_id=?
                 WHERE id=?
             ")->execute([
@@ -120,6 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_product'])) {
                         $label_text_color,
                         $label_bg_color,
                         $image_name,
+                        $images_json,
                         $delivery_content,
                         $label_id,
                         $product_id
@@ -287,8 +318,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_product'])) {
                         <i class="fas fa-money-bill-wave"></i>
                         Giá Gốc (VND) <span style="color: #ef4444;">*</span>
                     </label>
-                    <input type="number" name="price_vnd" id="priceVnd" class="form-control" required min="1000"
-                        step="1000" value="<?= $product['price_vnd'] ?>" oninput="calculatePrice()">
+                    <input type="number" name="price_vnd" id="priceVnd" class="form-control" required
+                        value="<?= $product['price_vnd'] ?>" oninput="calculatePrice()">
                     <small id="priceUsd" style="color: #10b981; font-weight: 600; display: block; margin-top: 0.5rem;">
                         USD: $<?= number_format($product['price_usd'], 2) ?>
                     </small>

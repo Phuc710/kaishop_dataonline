@@ -380,7 +380,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div style="text-align: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border);">
             <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 8px;">Hỗ trợ 24/7</p>
-            <a href="https://t.me/yourhandle" target="_blank"
+            <a href="<?= CONTACT_TELEGRAM ?>" target="_blank"
                 style="color: var(--primary); text-decoration: none; font-weight: 600; font-size: 14px;">
                 <i class="fab fa-telegram" style="font-size: 14px;"></i> Telegram
             </a>

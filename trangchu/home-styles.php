@@ -74,7 +74,7 @@
     [data-theme="light"] .feature-text,
     [data-theme="light"] .promo-content p,
     [data-theme="light"] .stat-label {
-        color: #64748b !important;
+        color: #000000 !important;
     }
 
     [data-theme="light"] .feature-card,
@@ -406,7 +406,6 @@
     /* Hero Subtitle */
     .hero-subtitle {
         font-size: 1.05rem;
-        line-height: 1.75;
         color: var(--text-muted);
         margin-bottom: 28px;
         max-width: 100%;
@@ -784,16 +783,6 @@
     .section-header.text-center {
         display: block;
         text-align: center;
-    }
-
-    .section-label {
-        display: inline-block;
-        color: var(--accent);
-        font-weight: 700;
-        letter-spacing: 2px;
-        font-size: 1.75rem;
-        text-transform: uppercase;
-        margin-bottom: 12px;
     }
 
     .section-title {

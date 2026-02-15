@@ -1,7 +1,14 @@
 # Ticket folder routing
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /kaishop/ticket/
+    
+    # Auto-detect RewriteBase
+    # Localhost: /kaishop/ticket/
+    # Production: /ticket/
+    RewriteCond %{HTTP_HOST} ^localhost [NC]
+    RewriteRule .* - [E=REWRITE_BASE:/kaishop/ticket/]
+    RewriteCond %{HTTP_HOST} !^localhost [NC]
+    RewriteRule .* - [E=REWRITE_BASE:/ticket/]
     
     # Remove .php extension
     RewriteCond %{REQUEST_FILENAME} !-d

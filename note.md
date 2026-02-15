@@ -1,42 +1,21 @@
-curl -X POST http://localhost/kaishop/api/sepay-webhook.php ^
--H "Content-Type: application/json" ^
--d "{\"id\": \"TEST_123456\", \"amount\": 20000, \"content\": \"kaiNKW9F4MGNE4GBTM\", \"transfer_type\": \"in\"}"
+2️⃣ Để đổi tên hiển thị "kaishop-id-vn.firebaseapp.com" → "KaiShop"
+Tao thấy trong Project Settings e đã có Public-facing name: KaiShop rồi. Nhưng cái popup Google vẫn hiện domain vì cần OAuth Brand Verification từ Google.
 
-C:\xampp\php\php.exe api/test-webhook.php kaiNKW9F4MGNE4GBTM 20000
+Cách fix:
+Vào link này: Google Cloud Console - OAuth consent screen
+Tìm phần App name → nhập KaiShop
+Bấm Save
+Hoặc trong Firebase settings có ghi:
 
+"To update public-facing name or support email, submit a request via Google Cloud Console."
 
-
-# Environment Configuration
-
-APP_URL=http://localhost/kaishop
-APP_NAME=KaiShop
-
-# Database Configuration
-DB_HOST=localhost
-DB_NAME=kaishop
-DB_USER=root
-DB_PASS=
-
-# Email Configuration
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=kaishop365@gmail.com
-SMTP_PASS=nkycgmhjkqreyghr
-EMAIL_FROM=kaishop@gmail.com
-EMAIL_FROM_NAME='KaiShop'
-EMAIL_RECIPIENT=Kaishop@gmail.com
+Click vào link Google Cloud Console đó và update tên app ở đó.
 
 
-RECAPTCHA_SECRET_KEY=6LcAwyskAAAAAAkN-v8tl_ASoL.Jb7nMzoTIuwcRy4NLL
 
-# Currency Settings
-DEFAULT_CURRENCY=VND
-EXCHANGE_RATE=24000
 
-# Upload Settings
-MAX_FILE_SIZE=5242880
 
-# reCAPTCHA Enterprise Configuration
-RECAPTCHA_SITE_KEY=6Lf2cSosAAAAAI0UuvpT-i9XE9Qw5sxpK3GNEn6m
-RECAPTCHA_SECRET_KEY=6Lf2cSosAAAAAI0UuvpT-i9XE9Qw5sxpK3GNEn6m
-RECAPTCHA_PROJECT_ID=kaishop-b0f1d
+Invoke-RestMethod -Uri "https://kaishop.id.vn/api/sepay-webhook.php" -Method Post -Headers @{
+    "Authorization" = "ApiKey sepay_MaiYeuEm_2026_a8f3d9c2e1b4f7a6"
+    "Content-Type" = "application/json"
+} -Body '{"id":"test12333","content":"Nap tien kaiL46TJ09H0QY3AZH","amount":10000,"account_number":"09696969690","transaction_date":"2026-01-20 20:00:00","transfer_type":"in","gate":"MB Bank"}'

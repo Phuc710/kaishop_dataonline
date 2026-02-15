@@ -611,7 +611,7 @@ $users = $stmt->fetchAll();
         document.body.style.overflow = 'hidden';
 
         // Fetch user details via AJAX
-        fetch(`/kaishop/admin/ajax/get_user_details.php?user_id=${userId}`)
+        fetch(`${window.APP_CONFIG.baseUrl}/admin/ajax/get_user_details.php?user_id=${userId}`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
@@ -783,7 +783,7 @@ $users = $stmt->fetchAll();
     }
 
     function toggleUserStatus(userId, status) {
-        fetch('/kaishop/admin/ajax/toggle_user_status.php', {
+        fetch(`${window.APP_CONFIG.baseUrl}/admin/ajax/toggle_user_status.php`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ user_id: userId, status: status })
@@ -801,7 +801,7 @@ $users = $stmt->fetchAll();
     }
 
     function blockUserFingerprint(fingerprint, username) {
-        fetch('/kaishop/admin/ajax/block_fingerprint.php', {
+        fetch(`${window.APP_CONFIG.baseUrl}/admin/ajax/block_fingerprint.php`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -949,7 +949,7 @@ $users = $stmt->fetchAll();
         // Show loading
         notify.info('Processing', 'Đang thực hiện ban...', { duration: 0 });
 
-        fetch('/kaishop/admin/ajax/instant_ban_user.php', {
+        fetch(`${window.APP_CONFIG.baseUrl}/admin/ajax/instant_ban_user.php`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

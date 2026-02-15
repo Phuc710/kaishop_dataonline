@@ -59,17 +59,181 @@ if ($view_order_number) {
     if ($order_detail) {
         ?>
         <link rel="stylesheet" href="assets/css/orders.css">
-        <div class="page-header fade-in">
-            <div>
+        <style>
+            .order-header-responsive {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                flex-direction: row !important;
+                width: 100% !important;
+                gap: 15px !important;
+                padding: 10px 0;
+                margin-bottom: 15px;
+            }
+
+            .order-header-left {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .order-header-left h1 {
+                margin: 0 !important;
+                font-size: 1.5rem !important;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .order-header-left p {
+                margin: 0 !important;
+                font-size: 0.95rem;
+            }
+
+            .order-header-right {
+                flex-shrink: 0;
+            }
+
+            @media (max-width: 768px) {
+                .order-header-left h1 {
+                    font-size: 1.1rem !important;
+                }
+
+                .order-header-left p {
+                    font-size: 0.8rem !important;
+                }
+
+                .order-header-right .btn {
+                    padding: 6px 12px !important;
+                    font-size: 0.85rem !important;
+                }
+
+                .order-header-responsive {
+                    gap: 8px !important;
+                }
+            }
+
+            textarea.form-control {
+                min-height: calc(1.5em + .75rem + 2px);
+                background: rgba(15, 23, 42, 0.6) !important;
+                border: 1px solid var(--border) !important;
+                color: #10aeb9ff !important;
+                border-radius: 8px !important;
+                padding: .75rem !important;
+                font-size: 0.95rem !important;
+                width: 100% !important;
+                resize: vertical;
+                font-family: 'Courier New', monospace;
+            }
+
+            .account-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 10px;
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                overflow: hidden;
+                background: rgba(0, 0, 0, 0.55);
+            }
+
+            .account-table th {
+                background: rgb(0 47 112) !important;
+                color: var(--text-main) !important;
+                padding: 15px;
+                text-align: center;
+                font-weight: 700;
+                font-size: 0.85rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                border-bottom: 1px solid var(--border);
+                border-right: 1px solid gray;
+            }
+
+            .account-table td {
+                padding: 15px;
+                border-bottom: 1px solid var(--border);
+                vertical-align: middle;
+                border-right: 1px solid #64748b;
+            }
+
+            .account-table tr:last-child td {
+                border-bottom: none;
+            }
+
+            .btn-copy-modern {
+                background: var(--primary) !important;
+                color: #ffffff !important;
+                border: none !important;
+                padding: 8px 20px !important;
+                border-radius: 8px !important;
+                font-weight: 600 !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 8px !important;
+                cursor: pointer !important;
+                white-space: nowrap !important;
+                transition: all 0.3s ease !important;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+            }
+
+            .btn-copy-modern:hover {
+                transform: translateY(-2px) !important;
+                filter: brightness(1.1) !important;
+            }
+
+            [data-theme="light"] textarea.form-control {
+                background: #ffffff !important;
+                border: 1px solid #ced4da !important;
+                color: #10aeb9ff !important;
+            }
+
+            [data-theme="light"] .account-table {
+                background: #ffffff !important;
+                border-color: #dee2e6 !important;
+            }
+
+            [data-theme="light"] .account-table th {
+                background: #004b91 !important;
+                color: #ffffff !important;
+                border-right: 1px solid rgba(255, 255, 255, 0.2);
+                border-bottom: 1px solid #dee2e6;
+            }
+
+            [data-theme="light"] .account-table td {
+                border-bottom: 1px solid #dee2e6 !important;
+                border-right: 1px solid #dee2e6 !important;
+            }
+
+            [data-theme="light"] .btn-copy-modern {
+                box-shadow: 0 4px 12px rgba(23, 162, 184, 0.2) !important;
+            }
+
+            .stt-cell {
+                text-align: center;
+                font-weight: 700;
+                color: #10aeb9ff !important;
+                font-size: 1rem;
+                min-width: 50px;
+            }
+
+            [data-theme="light"] .stt-cell {
+                color: #004b91 !important;
+            }
+        </style>
+        <div class="order-header-responsive fade-in">
+            <div class="order-header-left">
                 <h1><i class="fas fa-receipt"></i> Chi Tiết Đơn Hàng</h1>
-                <p style="margin-bottom:0">
+                <p>
                     <span style="color:var(--text-secondary)">Mã đơn:</span>
-                    <strong style="color:var(--primary)"><?= e($order_detail['order_number']) ?></strong>
+                    <strong
+                        style="color:var(--primary); font-family: monospace;"><?= e($order_detail['order_number']) ?></strong>
                 </p>
             </div>
-            <a href="?tab=orders" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Quay Lại
-            </a>
+            <div class="order-header-right">
+                <a href="?tab=orders" class="btn btn-secondary"
+                    style="color: white !important; background: rgba(255,255,255,0.1); white-space: nowrap;">
+                    <i class="fas fa-arrow-left"></i> Quay Lại
+                </a>
+            </div>
         </div>
 
         <div class="card fade-in">
@@ -204,7 +368,7 @@ if ($view_order_number) {
                 <h3 style="color: var(--text-primary); margin-bottom: 1rem; font-size: 1.2rem;">
                     <i class="fas fa-box"></i> Sản Phẩm Trong Đơn (<?= count($expanded_products) ?>)
                 </h3>
-                <div
+                <div class="table-wrapper"
                     style="background: rgba(0, 12, 117, 0.18); border-radius: 12px; border: 1px solid var(--border); overflow-x: auto; -webkit-overflow-scrolling: touch;">
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead>
@@ -338,57 +502,100 @@ if ($view_order_number) {
                         ?>
                         <div
                             style="padding: 1.5rem; background: border-radius: 12px; border: 1px solid var(--border); margin-bottom: 1rem;">
-                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                                <?php if ($product_type == 'account'): ?>
-                                    <span class="badge"
-                                        style="background: #8b5cf6; color: #fff; padding: 0.4rem 0.9rem; border-radius: 8px;">
-                                        <i class="fas fa-user-shield"></i> Tài Khoản
-                                    </span>
-                                <?php elseif ($product_type == 'source'): ?>
-                                    <span class="badge"
-                                        style="background: #3b82f6; color: #fff; padding: 0.4rem 0.9rem; border-radius: 8px;">
-                                        <i class="fas fa-code"></i> Source Code
-                                    </span>
-                                <?php elseif ($product_type == 'book'): ?>
-                                    <span class="badge"
-                                        style="background: #f59e0b; color: #000; padding: 0.4rem 0.9rem; border-radius: 8px;">
-                                        <i class="fas fa-book"></i> Ebook
-                                    </span>
-                                <?php endif; ?>
-                                <strong style="color: var(--text-primary);">
-                                    <?= e($item['product_name']) ?>
-                                    <?php if ($quantity > 1): ?>
-                                        <span style="color: #a78bfa; font-size: 0.9rem;"> x<?= $quantity ?></span>
+                            <div
+                                style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <?php if ($product_type == 'account'): ?>
+                                        <span class="badge"
+                                            style="background: #3a00c2ff; color: #fff; padding: 0.4rem 0.9rem; border-radius: 8px;">
+                                            <i class="fas fa-user-shield"></i> Tài Khoản
+                                        </span>
+                                    <?php elseif ($product_type == 'source'): ?>
+                                        <span class="badge"
+                                            style="background: #3b82f6; color: #fff; padding: 0.4rem 0.9rem; border-radius: 8px;">
+                                            <i class="fas fa-code"></i> Source Code
+                                        </span>
+                                    <?php elseif ($product_type == 'book'): ?>
+                                        <span class="badge"
+                                            style="background: #f59e0b; color: #000; padding: 0.4rem 0.9rem; border-radius: 8px;">
+                                            <i class="fas fa-book"></i> Ebook
+                                        </span>
                                     <?php endif; ?>
-                                </strong>
+                                    <strong style="color: var(--text-primary);">
+                                        <?= e($item['product_name']) ?>
+                                        <?php if ($quantity > 1): ?>
+                                            <span style="color: #a78bfa; font-size: 0.9rem;"> x<?= $quantity ?></span>
+                                        <?php endif; ?>
+                                    </strong>
+                                </div>
+
+                                <?php if ($has_delivery && $product_type == 'account'): ?>
+                                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                        <button onclick="copyAllAccounts_<?= $unique_id ?>()" class="btn btn-sm"
+                                            style="background: rgba(139, 92, 246, 0.2); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.3); padding: 5px 12px; border-radius: 6px; font-weight: 600;">
+                                            <i class="fas fa-copy"></i> Copy All
+                                        </button>
+                                        <button onclick="downloadAccounts_<?= $unique_id ?>()" class="btn btn-sm"
+                                            style="background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); padding: 5px 12px; border-radius: 6px; font-weight: 600;">
+                                            <i class="fas fa-file-download"></i> Down All
+                                        </button>
+                                    </div>
+                                <?php endif; ?>
                             </div>
 
                             <?php if ($has_delivery): ?>
                                 <?php if ($product_type == 'account'): ?>
-                                    <div style="position: relative;">
-                                        <div id="accounts_<?= $unique_id ?>"
-                                            style="background: rgba(15, 23, 42, 0.8); padding: 1.5rem; border-radius: 8px; color: #10b981; font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.8;">
-                                            <?php foreach ($delivery_lines as $idx => $account): ?>
-                                                <div
-                                                    style="display: flex; align-items: center; margin-bottom: 0.5rem; <?= $idx > 0 ? 'border-top: 1px solid rgba(139, 92, 246, 0.2); padding-top: 0.5rem;' : '' ?>">
-                                                    <span style="color: #a78bfa; font-weight: bold; min-width: 30px;"><?= $idx + 1 ?>.</span>
-                                                    <span style="flex: 1; margin-left: 10px;"><?= e($account) ?></span>
-                                                    <button onclick="copyAccount('<?= e($account) ?>')"
-                                                        style="background: #ffffff; border: 1px solid #8b5cf6; color: #c4b5fd; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; margin-left: 10px; cursor: pointer;">
-                                                        <i class="fas fa-copy"></i>
-                                                    </button>
-                                                </div>
-                                            <?php endforeach; ?>
-                                        </div>
+                                    <div class="table-wrapper notranslate">
+                                        <table class="account-table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 60px;">STT</th>
+                                                    <th>Tài khoản</th>
+                                                    <th style="width: 110px;">Thao tác</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($delivery_lines as $idx => $account): ?>
+                                                    <tr>
+                                                        <td class="stt-cell">
+                                                            <?= $idx + 1 ?>
+                                                        </td>
+                                                        <td>
+                                                            <textarea class="form-control" readonly><?= e($account) ?></textarea>
+                                                        </td>
+                                                        <td style="text-align: center;">
+                                                            <button onclick="copyAccount('<?= e($account) ?>')" class="btn-copy-modern">
+                                                                <i class="fas fa-copy"></i> Copy
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
                                     </div>
                                     <script>
                                         function copyAllAccounts_<?= $unique_id ?>() {
                                             const accounts = <?= json_encode($delivery_lines) ?>;
-                                            const text = accounts.map((acc, idx) => `${idx + 1}. ${acc}`).join('\n');
+                                            const text = accounts.join('\n');
                                             navigator.clipboard.writeText(text).then(() => {
                                                 if (window.notify) notify.success('Đã copy tất cả tài khoản!');
                                                 else alert('Đã copy tất cả tài khoản!');
                                             });
+                                        }
+                                        function downloadAccounts_<?= $unique_id ?>() {
+                                            const accounts = <?= json_encode($delivery_lines) ?>;
+                                            const text = accounts.join('\n');
+                                            const blob = new Blob([text], { type: 'text/plain' });
+                                            const url = window.URL.createObjectURL(blob);
+                                            const a = document.createElement('a');
+                                            a.href = url;
+                                            a.download = 'kaishop_accounts_<?= e($order_detail['order_number']) ?>.txt';
+                                            a.setAttribute('data-no-loading', 'true');
+                                            document.body.appendChild(a);
+                                            a.click();
+                                            window.URL.revokeObjectURL(url);
+                                            document.body.removeChild(a);
+                                            if (window.notify) notify.success('Đang tải về danh sách tài khoản!');
                                         }
                                         function copyAccount(account) {
                                             navigator.clipboard.writeText(account).then(() => {

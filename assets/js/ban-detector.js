@@ -14,7 +14,7 @@
     function checkBanStatus() {
         if (document.hidden) return;
 
-        fetch('/kaishop/api/check_ban_status.php', {
+        fetch(`${window.APP_CONFIG.baseUrl}/api/check_ban_status.php`, {
             method: 'GET',
             credentials: 'same-origin',
             cache: 'no-cache'
@@ -31,7 +31,7 @@
                     alert(`🚫 YOUR ACCOUNT HAS BEEN BANNED\n\n${data.reason || 'Your account has been locked by an administrator'}\n\nYou will be logged out immediately.`);
 
                     // Force logout
-                    window.location.href = '/kaishop/auth/logout.php?reason=banned';
+                    window.location.href = `${window.APP_CONFIG.baseUrl}/auth/logout.php?reason=banned`;
                 }
             })
             .catch(error => {

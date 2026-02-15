@@ -15,7 +15,7 @@ body.holiday-mode-tet {
     background-color: #0a0000 !important;
     background-image:
         linear-gradient(rgba(10, 0, 0, 0.85), rgba(54, 0, 0, 0.411)),
-        url('/kaishop/assets/images/tet/tet.jpg') !important;
+        url('../images/tet/tet.jpg') !important;
     background-size: cover !important;
     background-attachment: fixed !important;
     background-position: center !important;
@@ -24,7 +24,7 @@ body.holiday-mode-tet {
 
 body.holiday-mode-tet .page-wrapper::before {
     content: '' !important;
-    background-image: url('/kaishop/assets/images/tet/thantai.png') !important;
+    background-image: url('../images/tet/thantai.png') !important;
     background-size: 300px auto !important;
     background-attachment: fixed !important;
     background-position: bottom right !important;
@@ -47,7 +47,7 @@ body.holiday-mode-tet .page-wrapper::before {
 
 /* Header */
 body.holiday-mode-tet .kai-header {
-    background: linear-gradient(135deg, #3c000000 0%, #4b000000 100%) !important;
+    background: linear-gradient(135deg, #00000087 0%, #4b000000 100%) !important;
     backdrop-filter: blur(10px);
 }
 
@@ -172,7 +172,7 @@ body.holiday-mode-tet .stat-card,
 body.holiday-mode-tet .process-step,
 body.holiday-mode-tet .faq-item,
 body.holiday-mode-tet .glass-card {
-    background: rgb(51 1 1 / 37%) !important;
+    background: rgb(0 0 0 / 41%) !important;
     border: 2px solid rgba(255, 215, 0, 0.3) !important;
     backdrop-filter: blur(10px);
 }
@@ -370,7 +370,7 @@ body.holiday-mode-tet .checkbox-wrapper input:checked+label::before {
 /* Deposit Page */
 body.holiday-mode-tet .deposit-page {
     background-image: linear-gradient(rgba(10, 0, 0, 0.85), rgba(54, 0, 0, 0.411)),
-        url('/kaishop/assets/images/tet/tet.jpg') !important;
+        url('../images/tet/tet.jpg') !important;
     background-size: cover !important;
     background-attachment: fixed !important;
     background-position: center !important;
@@ -461,9 +461,11 @@ body.holiday-mode-tet .btn-copy {
 body.holiday-mode-tet .btn-copy:hover {
     transform: translateY(-2px) !important;
 }
-#displayAmount{
+
+#displayAmount {
     color: rgb(0, 255, 0) !important;
 }
+
 /* Tet Mode Hero Image */
 body.holiday-mode-tet .light-mode-img,
 body.holiday-mode-tet .dark-mode-img,
@@ -476,15 +478,34 @@ body.holiday-mode-tet .tet-mode-img {
     display: block !important;
 }
 
-/* Tet Mode Scroll to Top */
+/* Tet Mode Scroll to Top (Premium Rebuild) */
 body.holiday-mode-tet .scroll-to-top {
-    background: linear-gradient(135deg, #c8102e 0%, #8b0000 100%) !important;
-    border: 2px solid #ffd700 !important;
-    box-shadow: 0 0 15px rgba(200, 16, 46, 0.5) !important;
+    background: linear-gradient(135deg, #c8102e 0%, #db0000 100%) !important;
+    border: 1px solid #ffd700 !important;
+    box-shadow: 0 8px 32px rgba(200, 16, 46, 0.4), inset 0 0 0 1px rgba(255, 215, 0, 0.2) !important;
 }
 
 body.holiday-mode-tet .scroll-to-top:hover {
     background: #ffd700 !important;
     color: #8b0000 !important;
-    box-shadow: 0 0 25px rgba(255, 215, 0, 0.6) !important;
+    box-shadow: 0 12px 40px rgba(255, 215, 0, 0.6) !important;
+    border-color: #fff !important;
+}
+
+@keyframes tet-scroll-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 15px rgba(255, 215, 0, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+    }
+}
+
+body.holiday-mode-tet .scroll-to-top.show:hover {
+    animation: tet-scroll-pulse 2s infinite !important;
 }

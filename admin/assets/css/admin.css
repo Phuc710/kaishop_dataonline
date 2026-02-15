@@ -451,9 +451,6 @@ body::after {
     transition: all 0.3s;
 }
 
-.stat-card:hover {
-    transform: translateY(-5px);
-}
 
 .stat-card-header {
     display: flex;

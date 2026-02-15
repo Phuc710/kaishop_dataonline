@@ -3,10 +3,13 @@
  * Trang Chủ - KaiShop
  */
 
+// Load configuration and database connection
+require_once __DIR__ . '/../config/config.php';
+
 // Define page-specific metadata for SEO
-$pageTitle = 'KaiShop - Mua Tài Khoản ChatGPT, Gemini, Canva, Netflix Giá Rẻ';
-$pageDescription = 'Mua tài khoản ChatGPT Plus, Gemini Pro, Canva Pro, Netflix, Spotify giá rẻ. Giao dịch tự động 24/7, bảo hành trọn đời. Uy tín #1 VN!';
-$pageKeywords = 'chatgpt plus, gemini pro, canva pro, netflix, spotify, youtube premium, source code, mua tài khoản, giá rẻ, uy tín';
+$pageTitle = 'KaiShop - Mua Tài Khoản Premium | Thanh Toán QR Tự Động 24/7';
+$pageDescription = 'Cung cấp tài khoản ChatGPT Plus, Gemini Pro, Canva Pro, Netflix, Spotify chính hãng. Thanh toán QR tự động - Nhận hàng tức thì. Bảo hành trọn đời. Uy tín #1 Việt Nam!';
+$pageKeywords = 'thanh toán qr tự động, mua tài khoản chatgpt, gemini pro, canva pro, netflix premium, spotify premium, youtube premium, source code, giao dịch tự động 24/7';
 
 // Get stats
 $total_products = $pdo->query("SELECT COUNT(*) FROM products WHERE is_active = 1 AND is_hidden = 0")->fetchColumn();
@@ -55,12 +58,12 @@ require_once __DIR__ . '/../includes/header.php';
                     <div class="hero-badge">
                         <img src="https://media.giphy.com/media/xje7ITeGqNAFWyvZ7a/giphy.gif" alt="Auto"
                             style="width: 20px; height: 20px; object-fit: contain;">
-                        <span>Thanh toán tự động • Hỗ trợ 24/7</span>
+                        <span>Thanh toán QR tự động • Giao dịch tức thì</span>
                     </div>
 
                     <h1 class="hero-title">
-                        Kho tài nguyên <br>
-                        <span class="text-gradient">Chất lượng cao</span>
+                        Cung cấp tài khoản <br>
+                        <span class="text-gradient">Premium chính hãng</span>
                     </h1>
 
                     <div class="typing-container notranslate">
@@ -69,10 +72,10 @@ require_once __DIR__ . '/../includes/header.php';
                     </div>
 
                     <p class="hero-subtitle">
-                        <strong>KaiShop</strong> – Nơi chuyên cung cấp tài khoản premium: ChatGPT Plus, Gemini Pro,
-                        Canva Pro, Netflix, Spotify, YouTube Premium, cùng Source Code chất lượng cao. <br>
-                        Giao dịch tự động 24/7, bảo hành trọn đời, hỗ trợ nhiệt tình. Trải nghiệm mua sắm <strong>nhanh
-                            chóng</strong>, <strong>an toàn</strong> và <strong>tiện lợi</strong> nhất!
+                        <strong>KaiShop</strong> - Chuyên cung cấp tài khoản premium: ChatGPT Plus, Gemini Pro,
+                        Canva Pro, Netflix, Spotify, YouTube Premium & Source Code chất lượng cao. <br>
+                        <strong>Thanh toán QR tự động</strong> - Nhận hàng <strong>tức thì 24/7</strong>.
+                        An toàn, uy tín, bảo hành trọn đời!
                     </p>
 
                     <div class="hero-actions">
@@ -116,8 +119,7 @@ require_once __DIR__ . '/../includes/header.php';
                         <div class="section-label">GIÁ TRỊ CỐT LÕI</div>
                         <h2 class="section-title">Tại sao chọn <span class="text-gradient">KaiShop</span>?</h2>
                         <div class="section-sub">Hơn 10,000+ khách hàng tin tưởng sử dụng tài khoản ChatGPT, Gemini,
-                            Canva, Netflix, Spotify, Source Code từ KaiShop. Giá rẻ nhất thị trường, bảo hành trọn đời,
-                            hỗ trợ 24/7.</div>
+                            Canva, Netflix, Spotify, Source Code từ KaiShop. Giá rẻ nhất thị trường, hỗ trợ 24/7.</div>
                     </div>
                     <a href="<?= url('chinhsach') ?>" class="section-link">Xem chính sách bảo hành <i
                             class="fas fa-arrow-right"></i></a>
@@ -128,10 +130,10 @@ require_once __DIR__ . '/../includes/header.php';
                         <div class="feature-icon-box">
                             <i class="fas fa-robot"></i>
                         </div>
-                        <h3 class="feature-title">Giao dịch tự động 100%</h3>
+                        <h3 class="feature-title">Thanh toán QR tự động 100%</h3>
                         <p class="feature-text">
-                            Không cần chờ đợi admin phê duyệt. Hệ thống tự động kiểm tra chuyển khoản và trả hàng ngay
-                            lập tức bất kể ngày đêm.
+                            Chuyển khoản QR hoặc ngân hàng - Hệ thống tự động xác nhận và cộng tiền trong 1-5 giây.
+                            Nhận hàng ngay lập tức 24/7 không cần chờ admin.
                         </p>
                         <div class="feature-meta">
                             <span class="badge badge-success">Speed: 1-5s</span>
@@ -209,8 +211,7 @@ require_once __DIR__ . '/../includes/header.php';
                             <div class="section-label">THỐNG KÊ HỆ THỐNG</div>
                             <h2 class="h2-title">Nhiều Khách Hàng Tin Tưởng</h2>
                             <p class="text-muted">Đã cung cấp hàng nghìn tài khoản ChatGPT, Gemini, Canva, Netflix,
-                                Spotify, Source Code chất lượng cao. Giao dịch tự động 24/7, bảo hành trọn đời, hỗ trợ
-                                nhiệt tình.</p>
+                                Spotify, Source Code chất lượng cao. Giao dịch tự động 24/7.</p>
                         </div>
                     </div>
                     <div class="stats-grid stagger-box">
@@ -254,8 +255,8 @@ require_once __DIR__ . '/../includes/header.php';
                         <div class="process-icon">
                             <i class="fas fa-qrcode"></i>
                         </div>
-                        <h3>2. Thanh toán</h3>
-                        <p>Quét mã QR hoặc chuyển khoản. Hệ thống tự động check và cộng tiền trong vài giây.</p>
+                        <h3>2. Thanh toán QR</h3>
+                        <p>Quét mã QR hoặc chuyển khoản. Hệ thống tự động check và cộng tiền trong 1-5 giây.</p>
                     </div>
 
                     <div class="process-step">
@@ -411,7 +412,7 @@ require_once __DIR__ . '/../includes/header.php';
         // Advanced Typing Effect (fixed)
         const texts = [
             "Nhanh chóng - Tiện lợi - Bảo mật tuyệt đối",
-            "Giá rẻ - Uy tín #1 VN - Bảo hành trọn đời",
+            "Giá rẻ - Uy tín #1 VN",
             "Hỗ trợ nhiệt tình - Mua hàng tự động 24/7"
         ];
 
@@ -453,3 +454,6 @@ require_once __DIR__ . '/../includes/header.php';
 
     });
 </script>
+
+<!-- Code Protection -->
+<script src="<?= asset('js/code-protection.js') ?>"></script>

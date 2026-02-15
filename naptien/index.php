@@ -49,15 +49,25 @@ require_once __DIR__ . '/../includes/header.php';
 
         <!-- Main Payment Form -->
         <div class="payment-card">
+
             <!-- Quick Amounts -->
             <label>Chọn nhanh:</label>
             <div class="quick-amounts-grid">
                 <button class="amount-btn" onclick="setAmount(10000)">10.000</button>
                 <button class="amount-btn" onclick="setAmount(20000)">20.000</button>
                 <button class="amount-btn" onclick="setAmount(50000)">50.000</button>
-                <button class="amount-btn" onclick="setAmount(100000)">100.000</button>
-                <button class="amount-btn" onclick="setAmount(200000)">200.000</button>
-                <button class="amount-btn" onclick="setAmount(500000)">500.000</button>
+                <button class="amount-btn" onclick="setAmount(100000)">
+                    100.000
+                    <div class="bonus-badge">+10%</div>
+                </button>
+                <button class="amount-btn" onclick="setAmount(200000)">
+                    200.000
+                    <div class="bonus-badge">+15%</div>
+                </button>
+                <button class="amount-btn" onclick="setAmount(500000)">
+                    500.000
+                    <div class="bonus-badge">+20%</div>
+                </button>
             </div>
 
             <!-- Manual Input -->
@@ -70,7 +80,7 @@ require_once __DIR__ . '/../includes/header.php';
                         onkeypress="if(event.key === 'Enter') createTransaction()">
                     <span class="currency-suffix">VND</span>
                 </div>
-                <p style="color: #64748b; font-size: 0.85rem; margin-top: 0.75rem;">
+                <p style="color: #ffffff95; font-size: 0.85rem; margin-top: 0.75rem;">
                     <i class="fas fa-info-circle"></i> Số tiền nạp tối thiểu: 10.000đ
                 </p>
             </div>
@@ -99,7 +109,8 @@ require_once __DIR__ . '/../includes/header.php';
                     <!-- Right: Info -->
                     <div>
                         <div class="timer-box">
-                            <div style="color: #ff0000ff; font-size: 1.1rem; font-weight: bold; margin-bottom: 5px;">Thời gian còn lại</div>
+                            <div style="color: #ff0000ff; font-size: 1.1rem; font-weight: bold; margin-bottom: 5px;">
+                                Thời gian còn lại</div>
                             <div class="timer-text" id="timerDisplay">05:00</div>
                         </div>
 
@@ -146,7 +157,7 @@ require_once __DIR__ . '/../includes/header.php';
                         </div>
 
                         <button class="cancel-btn" onclick="cancelTransaction()">
-                           Hủy giao dịch
+                            Hủy giao dịch
                         </button>
                     </div>
                 </div>

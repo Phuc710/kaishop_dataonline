@@ -279,13 +279,10 @@
     #successPopup .btn-primary {
         background: linear-gradient(135deg, #18181b 0%, #000000 100%) !important;
         color: white !important;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     }
 
     #successPopup .btn-primary:hover {
-        opacity: 0.9;
         transform: translateY(-1px);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     }
 
     #successPopup .btn-primary:active {

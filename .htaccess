@@ -4,21 +4,29 @@
 # Enable Rewrite Engine
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /kaishop/
+    
+    # Auto-detect RewriteBase (localhost vs production)
+    # Localhost: /kaishop/
+    # Production: /
+    RewriteCond %{HTTP_HOST} ^localhost [NC]
+    RewriteRule ^(.*)$ - [E=BASE:/kaishop/]
+    RewriteCond %{HTTP_HOST} !^localhost [NC]
+    RewriteRule ^(.*)$ - [E=BASE:/]
     
     # Redirect www to non-www (Optional)
     # RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
-    # RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+    # RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
     
-    # Force HTTPS (Bật khi có SSL)
-    # RewriteCond %{HTTPS} off
-    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    # Force HTTPS (Production only - skip for localhost)
+    RewriteCond %{HTTPS} off
+    RewriteCond %{HTTP_HOST} !^localhost [NC]
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
     
     # Remove trailing slash
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)/$ /$1 [L,R=301]
     
-    # Remove .php extension
+    # Remove .php extension (allow /privacy instead of /privacy.php)
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME}\.php -f
     RewriteRule ^(.*)$ $1.php [L]
@@ -28,7 +36,7 @@
     RewriteCond %{REQUEST_FILENAME}\.html -f
     RewriteRule ^(.*)$ $1.html [L]
     
-    # Route all requests through index.php
+    # Route all requests through index.php (skip if file exists)
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)$ index.php [QSA,L]
@@ -36,6 +44,11 @@
 
 # Security Headers
 <IfModule mod_headers.c>
+    # CORS for manifest and JSON files
+    <FilesMatch "\.(webmanifest|json)$">
+        Header set Access-Control-Allow-Origin "*"
+    </FilesMatch>
+    
     # Prevent clickjacking
     Header set X-Frame-Options "SAMEORIGIN"
     
@@ -67,9 +80,11 @@ Options -Indexes
 </FilesMatch>
 
 # Custom Error Pages
-ErrorDocument 404 /kaishop/404.php
-ErrorDocument 403 /kaishop/403.php
-ErrorDocument 500 /kaishop/500.php
+# Auto-detect based on environment
+# Localhost uses /kaishop/ prefix, production uses /
+ErrorDocument 404 /404.php
+ErrorDocument 403 /403.php
+ErrorDocument 500 /500.php
 
 # Compression
 <IfModule mod_deflate.c>

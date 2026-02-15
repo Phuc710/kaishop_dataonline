@@ -174,8 +174,8 @@ foreach ($items as $item) {
 }
 
 $pageTitle = "Thanh Toán - " . SITE_NAME;
-$pageDescription = 'Xác nhận đơn hàng và thanh toán an toàn tại KaiShop. Hỗ trợ nhiều hình thức thanh toán, giao dịch bảo mật 100%. Mua hàng nhanh chóng, tiện lợi.';
-$pageKeywords = 'thanh toán online, đặt hàng kaishop, giao dịch an toàn, mua tài khoản trực tuyến';
+$pageDescription = 'Thanh toán tự động 24/7, Hỗ trợ nhiều hình thức thanh toán, giao dịch bảo mật 100%. Mua hàng nhanh chóng, tiện lợi.';
+$pageKeywords = 'Thanh toán tự động 24/7, thanh toán online, giao dịch an toàn, mua tài khoản trực tuyến';
 require_once __DIR__ . '/../includes/header.php';
 ?>
 

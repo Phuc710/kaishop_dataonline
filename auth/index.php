@@ -12,7 +12,7 @@ try {
 
     // Maintenance Check
     if (($settings['maintenance_mode'] ?? '0') == '1') {
-        header('Location: /kaishop/maintenance');
+        header('Location: ' . BASE_URL . '/maintenance');
         exit;
     }
 
@@ -70,121 +70,76 @@ function logUserLogin($userId, $username, $status, $failReason = null)
     }
 }
 
-/**
- * Verify reCAPTCHA Enterprise token (same as google-login.php)
- */
-function verifyRecaptchaToken($token)
-{
-    // Skip verification on localhost or if secret key is not configured
-    if ($token === 'localhost_skip' || empty(RECAPTCHA_SECRET_KEY)) {
-        error_log('[reCAPTCHA] Skipping verification (localhost or no secret key)');
-        return ['success' => true, 'score' => 1.0, 'skipped' => true];
-    }
 
-    try {
-        // Prepare API request
-        $url = 'https://recaptchaenterprise.googleapis.com/v1/projects/' . RECAPTCHA_PROJECT_ID . '/assessments?key=' . RECAPTCHA_SECRET_KEY;
-
-        $payload = [
-            'event' => [
-                'token' => $token,
-                'siteKey' => RECAPTCHA_SITE_KEY,
-                'expectedAction' => 'login'
-            ]
-        ];
-
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        if ($httpCode !== 200) {
-            error_log('[reCAPTCHA] API request failed with HTTP code: ' . $httpCode);
-            return ['success' => false, 'error' => 'API request failed'];
-        }
-
-        $result = json_decode($response, true);
-
-        if (!isset($result['tokenProperties']['valid']) || !$result['tokenProperties']['valid']) {
-            error_log('[reCAPTCHA] Invalid token');
-            return ['success' => false, 'error' => 'Token không hợp lệ'];
-        }
-
-        if (!isset($result['tokenProperties']['action']) || $result['tokenProperties']['action'] !== 'login') {
-            error_log('[reCAPTCHA] Action mismatch');
-            return ['success' => false, 'error' => 'Action không khớp'];
-        }
-
-        $score = $result['riskAnalysis']['score'] ?? 0;
-
-        if ($score < RECAPTCHA_MIN_SCORE) {
-            error_log('[reCAPTCHA] Score too low: ' . $score);
-            return ['success' => false, 'error' => 'Điểm xác thực quá thấp', 'score' => $score];
-        }
-
-        error_log('[reCAPTCHA] Verification successful, score: ' . $score);
-        return ['success' => true, 'score' => $score];
-
-    } catch (Exception $e) {
-        error_log('[reCAPTCHA] Exception: ' . $e->getMessage());
-        return ['success' => false, 'error' => 'Lỗi hệ thống'];
-    }
-}
 
 // Handle Login
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'login') {
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
-    $recaptchaToken = $_POST['recaptcha_token'] ?? '';
 
-    if (empty($username) || empty($password)) {
+    // Validate CSRF token
+    if (!CSRFProtection::validateRequest()) {
+        setFlash('error', 'Token bảo mật không hợp lệ. Vui lòng thử lại.');
+        logUserLogin(null, $username, 'failed', 'CSRF token validation failed');
+    } else if (empty($username) || empty($password)) {
         setFlash('error', 'Vui lòng nhập đầy đủ thông tin');
         logUserLogin(null, $username, 'failed', 'Thông tin không đầy đủ');
     } else {
-        // Verify reCAPTCHA token
-        if (empty($recaptchaToken)) {
-            setFlash('error', 'Vui lòng xác thực bảo mật');
-            logUserLogin(null, $username, 'failed', 'Missing reCAPTCHA token');
+        // Initialize LoginRateLimiter
+        $rateLimiter = new LoginRateLimiter($pdo);
+
+        // Check rate limit
+        $limitCheck = $rateLimiter->checkLimit($username);
+
+        if (!$limitCheck['allowed']) {
+            setFlash('error', $limitCheck['message']);
+            logUserLogin(null, $username, 'failed', 'Rate limit exceeded');
         } else {
+            // Apply delay if needed
+            if ($limitCheck['delay'] > 0) {
+                sleep($limitCheck['delay']);
+            }
+
             // Verify Cloudflare Turnstile
             $turnstileToken = TurnstileVerifier::getTokenFromRequest();
             if (!TurnstileVerifier::verify($turnstileToken)) {
-                setFlash('error', 'Xác thực thất bại. Vui lòng thử lại.');
-                logUserLogin(null, $username, 'failed', 'BOT L verification failed');
+                setFlash('error', 'Vui lòng xác thực "Verify you are human"');
+                logUserLogin(null, $username, 'failed', 'Turnstile verification failed');
+                $rateLimiter->recordFailedAttempt($username);
             } else {
-                // Verify reCAPTCHA token (optional dual layer)
-                $recaptchaResult = verifyRecaptchaToken($recaptchaToken);
-                if (!$recaptchaResult['success']) {
-                    setFlash('error', 'Xác thực bảo mật thất bại. Vui lòng thử lại.');
-                    logUserLogin(null, $username, 'failed', 'reCAPTCHA verification failed: ' . $recaptchaResult['error']);
+                $stmt = $pdo->prepare("SELECT * FROM users WHERE (username = ? OR email = ?) AND is_active = 1");
+                $stmt->execute([$username, $username]);
+                $user = $stmt->fetch();
+
+                if ($user && verifyPassword($password, $user['password'])) {
+                    // Reset failed attempts
+                    $rateLimiter->resetAttempts($username);
+
+                    // Use SessionManager for secure session
+                    SessionManager::setUserSession([
+                        'id' => $user['id'],
+                        'username' => $user['username'],
+                        'email' => $user['email'],
+                        'role' => $user['role']
+                    ]);
+
+                    $pdo->prepare("UPDATE users SET last_login = NOW() WHERE id = ?")->execute([$user['id']]);
+
+                    // Ghi log đăng nhập thành công
+                    logUserLogin($user['id'], $user['username'], 'success');
+
+                    // Regenerate CSRF token
+                    CSRFProtection::regenerateToken();
+
+                    setFlash('success', 'Đăng nhập thành công!');
+                    redirect(url(''));
                 } else {
-                    $stmt = $pdo->prepare("SELECT * FROM users WHERE (username = ? OR email = ?) AND is_active = 1");
-                    $stmt->execute([$username, $username]);
-                    $user = $stmt->fetch();
+                    // Record failed attempt
+                    $rateLimiter->recordFailedAttempt($username);
 
-                    if ($user && verifyPassword($password, $user['password'])) {
-                        $_SESSION['user_id'] = $user['id'];
-                        $_SESSION['username'] = $user['username'];
-                        $_SESSION['role'] = $user['role'];
-
-                        $pdo->prepare("UPDATE users SET last_login = NOW() WHERE id = ?")->execute([$user['id']]);
-
-                        // Ghi log đăng nhập thành công
-                        logUserLogin($user['id'], $user['username'], 'success');
-
-                        setFlash('success', 'Đăng nhập thành công!');
-                        redirect(url(''));
-                    } else {
-                        // SECURITY: Generic error message - không tiết lộ là sai username hay password
-                        logUserLogin(null, $username, 'failed', 'Invalid credentials');
-                        setFlash('error', 'Tài khoản hoặc mật khẩu không đúng');
-                    }
+                    // SECURITY: Generic error message - không tiết lộ là sai username hay password
+                    logUserLogin(null, $username, 'failed', 'Invalid credentials');
+                    setFlash('error', 'Tài khoản hoặc mật khẩu không đúng');
                 }
             }
         }
@@ -198,7 +153,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $password = $_POST['password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
 
-    if (empty($username) || empty($email) || empty($password)) {
+    // Validate CSRF token
+    if (!CSRFProtection::validateRequest()) {
+        setFlash('error', 'Token bảo mật không hợp lệ. Vui lòng thử lại.');
+    } elseif (empty($username) || empty($email) || empty($password)) {
         setFlash('error', 'Vui lòng điền đầy đủ thông tin');
     } elseif (strlen($username) < 3) {
         setFlash('error', 'Tên đăng nhập phải có ít nhất 3 ký tự');
@@ -240,9 +198,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                             'email' => $email
                         ]);
 
-                        $_SESSION['user_id'] = $id;
-                        $_SESSION['username'] = $username;
-                        $_SESSION['role'] = $role;
+                        // Use SessionManager for secure session
+                        SessionManager::setUserSession([
+                            'id' => $id,
+                            'username' => $username,
+                            'email' => $email,
+                            'role' => $role
+                        ]);
+
+                        // Regenerate CSRF token
+                        CSRFProtection::regenerateToken();
 
                         setFlash('success', $role === 'admin' ? 'Chúc mừng! Bạn là Admin đầu tiên!' : 'Đăng ký thành công!');
                         redirect(url(''));
@@ -284,7 +249,7 @@ $activeTab = $_GET['tab'] ?? 'login';
                 break;
         }
         if ($cssFile):
-        ?>
+            ?>
             <link rel="stylesheet" href="<?= asset('css/' . $cssFile) ?>?v=<?= time() ?>">
         <?php endif; ?>
         <script src="<?= asset('js/holiday-effects.js') ?>?v=<?= time() ?>"></script>
@@ -317,16 +282,16 @@ $activeTab = $_GET['tab'] ?? 'login';
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getAuth, signInWithPopup, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 
-        // Firebase Configuration
+        // Firebase Configuration (from .env)
         const firebaseConfig = {
-            apiKey: "AIzaSyC8CQbJAylfIkqE-tdM2e2vsHcr5iuZmlw",
-            authDomain: "kaishop-b0f1d.firebaseapp.com",
-            databaseURL: "https://kaishop-b0f1d-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "kaishop-b0f1d",
-            storageBucket: "kaishop-b0f1d.firebasestorage.app",
-            messagingSenderId: "800821561970",
-            appId: "1:800821561970:web:1c2385260b24a3e12890eb",
-            measurementId: "G-KS30HF01HE"
+            apiKey: "<?= FIREBASE_API_KEY ?>",
+            authDomain: "<?= FIREBASE_AUTH_DOMAIN ?>",
+            databaseURL: "<?= FIREBASE_DATABASE_URL ?>",
+            projectId: "<?= FIREBASE_PROJECT_ID ?>",
+            storageBucket: "<?= FIREBASE_STORAGE_BUCKET ?>",
+            messagingSenderId: "<?= FIREBASE_MESSAGING_SENDER_ID ?>",
+            appId: "<?= FIREBASE_APP_ID ?>",
+            measurementId: "<?= FIREBASE_MEASUREMENT_ID ?>"
         };
 
         // Initialize Firebase
@@ -339,12 +304,12 @@ $activeTab = $_GET['tab'] ?? 'login';
         window.signInWithPopup = signInWithPopup;
     </script>
 
-    <!-- reCAPTCHA Enterprise -->
-    <script
-        src="https://www.google.com/recaptcha/enterprise.js?render=6Lf2cSosAAAAAI0UuvpT-i9XE9Qw5sxpK3GNEn6m"></script>
 
-    <!-- Cloudflare Turnstile -->
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+    <!-- Cloudflare Turnstile (only on production) -->
+    <?php if (strpos($_SERVER['HTTP_HOST'] ?? '', 'localhost') === false && strpos($_SERVER['HTTP_HOST'] ?? '', '127.0.0.1') === false): ?>
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <?php endif; ?>
 
 </head>
 
@@ -353,10 +318,13 @@ $activeTab = $_GET['tab'] ?? 'login';
 
         <!-- Auth Card -->
         <div class="auth-card">
-            <a href="<?= url('') ?>" class="back-link-in-card">
-                <i class="fas fa-arrow-left"></i>
-                Về trang chủ
-            </a>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <a href="<?= url('') ?>" class="back-link-in-card">
+                    <i class="fas fa-arrow-left"></i>
+                    Về trang chủ
+                </a>
+
+            </div>
             <!-- Flash Messages -->
             <?php $flash = getFlash(); ?>
             <?php if ($flash): ?>
@@ -397,12 +365,12 @@ $activeTab = $_GET['tab'] ?? 'login';
 
                 <div class="divider">
                     <span class="marquee-wrapper"><span class="marquee-text" style="color: #fff;">Miền chính:
-                            Kaishop.id.vn</span></span>
+                            <?= str_replace(['http://', 'https://'], '', rtrim(BASE_URL, '/')) ?></span></span>
                 </div>
 
                 <form method="POST" id="loginForm">
                     <input type="hidden" name="action" value="login">
-                    <input type="hidden" name="recaptcha_token" id="recaptcha_token">
+                    <?= CSRFProtection::field() ?>
 
                     <div class="form-group">
                         <label>Tài Khoản</label>
@@ -430,10 +398,12 @@ $activeTab = $_GET['tab'] ?? 'login';
                         <a href="forgot-password" class="forgot-link">Quên mật khẩu?</a>
                     </div>
 
-                    <!-- Cloudflare Turnstile Widget -->
-                    <div class="cf-turnstile" data-sitekey="<?= TURNSTILE_SITE_KEY ?>" data-theme="dark"></div>
+                    <!-- Cloudflare Turnstile Widget (hidden on localhost) -->
+                    <?php if (strpos($_SERVER['HTTP_HOST'] ?? '', 'localhost') === false && strpos($_SERVER['HTTP_HOST'] ?? '', '127.0.0.1') === false): ?>
+                        <div class="cf-turnstile" data-sitekey="<?= TURNSTILE_SITE_KEY ?>" data-theme="dark"></div>
+                    <?php endif; ?>
 
-                    <button type="button" class="btn-submit" onclick="submitLoginForm()">
+                    <button type="submit" class="btn-submit">
                         <i class="fas fa-arrow-right"></i> Đăng Nhập
                     </button>
                 </form>
@@ -465,11 +435,13 @@ $activeTab = $_GET['tab'] ?? 'login';
                 </button>
 
                 <div class="divider">
-                    <span class="marquee-wrapper"><span class="marquee-text">Miễn chính: Kaishop.id.vn</span></span>
+                    <span class="marquee-wrapper"><span class="marquee-text">Miền chính:
+                            <?= str_replace(['http://', 'https://'], '', rtrim(BASE_URL, '/')) ?></span></span>
                 </div>
 
                 <form method="POST">
                     <input type="hidden" name="action" value="register">
+                    <?= CSRFProtection::field() ?>
 
                     <div class="form-group">
                         <label>Địa chỉ Email</label>
@@ -516,8 +488,10 @@ $activeTab = $_GET['tab'] ?? 'login';
                         </label>
                     </div>
 
-                    <!-- Cloudflare Turnstile Widget -->
-                    <div class="cf-turnstile" data-sitekey="<?= TURNSTILE_SITE_KEY ?>" data-theme="dark"></div>
+                    <!-- Cloudflare Turnstile Widget (hidden on localhost) -->
+                    <?php if (strpos($_SERVER['HTTP_HOST'] ?? '', 'localhost') === false && strpos($_SERVER['HTTP_HOST'] ?? '', '127.0.0.1') === false): ?>
+                        <div class="cf-turnstile" data-sitekey="<?= TURNSTILE_SITE_KEY ?>" data-theme="dark"></div>
+                    <?php endif; ?>
 
                     <button type="submit" class="btn-submit">
                         <i class="fas fa-user-plus"></i> Đăng Ký
@@ -531,170 +505,17 @@ $activeTab = $_GET['tab'] ?? 'login';
         </div>
     </div>
 
+    <!-- Auth Page JavaScript -->
     <script>
-        // Password Toggle Function
-        function togglePassword(inputId, icon) {
-            const input = document.getElementById(inputId);
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            } else {
-                input.type = 'password';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            }
-        }
-
-        function switchTab(tab) {
-            // Update URL
-            const url = new URL(window.location);
-            url.searchParams.set('tab', tab);
-            window.history.pushState({}, '', url);
-
-            // Update tabs
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-
-            if (tab === 'login') {
-                document.querySelectorAll('.tab')[0].classList.add('active');
-                document.getElementById('login-tab').classList.add('active');
-            } else {
-                document.querySelectorAll('.tab')[1].classList.add('active');
-                document.getElementById('register-tab').classList.add('active');
-            }
-        }
-
-        <?php if (hasFlash()): ?>             <?php $flash = getFlash(); ?>         document.addEventListener('DOMContentLoaded', function () {             notify.<?= $flash['type'] === 'success' ? 'success' : 'error' ?>(                 '<?= $flash['type'] === 'success' ? 'Thành công!' : 'Lỗi!' ?>',                 '<?= addslashes($flash['message']) ?>'             );         });
-        <?php endif; ?>
-
-        // Google Sign-In Handler with reCAPTCHA
-        async function handleGoogleSignIn() {
-            const btn = event.target.closest('.btn-google');
-            if (!btn) return;
-
-            try {
-                btn.disabled = true;
-                btn.innerHTML = '<span class="loading-icon-inline"></span> Đang xử lý...';
-
-                // Execute reCAPTCHA (skip on localhost)
-                let recaptchaToken = null;
-                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                    recaptchaToken = 'localhost_skip';
-                } else {
-                    try {
-                        await grecaptcha.enterprise.ready();
-                        recaptchaToken = await grecaptcha.enterprise.execute('6Lf2cSosAAAAAI0UuvpT-i9XE9Qw5sxpK3GNEn6m', { action: 'login' });
-                    } catch (recaptchaError) {
-                        console.error('reCAPTCHA Error:', recaptchaError);
-                        throw new Error('Xác thực bảo mật thất bại. Vui lòng thử lại.');
-                    }
-                }
-
-                // Proceed with Google Sign-In
-                const provider = new window.GoogleAuthProvider();
-                const result = await window.signInWithPopup(window.firebaseAuth, provider);
-                const user = result.user;
-
-                // Prepare payload with full Google profile + reCAPTCHA token
-                const payload = {
-                    email: user.email,
-                    displayName: user.displayName,
-                    photoURL: user.photoURL,
-                    idToken: await user.getIdToken(),
-                    recaptchaToken: recaptchaToken
-                };
-
-                // Send token to backend
-                const response = await fetch('<?= url('auth/google-login.php') ?>', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    notify.success('Thành công!', 'Đăng nhập Google thành công!');
-                    setTimeout(() => {
-                        window.location.href = '<?= url('') ?>';
-                    }, 500);
-                } else {
-                    throw new Error(data.message || 'Lỗi đăng nhập');
-                }
-            } catch (error) {
-                console.error('Google Sign-In Error:', error);
-
-                let errorMessage = 'Đăng nhập Google thất bại';
-
-                if (error.code === 'auth/popup-blocked') {
-                    errorMessage = 'Trình duyệt chặn popup. Vui lòng cho phép popup và thử lại.';
-                } else if (error.code === 'auth/popup-closed-by-user') {
-                    errorMessage = 'Bạn đã đóng popup đăng nhập.';
-                } else if (error.code === 'auth/network-request-failed') {
-                    errorMessage = 'Lỗi kết nối mạng. Vui lòng kiểm tra internet.';
-                } else if (error.message) {
-                    errorMessage = error.message;
-                }
-
-                notify.error('Lỗi!', errorMessage);
-
-                // Reset button
-                btn.disabled = false;
-                const isLogin = btn.id === 'googleLoginBtn';
-                btn.innerHTML = `
-                    <svg class="google-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-                        <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
-                        <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
-                        <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
-                        <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
-                    </svg>
-                    ${isLogin ? 'Đăng nhập bằng Google' : 'Đăng ký bằng Google'}
-                `;
-            }
-        }
-
-        // Attach event listeners
-        document.addEventListener('DOMContentLoaded', function () {
-            const googleLoginBtn = document.getElementById('googleLoginBtn');
-            const googleRegisterBtn = document.getElementById('googleRegisterBtn');
-
-            if (googleLoginBtn) {
-                googleLoginBtn.addEventListener('click', handleGoogleSignIn);
-            }
-            if (googleRegisterBtn) {
-                googleRegisterBtn.addEventListener('click', handleGoogleSignIn);
-            }
-        });
-
-        // Normal Login Form with reCAPTCHA
-        function submitLoginForm() {
-            // Skip reCAPTCHA on localhost
-            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                document.getElementById('recaptcha_token').value = 'localhost_skip';
-                document.getElementById('loginForm').submit();
-                return;
-            }
-
-            grecaptcha.enterprise.ready(async () => {
-                try {
-                    const token = await grecaptcha.enterprise.execute(
-                        '6Lf2cSosAAAAAI0UuvpT-i9XE9Qw5sxpK3GNEn6m',
-                        { action: 'login' }
-                    );
-
-                    // Set token and submit form
-                    document.getElementById('recaptcha_token').value = token;
-                    document.getElementById('loginForm').submit();
-                } catch (error) {
-                    console.error('reCAPTCHA Error:', error);
-                    notify.error('Lỗi!', 'Xác thực bảo mật thất bại. Vui lòng thử lại.');
-                }
+        // Flash message handler (needs PHP data)
+        <?php if (hasFlash()): ?>
+            <?php $flash = getFlash(); ?>
+            document.addEventListener('DOMContentLoaded', function () {
+                notify.<?= $flash['type'] === 'success' ? 'success' : 'error' ?>('<?= $flash['type'] === 'success' ? 'Thành công!' : 'Lỗi!' ?>', '<?= addslashes($flash['message']) ?>');
             });
-        }
+        <?php endif; ?>
     </script>
+    <script src="<?= url('js/auth/index.js') ?>?v=<?= time() ?>"></script>
 </body>
 
 </html>

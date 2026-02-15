@@ -29,7 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $requires_customer_info = isset($_POST['requires_customer_info']) ? 1 : 0;
     $customer_info_label = trim($_POST['customer_info_label'] ?? '');
     $option_mode = $_POST['option_mode'] ?? 'one'; // 'one' or 'multi'
-    $label_id = !empty($_POST['label_id']) ? $_POST['label_id'] : null;
 
     // Validation
     if (empty($name))
@@ -156,10 +155,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($check->fetch())
                 $product_slug = $product_slug . '-' . time();
 
-            // Handle image upload
+            // Handle image uploads (multi-image support)
             $image_name = '';
+            $additional_images = [];
+
+            // Process main image (first uploaded file)
             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp'];
+                $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
                 $filename = $_FILES['image']['name'];
                 $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
@@ -168,6 +170,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     move_uploaded_file($_FILES['image']['tmp_name'], __DIR__ . '/../../../assets/images/uploads/' . $image_name);
                 }
             }
+
+            // Process additional images
+            if (isset($_FILES['additional_images']) && is_array($_FILES['additional_images']['name'])) {
+                $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+                $count = count($_FILES['additional_images']['name']);
+
+                for ($i = 0; $i < $count; $i++) {
+                    if ($_FILES['additional_images']['error'][$i] === UPLOAD_ERR_OK) {
+                        $filename = $_FILES['additional_images']['name'][$i];
+                        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+                        if (in_array($ext, $allowed) && $_FILES['additional_images']['size'][$i] <= 10 * 1024 * 1024) {
+                            $img_name = uniqid() . '_' . $i . '.' . $ext;
+                            if (move_uploaded_file($_FILES['additional_images']['tmp_name'][$i], __DIR__ . '/../../../assets/images/uploads/' . $img_name)) {
+                                // If no main image yet, use first additional as main
+                                if (empty($image_name)) {
+                                    $image_name = $img_name;
+                                } else {
+                                    $additional_images[] = $img_name;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Merge with existing images to keep (for edit mode compatibility)
+            $images_json_input = $_POST['images_json'] ?? '[]';
+            $existing_to_keep = json_decode($images_json_input, true) ?: [];
+            $all_images = array_merge($existing_to_keep, $additional_images);
+            $images_json = json_encode(array_values($all_images));
 
             if ($option_mode === 'one') {
                 // Single option
@@ -182,8 +215,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         id, name, slug, description, price_vnd, price_usd,
                         discount_percent, discount_amount_vnd, discount_amount_usd,
                         final_price_vnd, final_price_usd, stock, category_id,
-                        min_purchase, max_purchase, label, label_text_color, label_bg_color, image,
-                        requires_customer_info, customer_info_label, product_type, label_id
+                        min_purchase, max_purchase, label, label_text_color, label_bg_color, image, images,
+                        requires_customer_info, customer_info_label, product_type
                     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ")->execute([
                             $product_id,
@@ -205,10 +238,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $label_text_color,
                             $label_bg_color,
                             $image_name,
+                            $images_json,
                             $requires_customer_info,
                             $customer_info_label,
-                            'account',
-                            $label_id
+                            'account'
                         ]);
 
             } else {
@@ -228,8 +261,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         id, name, slug, description, price_vnd, price_usd,
                         discount_percent, discount_amount_vnd, discount_amount_usd,
                         final_price_vnd, final_price_usd, stock, category_id,
-                        min_purchase, max_purchase, label, label_text_color, label_bg_color, image,
-                        requires_customer_info, customer_info_label, product_type, label_id
+                        min_purchase, max_purchase, label, label_text_color, label_bg_color, image, images,
+                        requires_customer_info, customer_info_label, product_type
                     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ")->execute([
                             $product_id,
@@ -251,10 +284,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $label_text_color,
                             $label_bg_color,
                             $image_name,
+                            $images_json,
                             $requires_customer_info,
                             $customer_info_label,
-                            'account',
-                            $label_id
+                            'account'
                         ]);
 
                 // Insert variants
@@ -421,8 +454,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <i class="fas fa-money-bill-wave"></i>
                             Giá Gốc (VND) <span style="color: #ef4444;">*</span>
                         </label>
-                        <input type="number" name="price_vnd" class="form-control price-input"
-                            placeholder="" oninput="calculateOneOption()">
+                        <input type="number" name="price_vnd" class="form-control price-input" placeholder=""
+                            oninput="calculateOneOption()">
                         <small id="oneOptionUsd"
                             style="color: #10b981; font-weight: 600; display: block; margin-top: 0.5rem;">
                             USD: $0.00

@@ -41,7 +41,7 @@ function getUserAvatar($user = null, $avatar = null, $role = null)
  */
 function isLoggedIn()
 {
-    return isset($_SESSION['user_id']);
+    return SessionManager::isLoggedIn();
 }
 
 /**
@@ -349,22 +349,35 @@ function asset($path = '')
 }
 
 /**
- * Tạo CSRF token
+ * Tạo CSRF token (wrapper cho CSRFProtection)
  */
 function generateCSRFToken()
 {
-    if (!isset($_SESSION['csrf_token'])) {
-        $_SESSION['csrf_token'] = generateToken();
-    }
-    return $_SESSION['csrf_token'];
+    return CSRFProtection::getToken();
 }
 
 /**
- * Verify CSRF token
+ * Verify CSRF token (wrapper cho CSRFProtection)
  */
 function verifyCSRFToken($token)
 {
-    return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
+    return CSRFProtection::validateToken($token);
+}
+
+/**
+ * Get CSRF field HTML (wrapper cho CSRFProtection)
+ */
+function csrf_field()
+{
+    return CSRFProtection::field();
+}
+
+/**
+ * Get CSRF token value
+ */
+function csrf_token()
+{
+    return CSRFProtection::getToken();
 }
 
 /**

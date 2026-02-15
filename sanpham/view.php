@@ -109,6 +109,10 @@ require_once __DIR__ . '/../includes/header.php';
 <!-- Product View Styles -->
 <link rel="stylesheet" href="<?= asset('css/product-view.css') ?>">
 <link rel="stylesheet" href="<?= asset('css/product-variants.css') ?>">
+<link rel="stylesheet" href="<?= asset('css/carousel.css') ?>">
+<link rel="stylesheet" href="<?= asset('css/lightbox.css') ?>">
+<script src="<?= asset('js/carousel.js') ?>" defer></script>
+<script src="<?= asset('js/lightbox.js') ?>" defer></script>
 
 <!-- Animated Background -->
 <div class="view-bg-animated"></div>
@@ -118,24 +122,120 @@ require_once __DIR__ . '/../includes/header.php';
         <div class="product-detail-grid">
             <!-- Column 1: Gallery -->
             <div class="product-gallery">
-                <div class="pd-main-wrap">
-                    <img src="<?= asset('images/uploads/' . $product['image']) ?>" alt="<?= e($product['name']) ?>"
-                        class="pd-main-img" id="mainImage">
-                </div>
-                <?php if (!empty($images)): ?>
-                    <div class="pd-thumbs">
-                        <button class="pd-thumb is-active" type="button" onclick="changeImage(this.dataset.src, this)"
-                            data-src="<?= asset('images/uploads/' . $product['image']) ?>">
-                            <img src="<?= asset('images/uploads/' . $product['image']) ?>" class="pd-thumb-img" alt="thumb">
+                <?php
+                // Prepare all images array (main image + additional images)
+                $allImages = [$product['image']];
+                if (!empty($images)) {
+                    $allImages = array_merge($allImages, $images);
+                }
+                $imageCount = count($allImages);
+                ?>
+
+                <?php if ($imageCount > 1): ?>
+                    <!-- Multi-Image Carousel -->
+                    <div class="product-carousel" role="region" aria-label="Product Images">
+                        <div class="carousel-track">
+                            <?php foreach ($allImages as $idx => $img): ?>
+                                <div class="carousel-slide">
+                                    <img src="<?= asset('images/uploads/' . $img) ?>"
+                                        alt="<?= e($product['name']) ?> - Image <?= $idx + 1 ?>" draggable="false">
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+
+                        <!-- Navigation -->
+                        <button type="button" class="carousel-btn prev" aria-label="Previous image">
+                            <i class="fas fa-chevron-left"></i>
                         </button>
-                        <?php foreach ($images as $img): ?>
-                            <button class="pd-thumb" type="button" onclick="changeImage(this.dataset.src, this)"
-                                data-src="<?= asset('images/uploads/' . $img) ?>">
-                                <img src="<?= asset('images/uploads/' . $img) ?>" class="pd-thumb-img" alt="thumb">
+                        <button type="button" class="carousel-btn next" aria-label="Next image">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+
+                        <!-- Dots -->
+                        <div class="carousel-dots" role="tablist"></div>
+
+                        <!-- Counter -->
+                        <div class="carousel-counter">1 / <?= $imageCount ?></div>
+                    </div>
+
+                    <!-- Thumbnails -->
+                    <div class="carousel-thumbs">
+                        <?php foreach ($allImages as $idx => $img): ?>
+                            <button type="button" class="carousel-thumb <?= $idx === 0 ? 'active' : '' ?>"
+                                aria-label="View image <?= $idx + 1 ?>">
+                                <img src="<?= asset('images/uploads/' . $img) ?>" alt="Thumbnail <?= $idx + 1 ?>">
                             </button>
                         <?php endforeach; ?>
                     </div>
+
+                <?php else: ?>
+                    <!-- Single Image -->
+                    <div class="pd-main-wrap">
+                        <img src="<?= asset('images/uploads/' . $product['image']) ?>" alt="<?= e($product['name']) ?>"
+                            class="pd-main-img" id="mainImage">
+                    </div>
                 <?php endif; ?>
+
+                <!-- Description & Reviews Tabs (Moved Here) -->
+                <div class="product-extra glass-card" style="margin-top: 24px;">
+                    <div class="pd-tabs">
+                        <button type="button" class="pd-tab is-active" data-tab="description">
+                            <i class="fas fa-info-circle"></i> Mô tả
+                        </button>
+                        <button type="button" class="pd-tab" data-tab="reviews">
+                            <i class="fas fa-star"></i>
+                            Đánh giá
+                            <?php if ($reviewCount): ?>
+                                <span class="count-pill"><?= $reviewCount ?></span>
+                            <?php endif; ?>
+                        </button>
+                    </div>
+
+                    <div class="pd-tab-panels">
+                        <!-- Tab: Mô tả -->
+                        <div class="pd-tab-panel is-active" id="tab-description">
+                            <div class="product-description">
+                                <p><?= nl2br(e($product['description'])) ?></p>
+                            </div>
+                        </div>
+
+                        <!-- Tab: Đánh giá -->
+                        <div class="pd-tab-panel" id="tab-reviews">
+                            <?php if ($reviewCount > 0): ?>
+                                <?php foreach ($reviews as $review): ?>
+                                    <div class="review-item"
+                                        style="padding:18px 0;border-bottom:1px solid rgba(139,92,246,0.15);transition:background 0.3s ease;">
+                                        <div style="display:flex;gap:15px;">
+                                            <img class="review-avatar" src="<?= getUserAvatar($review) ?>"
+                                                style="width:46px;height:46px;border-radius:50%;border:2px solid rgba(139,92,246,0.3);">
+                                            <div class="review-content" style="flex:1;">
+                                                <strong class="review-username"
+                                                    style="color:#f8fafc;font-weight:700;"><?= e($review['username']) ?></strong>
+                                                <div class="review-stars" style="color:#fbbf24;margin:6px 0;">
+                                                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                                                        <i class="<?= $i <= $review['rating'] ? 'fas' : 'far' ?> fa-star"></i>
+                                                    <?php endfor; ?>
+                                                </div>
+                                                <p class="review-comment"
+                                                    style="color:#94a3b8;line-height:1.6;margin:8px 0;font-size:14px;">
+                                                    <?= e($review['comment']) ?>
+                                                </p>
+                                                <small class="review-time"
+                                                    style="color:#64748b;font-size:12px;"><?= timeAgo($review['created_at']) ?></small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <div style="text-align:center;padding:32px 10px;color:#94a3b8;">
+                                    <i class="fas fa-star" style="font-size:2.4rem;opacity:0.3;margin-bottom:10px;"></i>
+                                    <p>Chưa có đánh giá nào cho sản phẩm này</p>
+                                    <small style="color:#64748b;">Mua hàng và trở thành người đánh giá đầu tiên!</small>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Column 2: Combined Product Info + Purchase -->
@@ -319,12 +419,12 @@ require_once __DIR__ . '/../includes/header.php';
                         </small>
                     </div>
                     <div style="display:flex;gap:8px;align-items:center;">
-                        <button onclick="changeQty(-1)" class="btn btn-secondary"
+                        <button onclick="changeQty(-1)" class="btn btn-secondary notranslate"
                             style="width:40px;height:40px;padding:0;font-size:1rem;">-</button>
                         <input type="number" id="quantity" value="1" min="1" max="<?= $maxOrder ?>"
                             style="width:70px;height:40px;text-align:center;background:rgba(15,23,42,0.6);border:1px solid rgba(139,92,246,0.3);border-radius:8px;color:#f8fafc;font-size:0.95rem;font-weight:700;"
                             readonly>
-                        <button onclick="changeQty(1)" class="btn btn-secondary"
+                        <button onclick="changeQty(1)" class="btn btn-secondary notranslate"
                             style="width:40px;height:40px;padding:0;font-size:1rem;">+</button>
                     </div>
                 </div>
@@ -397,15 +497,12 @@ require_once __DIR__ . '/../includes/header.php';
                 <?php if ($allOutOfStock): ?>
                     <!-- Out of Stock Message -->
                     <div
-                        style="background: rgba(15, 23, 42, 0.97); border: 1px solid rgba(71, 85, 105, 0.3); border-radius: 16px; padding: 32px; text-align: center;">
+                        style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 20px; text-align: center;">
                         <i class="fas fa-box-open"
-                            style="font-size: 3rem; color: #475569; margin-bottom: 16px; display: block;"></i>
+                            style="font-size: 2rem; color: #ef4444; margin-bottom: 10px; display: block; opacity: 0.7;"></i>
                         <div
-                            style="font-size: 1.1rem; font-weight: 700; color: #cbd5e1; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">
-                            Tạm hết hàng
-                        </div>
-                        <div style="font-size: 0.85rem; color: #64748b;">
-                            Sản phẩm sẽ sớm có lại, vui lòng quay lại sau!
+                            style="font-size: 0.95rem; font-weight: 600; color: #f87171; text-transform: uppercase; letter-spacing: 1px;">
+                            Hết hàng
                         </div>
                     </div>
                 <?php else: ?>
@@ -424,7 +521,6 @@ require_once __DIR__ . '/../includes/header.php';
             </div>
         </div>
 
-        <!-- Bottom Section: Description/Reviews (Full Width) -->
         <div class="product-bottom-section">
             <div class="product-extra glass-card">
                 <div class="pd-tabs">
@@ -510,11 +606,27 @@ require_once __DIR__ . '/../includes/header.php';
 
     function changeQty(delta) {
         const input = document.getElementById('quantity');
-        let val = parseInt(input.value) + delta;
+        let currentVal = parseInt(input.value);
+        let val = currentVal + delta;
+
         // Min is always 1, max is min(stock, admin max_purchase)
         val = Math.max(1, Math.min(maxOrder, val));
-        input.value = val;
-        input.max = maxOrder; // Update max attribute
+
+        // Check if value actually changed
+        if (currentVal !== val) {
+            input.value = val;
+            input.max = maxOrder; // Update max attribute
+
+            // Notify user
+            notify.success('Cập nhật', 'Số lượng: ' + val);
+        } else {
+            // Optional: Notify if looking to exceed limits
+            if (val >= maxOrder && delta > 0) {
+                notify.warning('Thông báo', 'Đã đạt giới hạn số lượng tối đa');
+            } else if (val <= 1 && delta < 0) {
+                // notify.info('Thông báo', 'Số lượng tối thiểu là 1');
+            }
+        }
     }
 
     // Update price and stock when variant changes
@@ -1327,5 +1439,8 @@ require_once __DIR__ . '/../includes/header.php';
         flex: 1;
     }
 </style>
+
+<!-- Code Protection -->
+<script src="<?= asset('js/code-protection.js') ?>"></script>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

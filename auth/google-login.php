@@ -82,7 +82,7 @@ if ($requestData === null || json_last_error() !== JSON_ERROR_NONE) {
 }
 
 // Validate required fields
-$requiredFields = ['idToken', 'displayName', 'photoURL', 'recaptchaToken'];
+$requiredFields = ['idToken', 'displayName', 'photoURL'];
 $missingFields = array_filter($requiredFields, function ($field) use ($requestData) {
     return !isset($requestData[$field]) || trim($requestData[$field]) === '';
 });
@@ -97,21 +97,9 @@ if (!empty($missingFields)) {
 $firebaseIdToken = trim($requestData['idToken']);
 $displayName = trim($requestData['displayName']);
 $photoURL = trim($requestData['photoURL']);
-$recaptchaToken = trim($requestData['recaptchaToken']);
 $clientEmail = isset($requestData['email']) ? trim($requestData['email']) : null;
 
-// =============================================================================
-// reCAPTCHA Verification
-// =============================================================================
 
-$recaptchaVerification = GoogleRecaptchaVerifier::verify($recaptchaToken, 'login');
-
-if (!$recaptchaVerification['success']) {
-    sendErrorResponse(403, 'RECAPTCHA_VERIFICATION_FAILED', 'Security verification failed', [
-        'details' => $recaptchaVerification['error'] ?? 'Verification failed',
-        'error_code' => $recaptchaVerification['error_code'] ?? 'UNKNOWN'
-    ]);
-}
 
 // =============================================================================
 // Firebase Token Validation

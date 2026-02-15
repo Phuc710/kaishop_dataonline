@@ -1,334 +1,433 @@
-<!-- ======================== POPUP TAB ======================== -->
-<div class="card">
-    <form method="POST" id="popupForm">
-        <input type="hidden" name="action" value="add">
-        <input type="hidden" name="type" value="popup">
-        <input type="hidden" name="image" id="popup-image-path">
-        <input type="hidden" name="image_width" id="popup-image-width" value="800">
-        <input type="hidden" name="image_height" id="popup-image-height" value="500">
-        <input type="hidden" name="content_mode" id="popup-content-mode" value="text">
-        <input type="hidden" name="background_code" id="popup-background-code">
+<?php
+// Admin Popup Management - 3 Options: Current, Off, Image
+$current_template = get_setting('active_popup_template', '0');
+$popup_image = get_setting('popup_custom_image', '');
 
-        <div class="form-grid">
-            <div class="form-group" style="grid-column: 1 / -1;">
-                <label><i class="fas fa-align-left"></i> Chế độ nội dung</label>
-                <div style="display:flex;gap:1.5rem;margin-bottom:1rem">
-                    <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer">
-                        <input type="radio" name="mode_selector" value="text" checked onchange="switchPopupMode('text')"
-                            style="cursor:pointer">
-                        <span style="color:#f8fafc;font-weight:600">📝 Text thường</span>
-                    </label>
-                    <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer">
-                        <input type="radio" name="mode_selector" value="html" onchange="switchPopupMode('html')"
-                            style="cursor:pointer">
-                        <span style="color:#f8fafc;font-weight:600">💻 Code HTML/CSS</span>
-                    </label>
-                </div>
-            </div>
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['popup_template'])) {
+    $template_id = $_POST['popup_template'];
 
-            <div class="form-group" style="grid-column: 1 / -1;">
-                <label id="popup-content-label"><i class="fas fa-align-left"></i> Nội dung popup</label>
-                <textarea name="title" id="popup-content-textarea" class="form-control" rows="8"
-                    placeholder="VD: Chúc mừng năm mới 2026!&#10;&#10;Chúc ae năm mới vui vẻ, hạnh phúc! 🎉"></textarea>
-                <small id="popup-content-help" style="color:#94a3b8;margin-top:0.5rem;display:block">
-                    💡 Nhập text thường, hệ thống tự động thêm style đẹp
-                </small>
-            </div>
+    // Save template selection
+    $stmt = $pdo->prepare("SELECT id FROM settings WHERE setting_key = 'active_popup_template'");
+    $stmt->execute();
+    if ($stmt->fetch()) {
+        $stmt = $pdo->prepare("UPDATE settings SET setting_value = ? WHERE setting_key = 'active_popup_template'");
+        $stmt->execute([$template_id]);
+    } else {
+        $stmt = $pdo->prepare("INSERT INTO settings (setting_key, setting_value) VALUES ('active_popup_template', ?)");
+        $stmt->execute([$template_id]);
+    }
 
-            <div class="form-group" id="background-code-group" style="grid-column: 1 / -1;display:none">
-                <label><i class="fas fa-paint-brush"></i> Code nền (Background CSS)</label>
-                <textarea id="background-code-textarea" class="form-control" rows="4"
-                    placeholder="VD: background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></textarea>
-                <small style="color:#94a3b8;margin-top:0.5rem;display:block">
-                    🎨 Paste code CSS cho nền popup (chỉ hiện khi không upload ảnh)
-                </small>
-            </div>
+    // Handle image upload for option 2
+    if ($template_id === '2' && isset($_FILES['popup_image']) && $_FILES['popup_image']['error'] === UPLOAD_ERR_OK) {
+        $upload_dir = __DIR__ . '/../../../uploads/popup/';
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0755, true);
+        }
 
-            <div class="form-group" style="grid-column: 1 / -1;">
-                <label><i class="fas fa-image"></i> Ảnh nền popup</label>
-                <div style="display:flex;gap:1rem;align-items:start">
-                    <div style="flex:1">
-                        <input type="file" id="popup-image-upload" accept="image/*" class="form-control"
-                            style="margin-bottom:0.5rem">
-                        <small style="color:#94a3b8">Hỗ trợ: JPG, PNG, GIF, WEBP</small>
-                        <div id="upload-progress" style="display:none;margin-top:0.5rem">
-                            <div style="background:#1e293b;border-radius:8px;overflow:hidden;height:4px">
-                                <div id="progress-bar"
-                                    style="background:linear-gradient(90deg,#8b5cf6,#7c3aed);height:100%;width:0%;transition:width 0.3s">
-                                </div>
-                            </div>
+        $ext = pathinfo($_FILES['popup_image']['name'], PATHINFO_EXTENSION);
+        $filename = 'popup_' . time() . '.' . $ext;
+        $target = $upload_dir . $filename;
+
+        if (move_uploaded_file($_FILES['popup_image']['tmp_name'], $target)) {
+            $image_path = 'uploads/popup/' . $filename;
+
+            // Save image path to settings
+            $stmt = $pdo->prepare("SELECT id FROM settings WHERE setting_key = 'popup_custom_image'");
+            $stmt->execute();
+            if ($stmt->fetch()) {
+                $stmt = $pdo->prepare("UPDATE settings SET setting_value = ? WHERE setting_key = 'popup_custom_image'");
+                $stmt->execute([$image_path]);
+            } else {
+                $stmt = $pdo->prepare("INSERT INTO settings (setting_key, setting_value) VALUES ('popup_custom_image', ?)");
+                $stmt->execute([$image_path]);
+            }
+        }
+    }
+
+    $messages = [
+        '0' => 'Đã tắt popup!',
+        '1' => 'Đã bật popup mặc định!',
+        '2' => 'Đã bật popup hình ảnh!'
+    ];
+
+    $_SESSION['notif_success'] = $messages[$template_id] ?? 'Đã lưu cài đặt!';
+    header("Location: ?tab=notifications&subtab=popup");
+    exit;
+}
+?>
+
+<div class="card p-4">
+    <h3 class="mb-4"><i class="fas fa-window-restore"></i> Cấu Hình Popup Trang Chủ</h3>
+
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> Popup sẽ hiển thị ngay khi khách truy cập vào trang chủ.
+    </div>
+
+    <form method="POST" action="" enctype="multipart/form-data">
+        <div class="popup-template-grid">
+
+            <!-- Option 1: Default Popup -->
+            <label class="popup-template-option <?php echo $current_template == '1' ? 'active' : ''; ?>">
+                <input type="radio" name="popup_template" value="1" <?php echo $current_template == '1' ? 'checked' : ''; ?>>
+                <div class="template-card template-1">
+                    <div class="template-preview">
+                        <div class="preview-header">
+                            <span class="badge bg-success">ĐANG HOẠT ĐỘNG</span>
+                        </div>
+                        <h5 class="text-uppercase fw-bold text-primary mb-1">Dịch Vụ Thiết Kế Web</h5>
+                        <div class="text-danger fw-bold small">Khai Xuân 2026 - HELLO2026</div>
+                        <div class="mt-2">
+                            <span class="badge bg-danger">🔥 HOT</span>
+                            <span class="badge bg-info"><i class="fab fa-telegram"></i> Telegram</span>
                         </div>
                     </div>
-                    <div id="image-preview"
-                        style="width:200px;height:125px;border:2px dashed rgba(139,92,246,0.3);border-radius:8px;overflow:hidden;display:none">
-                        <img id="preview-img" style="width:100%;height:100%;object-fit:cover">
+                    <div class="template-info">
+                        <h4><i class="fas fa-check-circle text-success"></i> POPUP MẶC ĐỊNH</h4>
+                        <p>Thông báo tham gia nhóm + Khai xuân</p>
                     </div>
                 </div>
-            </div>
+            </label>
+
+            <!-- Option 0: Disable -->
+            <label class="popup-template-option <?php echo $current_template == '0' ? 'active' : ''; ?>">
+                <input type="radio" name="popup_template" value="0" <?php echo $current_template == '0' ? 'checked' : ''; ?>>
+                <div class="template-card template-disabled">
+                    <div class="template-icon">
+                        <i class="fas fa-ban"></i>
+                    </div>
+                    <div class="template-info">
+                        <h4>TẮT POPUP</h4>
+                        <p>Không hiển thị popup nào</p>
+                    </div>
+                </div>
+            </label>
+
+            <!-- Option 2: Custom Image -->
+            <label class="popup-template-option <?php echo $current_template == '2' ? 'active' : ''; ?>">
+                <input type="radio" name="popup_template" value="2" <?php echo $current_template == '2' ? 'checked' : ''; ?>>
+                <div class="template-card template-image">
+                    <div class="template-preview">
+                        <?php if (!empty($popup_image)): ?>
+                            <img src="<?= BASE_URL ?>/<?= htmlspecialchars($popup_image) ?>" alt="Popup Image"
+                                class="img-fluid rounded" style="max-height: 120px;">
+                        <?php else: ?>
+                            <div class="upload-placeholder">
+                                <i class="fas fa-image"></i>
+                                <span>Chưa có ảnh</span>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="template-info">
+                        <h4><i class="fas fa-image text-info"></i> POPUP HÌNH ẢNH</h4>
+                        <p>Sử dụng hình ảnh tùy chỉnh</p>
+                    </div>
+                    <div class="image-upload-section mt-2">
+                        <input type="file" name="popup_image" accept="image/*" class="form-control form-control-sm">
+                    </div>
+                </div>
+            </label>
+
         </div>
 
-        <button type="submit" class="btn btn-primary" id="popup-submit-btn">
-            <i class="fas fa-plus"></i> Thêm Popup
+        <button type="submit" class="btn btn-primary mt-4 btn-lg px-5">
+            <i class="fas fa-save"></i> Lưu Cài Đặt
         </button>
     </form>
 </div>
 
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Danh Sách Popup (<?= count($popups) ?>)</h3>
-    </div>
+<style>
+    /* Modern Clean UI for Popup Admin */
+    .popup-template-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.75rem;
+        margin-top: 1.5rem;
+    }
 
-    <div class="table-wrapper">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Ảnh</th>
-                    <th>Tiêu đề</th>
-                    <th>Trạng thái</th>
-                    <th>Thao tác</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (empty($popups)): ?>
-                    <tr>
-                        <td colspan="5" style="text-align:center;padding:3rem;color:#64748b"><i class="fas fa-inbox"
-                                style="font-size:3rem;margin-bottom:1rem"></i>
-                            <p>Chưa có popup nào</p>
-                        </td>
-                    </tr>
-                <?php else: ?>
-                    <?php foreach ($popups as $popup): ?>
-                        <tr>
-                            <td>#<?= $popup['id'] ?></td>
-                            <td>
-                                <img src="<?= url($popup['image']) ?>"
-                                    style="width:100px;height:auto;border-radius:8px;border:2px solid rgba(139,92,246,0.3)"
-                                    onerror="this.style.display='none';this.parentElement.innerHTML='<div style=&quot;width:100px;height:62px;border:2px dashed rgba(139,92,246,0.3);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#64748b&quot;><i class=&quot;fas fa-image&quot;></i></div>'">
-                            </td>
-                            <td>
-                                <?php
-                                $displayTitle = $popup['title'];
-                                $isHtml = ($popup['content_mode'] ?? 'text') === 'html' || strpos($displayTitle, '<') !== false;
-                                if (mb_strlen($displayTitle) > 50) {
-                                    $displayTitle = mb_substr($displayTitle, 0, 50) . '...';
-                                }
-                                ?>
-                                <div style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
-                                    title="<?= e($popup['title']) ?>">
-                                    <?php if ($isHtml): ?>
-                                        <span class="badge badge-info"
-                                            style="margin-right:0.5rem;background:#0ea5e9;padding:2px 6px;border-radius:4px;font-size:0.75rem">HTML</span>
-                                        <code style="color:#d1d5db"><?= e($displayTitle) ?></code>
-                                    <?php else: ?>
-                                        <strong style="color:#f8fafc"><?= e($displayTitle) ?></strong>
-                                    <?php endif; ?>
-                                </div>
-                                <small style="color:#94a3b8;display:block;margin-top:4px">
-                                    <?php if (!empty($popup['background_code'])): ?>
-                                        <i class="fas fa-paint-brush"></i> Có code nền
-                                    <?php endif; ?>
-                                </small>
-                            </td>
-                            <td>
-                                <label class="toggle">
-                                    <input type="checkbox" <?= $popup['is_active'] ? 'checked' : '' ?>
-                                        onchange="togglePopup(<?= $popup['id'] ?>, this.checked)">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </td>
-                            <td>
-                                <div style="display:flex;gap:0.5rem">
-                                    <button onclick="editPopup(<?= htmlspecialchars(json_encode($popup)) ?>)"
-                                        class="btn btn-sm btn-primary">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button onclick="deletePopup(<?= $popup['id'] ?>)" class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
-</div>
+    .popup-template-option {
+        cursor: pointer;
+        display: block;
+        position: relative;
+    }
 
-<!-- Popup Edit Modal -->
-<div id="editPopupModal"
-    style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:9999;padding:2rem;overflow-y:auto">
-    <div
-        style="max-width:800px;margin:0 auto;background:linear-gradient(135deg,#1e293b,#0f172a);padding:2rem;border-radius:16px;border:1px solid rgba(139,92,246,0.3)">
-        <h2 style="color:#f8fafc;margin-bottom:1.5rem"><i class="fas fa-edit"></i> Sửa Popup</h2>
-        <form method="POST" id="editPopupForm" enctype="multipart/form-data">
-            <input type="hidden" name="action" value="edit">
-            <input type="hidden" name="type" value="popup">
-            <input type="hidden" name="id" id="edit-popup-id">
-            <input type="hidden" name="image" id="edit-popup-image">
-            <input type="hidden" name="image_width" id="edit-popup-width">
-            <input type="hidden" name="image_height" id="edit-popup-height">
+    .popup-template-option input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
 
-            <div class="form-group">
-                <label><i class="fas fa-align-left"></i> Nội dung popup</label>
-                <textarea name="title" id="edit-popup-title" class="form-control" rows="8"
-                    placeholder="Nhập text thường hoặc paste code HTML/CSS"></textarea>
-                <small style="color:#94a3b8;margin-top:0.5rem;display:block">
-                    💡 <strong>Hỗ trợ cả text thường và HTML/CSS</strong> - Paste code trực tiếp để tùy chỉnh style
-                </small>
-            </div>
+    /* Clean Card Design */
+    .template-card {
+        background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+        border: 2px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 1.75rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+    }
 
-            <div style="display:flex;gap:1rem;margin-top:1.5rem">
-                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Lưu</button>
-                <button type="button" onclick="closePopupModal()" class="btn btn-secondary">Hủy</button>
-            </div>
-        </form>
-    </div>
-</div>
+    .template-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
 
-<script>
-    // Mode switching function
-    function switchPopupMode(mode) {
-        const textarea = document.getElementById('popup-content-textarea');
-        const helpText = document.getElementById('popup-content-help');
-        const modeInput = document.getElementById('popup-content-mode');
+    .template-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        border-color: #cbd5e1;
+    }
 
-        modeInput.value = mode;
+    .template-card:hover::after {
+        opacity: 0.5;
+    }
 
-        if (mode === 'text') {
-            textarea.placeholder = 'VD: Chúc mừng năm mới 2026!\n\nChúc ae năm mới vui vẻ, hạnh phúc! 🎉';
-            helpText.innerHTML = '💡 Nhập text thường, hệ thống tự động thêm style đẹp';
-        } else {
-            textarea.placeholder = '<h1 class="popup-gradient-text">\n    CHÚC MỪNG NĂM MỚI 2026\n</h1>\n<p class="popup-text-white">\n    Chúc ae năm mới vui vẻ, hạnh phúc! 🎉\n</p>';
-            helpText.innerHTML = '💻 <strong>Paste code HTML/CSS</strong> - Dùng class có sẵn: <code style="background:#1e293b;padding:2px 6px;border-radius:4px">popup-gradient-text</code>, <code style="background:#1e293b;padding:2px 6px;border-radius:4px">popup-text-white</code>, <code style="background:#1e293b;padding:2px 6px;border-radius:4px">popup-text-glow</code>';
+    /* Active State */
+    .popup-template-option.active .template-card,
+    .popup-template-option input:checked+.template-card {
+        border-color: #3b82f6;
+        background: linear-gradient(145deg, #eff6ff 0%, #dbeafe 100%);
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15),
+            0 8px 24px rgba(59, 130, 246, 0.2);
+        transform: translateY(-2px);
+    }
+
+    .popup-template-option.active .template-card::after,
+    .popup-template-option input:checked+.template-card::after {
+        opacity: 1;
+    }
+
+    /* Check Badge */
+    .popup-template-option.active .template-card::before,
+    .popup-template-option input:checked+.template-card::before {
+        content: '✓';
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 700;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        animation: checkPop 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        z-index: 5;
+    }
+
+    @keyframes checkPop {
+        0% {
+            transform: scale(0);
+            opacity: 0;
+        }
+
+        50% {
+            transform: scale(1.1);
+        }
+
+        100% {
+            transform: scale(1);
+            opacity: 1;
         }
     }
 
-    // Background code field sync and visibility
-    const backgroundCodeTextarea = document.getElementById('background-code-textarea');
-    const backgroundCodeGroup = document.getElementById('background-code-group');
-    const popupImagePath = document.getElementById('popup-image-path');
+    /* Disabled Template */
+    .template-disabled {
+        border-style: dashed;
+        border-color: #cbd5e1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 200px;
+        text-align: center;
+        background: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 100%);
+    }
 
-    // Show background code field initially (no image)
-    backgroundCodeGroup.style.display = 'block';
+    .template-disabled .template-icon {
+        font-size: 3rem;
+        color: #94a3b8;
+        margin-bottom: 1rem;
+        opacity: 0.7;
+    }
 
-    // Sync textarea to hidden field
-    backgroundCodeTextarea?.addEventListener('input', function () {
-        document.getElementById('popup-background-code').value = this.value;
-    });
+    .popup-template-option:hover .template-disabled .template-icon {
+        color: #64748b;
+        opacity: 1;
+    }
 
-    // Form submit handler to sync background code
-    document.getElementById('popupForm')?.addEventListener('submit', function () {
-        document.getElementById('popup-background-code').value = backgroundCodeTextarea.value;
-    });
+    /* Template Preview */
+    .template-1 .template-preview,
+    .template-image .template-preview {
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 1.25rem;
+        text-align: center;
+        margin-bottom: 1.25rem;
+        min-height: 140px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
 
-    // Image upload handler
-    document.getElementById('popup-image-upload')?.addEventListener('change', async function (e) {
-        const file = e.target.files[0];
-        if (!file) return;
+    .template-1 .template-preview::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
 
-        // Show progress
-        document.getElementById('upload-progress').style.display = 'block';
-        document.getElementById('progress-bar').style.width = '30%';
+    .popup-template-option:hover .template-1 .template-preview::before {
+        opacity: 1;
+    }
 
-        const formData = new FormData();
-        formData.append('image', file);
-        formData.append('width', 800);
-        formData.append('height', 500);
+    .preview-header {
+        margin-bottom: 0.75rem;
+    }
 
-        try {
-            const response = await fetch(`${window.API_URL}/upload_popup_image`, {
-                method: 'POST',
-                body: formData
-            });
+    .preview-header .badge {
+        padding: 0.35rem 0.75rem;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        border-radius: 6px;
+    }
 
-            document.getElementById('progress-bar').style.width = '70%';
-            const result = await response.json();
+    /* Upload Placeholder */
+    .upload-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #94a3b8;
+        padding: 1rem;
+    }
 
-            if (result.success) {
-                document.getElementById('progress-bar').style.width = '100%';
-                document.getElementById('popup-image-path').value = result.path;
-                document.getElementById('popup-image-width').value = result.width;
-                document.getElementById('popup-image-height').value = result.height;
+    .upload-placeholder i {
+        font-size: 2.5rem;
+        margin-bottom: 0.75rem;
+        opacity: 0.6;
+    }
 
-                // Hide background code field when image is uploaded
-                document.getElementById('background-code-group').style.display = 'none';
-                document.getElementById('background-code-textarea').value = '';
-                document.getElementById('popup-background-code').value = '';
+    .upload-placeholder span {
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
 
-                // Show preview
-                const preview = document.getElementById('image-preview');
-                const img = document.getElementById('preview-img');
-                img.src = window.APP_URL + '/' + result.path;
-                preview.style.display = 'block';
+    /* Template Info */
+    .template-info {
+        text-align: center;
+    }
 
-                if (window.notify) {
-                    notify.success('Thành công!', 'Upload ảnh thành công!');
-                }
+    .template-info h4 {
+        color: #1e293b;
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        letter-spacing: 0.3px;
+    }
 
-                setTimeout(() => {
-                    document.getElementById('upload-progress').style.display = 'none';
-                    document.getElementById('progress-bar').style.width = '0%';
-                }, 1000);
-            } else {
-                throw new Error(result.error || 'Upload failed');
-            }
-        } catch (error) {
-            document.getElementById('upload-progress').style.display = 'none';
-            if (window.notify) {
-                notify.error('Lỗi!', error.message || 'Không thể upload ảnh');
-            }
+    .template-info h4 i {
+        margin-right: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .template-info p {
+        color: #64748b;
+        font-size: 0.9rem;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    /* Image Upload Section */
+    .image-upload-section {
+        border-top: 2px solid #e5e7eb;
+        padding-top: 1rem;
+        margin-top: 1rem;
+    }
+
+    .image-upload-section .form-control {
+        border-radius: 8px;
+        border: 2px dashed #cbd5e1;
+        padding: 0.6rem 0.75rem;
+        transition: all 0.2s ease;
+        background: #f8fafc;
+    }
+
+    .image-upload-section .form-control:hover {
+        border-color: #3b82f6;
+        background: #ffffff;
+    }
+
+    .image-upload-section .form-control:focus {
+        border-style: solid;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        background: #ffffff;
+    }
+
+    /* Save Button Enhancement */
+    .btn-primary.btn-lg {
+        border-radius: 12px;
+        padding: 0.85rem 2.5rem;
+        font-weight: 600;
+        font-size: 1rem;
+        letter-spacing: 0.5px;
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        border: none;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary.btn-lg:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    }
+
+    .btn-primary.btn-lg:active {
+        transform: translateY(0);
+    }
+
+    .btn-primary.btn-lg i {
+        margin-right: 0.5rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .popup-template-grid {
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
         }
-    });
 
-    // Toggle popup active status (only one can be active)
-    function togglePopup(id, isActive) {
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.innerHTML = `
-        <input type="hidden" name="action" value="toggle">
-        <input type="hidden" name="type" value="popup">
-        <input type="hidden" name="id" value="${id}">
-        <input type="hidden" name="is_active" value="${isActive ? 1 : 0}">
-    `;
-        document.body.appendChild(form);
-        form.submit();
-    }
+        .template-card {
+            padding: 1.5rem;
+        }
 
-    // Popup CRUD functions
-    function editPopup(data) {
-        document.getElementById('edit-popup-id').value = data.id;
-        document.getElementById('edit-popup-title').value = data.title;
-        document.getElementById('edit-popup-image').value = data.image;
-        document.getElementById('edit-popup-width').value = data.image_width;
-        document.getElementById('edit-popup-height').value = data.image_height;
-        document.getElementById('editPopupModal').style.display = 'block';
-    }
-
-    function closePopupModal() {
-        document.getElementById('editPopupModal').style.display = 'none';
-    }
-
-    async function deletePopup(id) {
-        const confirmed = await notify.confirm({
-            title: 'Xác nhận xóa popup',
-            message: 'Bạn có chắc muốn xóa popup này? Ảnh cũng sẽ bị xóa.',
-            type: 'warning',
-            confirmText: 'Xóa',
-            cancelText: 'Hủy'
-        });
-
-        if (confirmed) {
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.innerHTML = `
-            <input type="hidden" name="action" value="delete">
-            <input type="hidden" name="type" value="popup">
-            <input type="hidden" name="id" value="${id}">
-        `;
-            document.body.appendChild(form);
-            form.submit();
+        .template-disabled {
+            min-height: 160px;
         }
     }
-</script>
+</style>

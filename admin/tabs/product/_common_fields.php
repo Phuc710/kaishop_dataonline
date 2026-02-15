@@ -36,9 +36,14 @@
 
 <!-- Section 2: Nhãn Sản Phẩm -->
 <?php
-// Fetch all labels from DB
-$all_labels = $pdo->query("SELECT * FROM product_labels ORDER BY name ASC")->fetchAll();
-$current_label_id = $product['label_id'] ?? ($_POST['label_id'] ?? null);
+// Hardcoded labels with colors matching navigation bar
+$hardcoded_labels = [
+    'Free' => ['bg' => '#18a52a', 'text' => '#ffffff'],           // Green (Kho Mã Nguồn)
+    'Source' => ['bg' => '#2997f7', 'text' => '#ffffff'],         // Blue (Trang Chủ)
+    'Account' => ['bg' => '#04b9b6', 'text' => '#ffffff'],        // Purple (Diễn Đàn)
+    'Danh mục khác' => ['bg' => '#b70cb7d5', 'text' => '#ffffff']   // Cyan (Bảng Xếp Hạng)
+];
+$current_label = $product['label'] ?? ($_POST['label'] ?? '');
 ?>
 <div class="form-section">
     <div class="form-section-header">
@@ -49,42 +54,64 @@ $current_label_id = $product['label_id'] ?? ($_POST['label_id'] ?? null);
     <div class="form-group">
         <label>
             <i class="fas fa-eye"></i>
-            Xem trước Nhãn (Ảnh)
+            Xem trước Nhãn
         </label>
         <div class="label-preview-container"
             style="padding: 15px; background: rgba(15, 23, 42, 0.4); border-radius: 12px; border: 1px dashed rgba(148, 163, 184, 0.2); text-align: center; min-height: 60px; display: flex; align-items: center; justify-content: center;">
-            <div id="systemLabelPreview">
-                <span style="color: var(--text-muted); font-size: 13px;">Chưa chọn nhãn</span>
+            <div id="labelPreview">
+                <?php if ($current_label && isset($hardcoded_labels[$current_label])): ?>
+                    <span
+                        style="padding: 8px 20px; border-radius: 99px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; background: <?= $hardcoded_labels[$current_label]['bg'] ?>; color: <?= $hardcoded_labels[$current_label]['text'] ?>;">
+                        <?= htmlspecialchars($current_label) ?>
+                    </span>
+                <?php else: ?>
+                    <span style="color: var(--text-muted); font-size: 13px;">Chưa chọn nhãn</span>
+                <?php endif; ?>
             </div>
         </div>
     </div>
 
     <div class="form-group" style="margin-top: 1.5rem;">
         <label>
-            <i class="fas fa-database"></i>
-            Chọn Nhãn Từ Hệ Thống
+            <i class="fas fa-tags"></i>
+            Chọn Nhãn
         </label>
-        <select name="label_id" id="systemLabelSelect" class="form-control" onchange="updateSystemLabelPreview(this)">
+        <select name="label" id="labelSelect" class="form-control" onchange="updateLabelPreview(this)">
             <option value="">-- Không sử dụng nhãn --</option>
-            <?php foreach ($all_labels as $lbl): ?>
-                <option value="<?= $lbl['id'] ?>" data-image="<?= asset('images/uploads/' . $lbl['image_url']) ?>"
-                    <?= $current_label_id == $lbl['id'] ? 'selected' : '' ?>>
-                    <?= htmlspecialchars($lbl['name']) ?>
+            <?php foreach ($hardcoded_labels as $labelName => $colors): ?>
+                <option value="<?= htmlspecialchars($labelName) ?>" data-bg="<?= $colors['bg'] ?>"
+                    data-text="<?= $colors['text'] ?>" <?= $current_label === $labelName ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($labelName) ?>
                 </option>
             <?php endforeach; ?>
         </select>
     </div>
 
-    <!-- Preset chips removed as requested (Name + Image only focus) -->
-    <input type="hidden" name="label" id="labelInput" value="">
-    <input type="hidden" name="label_text_color" id="labelTextColor" value="">
-    <input type="hidden" name="label_bg_color" id="labelBgColor" value="">
-
-    <!-- Hidden color inputs to maintain compatibility with existing logic if any, 
-         but we'll override them with presets for simplicity -->
-    <input type="hidden" name="label_text_color" id="labelTextColor" value="#ffffff">
-    <input type="hidden" name="label_bg_color" id="labelBgColor" value="#8b5cf6">
+    <!-- Hidden fields for color compatibility -->
+    <input type="hidden" name="label_text_color" id="labelTextColor"
+        value="<?= $hardcoded_labels[$current_label]['text'] ?? '#ffffff' ?>">
+    <input type="hidden" name="label_bg_color" id="labelBgColor"
+        value="<?= $hardcoded_labels[$current_label]['bg'] ?? '#8b5cf6' ?>">
 </div>
+
+<script>
+    function updateLabelPreview(select) {
+        const option = select.options[select.selectedIndex];
+        const preview = document.getElementById('labelPreview');
+        const bgColor = option.getAttribute('data-bg');
+        const textColor = option.getAttribute('data-text');
+
+        // Update hidden fields
+        document.getElementById('labelTextColor').value = textColor || '#ffffff';
+        document.getElementById('labelBgColor').value = bgColor || '#8b5cf6';
+
+        if (option.value) {
+            preview.innerHTML = `<span style="padding: 8px 20px; border-radius: 99px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; background: ${bgColor}; color: ${textColor};">${option.value}</span>`;
+        } else {
+            preview.innerHTML = '<span style="color: var(--text-muted); font-size: 13px;">Chưa chọn nhãn</span>';
+        }
+    }
+</script>
 
 <!-- Section 3: Danh Mục -->
 <div class="form-section">
@@ -161,30 +188,39 @@ $current_label_id = $product['label_id'] ?? ($_POST['label_id'] ?? null);
     </div>
 </div>
 
-<!-- Section 4: Hình Ảnh -->
+<!-- Section 4: Hình Ảnh (Multi-Image Upload) -->
 <div class="form-section">
     <div class="form-section-header">
-        <i class="fas fa-image"></i>
-        <h3>Hình Ảnh</h3>
+        <i class="fas fa-images"></i>
+        <h3>Hình Ảnh Sản Phẩm</h3>
+        <small style="margin-left: auto; color: var(--text-muted); font-weight: 400;">Ảnh đầu tiên = Ảnh đại
+            diện</small>
     </div>
 
-    <div class="image-upload-area" id="imageUploadArea">
-        <input type="file" name="image" id="imageInput" accept="image/*" style="display: none;"
-            onchange="previewImage(this)">
-        <div class="upload-placeholder" onclick="document.getElementById('imageInput').click()">
-            <i class="fas fa-cloud-upload-alt"></i>
-            <p style="margin: 0.75rem 0 0 0; font-weight: 600;">Click để upload ảnh</p>
-            <small style="color: var(--text-muted); display: block; margin-top: 0.5rem;">
-                Hỗ trợ: JPG, PNG, GIF, WEBP, SVG, BMP<br>
-                Dung lượng tối đa: 10MB
-            </small>
-        </div>
-        <div class="image-preview" id="imagePreview" style="display: none;">
-            <img id="previewImg" src="" alt="Preview" style="max-width: 100%; max-height: 300px; border-radius: 8px;">
-            <button type="button" class="btn-remove-image" onclick="removeImage()">
-                <i class="fas fa-times"></i> Xóa
-            </button>
-        </div>
+    <!-- Hidden inputs for form submission -->
+    <input type="file" name="image" id="mainImageInput" accept="image/*" style="display: none;">
+    <input type="file" name="additional_images[]" id="additionalImagesInput" accept="image/*" multiple
+        style="display: none;">
+    <input type="hidden" name="images_json" id="imagesJsonInput" value="[]">
+    <input type="hidden" name="existing_images" id="existingImagesInput"
+        value="<?= htmlspecialchars($product['images'] ?? '[]') ?>">
+
+    <!-- Upload Zone -->
+    <div class="multi-image-upload-zone" id="multiImageUploadZone"
+        onclick="document.getElementById('additionalImagesInput').click()">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <p style="margin: 0.75rem 0 0 0; font-weight: 600;">Kéo thả hoặc click để upload ảnh</p>
+        <small style="color: var(--text-muted); display: block; margin-top: 0.5rem;">
+            Hỗ trợ: JPG, PNG, GIF, WEBP • Tối đa 10 ảnh • 10MB/ảnh
+        </small>
+    </div>
+
+    <!-- Image Gallery Preview -->
+    <div class="multi-image-gallery" id="multiImageGallery" style="display: none;">
+        <div class="gallery-grid" id="galleryGrid"></div>
+        <button type="button" class="btn-add-more" onclick="document.getElementById('additionalImagesInput').click()">
+            <i class="fas fa-plus"></i> Thêm ảnh
+        </button>
     </div>
 
     <div class="form-group" style="margin-top: 1rem;">
@@ -195,27 +231,125 @@ $current_label_id = $product['label_id'] ?? ($_POST['label_id'] ?? null);
     </div>
 </div>
 
-<script>
-    // Label preview functions
-    function updateSystemLabelPreview(select) {
-        const option = select.options[select.selectedIndex];
-        const preview = document.getElementById('systemLabelPreview');
-        if (!preview) return;
-
-        if (option.value && option.getAttribute('data-image')) {
-            const imgSrc = option.getAttribute('data-image');
-            preview.innerHTML = `<img src="${imgSrc}" style="max-height: 40px; object-fit: contain;">`;
-        } else {
-            preview.innerHTML = `<span style="color: var(--text-muted); font-size: 13px;">Chưa chọn nhãn</span>`;
-        }
+<style>
+    .multi-image-upload-zone {
+        border: 2px dashed rgba(139, 92, 246, 0.4);
+        border-radius: 12px;
+        padding: 40px 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: rgba(139, 92, 246, 0.05);
     }
 
-    // Initial preview
-    window.addEventListener('DOMContentLoaded', () => {
-        const select = document.getElementById('systemLabelSelect');
-        if (select) updateSystemLabelPreview(select);
-    });
+    .multi-image-upload-zone:hover,
+    .multi-image-upload-zone.dragover {
+        border-color: #8b5cf6;
+        background: rgba(139, 92, 246, 0.1);
+    }
 
+    .multi-image-upload-zone i {
+        font-size: 2.5rem;
+        color: #8b5cf6;
+        opacity: 0.7;
+    }
+
+    .multi-image-gallery {
+        margin-top: 1rem;
+    }
+
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 12px;
+        margin-bottom: 1rem;
+    }
+
+    .gallery-item {
+        position: relative;
+        aspect-ratio: 1;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 2px solid transparent;
+        cursor: grab;
+        transition: all 0.2s ease;
+    }
+
+    .gallery-item:first-child {
+        border-color: #8b5cf6;
+    }
+
+    .gallery-item:first-child::after {
+        content: 'Ảnh chính';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 4px;
+        background: linear-gradient(transparent, rgba(139, 92, 246, 0.9));
+        color: #fff;
+        font-size: 10px;
+        text-align: center;
+        font-weight: 600;
+    }
+
+    .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .gallery-item .btn-remove {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: rgba(239, 68, 68, 0.9);
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+
+    .gallery-item:hover .btn-remove {
+        opacity: 1;
+    }
+
+    .gallery-item.dragging {
+        opacity: 0.5;
+        border-color: #fbbf24;
+    }
+
+    .btn-add-more {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        padding: 12px;
+        background: rgba(139, 92, 246, 0.1);
+        border: 2px dashed rgba(139, 92, 246, 0.3);
+        border-radius: 8px;
+        color: #8b5cf6;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+
+    .btn-add-more:hover {
+        background: rgba(139, 92, 246, 0.15);
+        border-color: #8b5cf6;
+    }
+</style>
+
+<script>
     // Category tab switching
     function switchCategoryTab(tab) {
         document.querySelectorAll('.category-tab').forEach(btn => {
@@ -252,23 +386,249 @@ $current_label_id = $product['label_id'] ?? ($_POST['label_id'] ?? null);
         }
     }
 
-    // Image preview
-    function previewImage(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                document.getElementById('previewImg').src = e.target.result;
-                document.querySelector('.upload-placeholder').style.display = 'none';
-                document.getElementById('imagePreview').style.display = 'block';
+    // ==================== MULTI-IMAGE UPLOAD MANAGER ====================
+    const MultiImageManager = {
+        images: [], // Array of {file: File|null, url: string, isExisting: boolean}
+        maxImages: 10,
+        
+        init() {
+            const uploadZone = document.getElementById('multiImageUploadZone');
+            const fileInput = document.getElementById('additionalImagesInput');
+            const existingImagesInput = document.getElementById('existingImagesInput');
+            
+            // Load existing images (for edit mode)
+            if (existingImagesInput && existingImagesInput.value) {
+                try {
+                    const existingImages = JSON.parse(existingImagesInput.value);
+                    if (Array.isArray(existingImages)) {
+                        existingImages.forEach(imgName => {
+                            this.images.push({
+                                file: null,
+                                url: window.APP_CONFIG?.ASSET_URL ? 
+                                    window.APP_CONFIG.ASSET_URL + 'images/uploads/' + imgName :
+                                    '/assets/images/uploads/' + imgName,
+                                filename: imgName,
+                                isExisting: true
+                            });
+                        });
+                    }
+                } catch(e) {}
+            }
+            
+            // Drag and drop
+            if (uploadZone) {
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                    uploadZone.addEventListener(eventName, (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    });
+                });
+                
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    uploadZone.addEventListener(eventName, () => {
+                        uploadZone.classList.add('dragover');
+                    });
+                });
+                
+                ['dragleave', 'drop'].forEach(eventName => {
+                    uploadZone.addEventListener(eventName, () => {
+                        uploadZone.classList.remove('dragover');
+                    });
+                });
+                
+                uploadZone.addEventListener('drop', (e) => {
+                    const files = e.dataTransfer.files;
+                    this.handleFiles(files);
+                });
+            }
+            
+            // File input change
+            if (fileInput) {
+                fileInput.addEventListener('change', (e) => {
+                    this.handleFiles(e.target.files);
+                    e.target.value = ''; // Reset for re-upload
+                });
+            }
+            
+            this.render();
+        },
+        
+        handleFiles(files) {
+            const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            const maxSize = 10 * 1024 * 1024; // 10MB
+            
+            Array.from(files).forEach(file => {
+                if (this.images.length >= this.maxImages) {
+                    alert('Tối đa ' + this.maxImages + ' ảnh!');
+                    return;
+                }
+                
+                if (!validTypes.includes(file.type)) {
+                    alert('File ' + file.name + ' không hợp lệ!');
+                    return;
+                }
+                
+                if (file.size > maxSize) {
+                    alert('File ' + file.name + ' quá lớn (max 10MB)!');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.images.push({
+                        file: file,
+                        url: e.target.result,
+                        isExisting: false
+                    });
+                    this.render();
+                    this.updateFormData();
+                };
+                reader.readAsDataURL(file);
+            });
+        },
+        
+        removeImage(index) {
+            this.images.splice(index, 1);
+            this.render();
+            this.updateFormData();
+        },
+        
+        render() {
+            const uploadZone = document.getElementById('multiImageUploadZone');
+            const gallery = document.getElementById('multiImageGallery');
+            const grid = document.getElementById('galleryGrid');
+            
+            if (this.images.length === 0) {
+                uploadZone.style.display = 'block';
+                gallery.style.display = 'none';
+                return;
+            }
+            
+            uploadZone.style.display = 'none';
+            gallery.style.display = 'block';
+            
+            grid.innerHTML = this.images.map((img, idx) => `
+                <div class="gallery-item" draggable="true" data-index="${idx}">
+                    <img src="${img.url}" alt="Image ${idx + 1}">
+                    <button type="button" class="btn-remove" onclick="MultiImageManager.removeImage(${idx})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `).join('');
+            
+            // Setup drag reordering
+            this.setupDragReorder();
+        },
+        
+        setupDragReorder() {
+            const items = document.querySelectorAll('.gallery-item');
+            let draggedItem = null;
+            
+            items.forEach(item => {
+                item.addEventListener('dragstart', (e) => {
+                    draggedItem = item;
+                    item.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+                
+                item.addEventListener('dragend', () => {
+                    item.classList.remove('dragging');
+                    draggedItem = null;
+                    this.updateFormData();
+                });
+                
+                item.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    if (draggedItem && draggedItem !== item) {
+                        const grid = document.getElementById('galleryGrid');
+                        const items = Array.from(grid.children);
+                        const draggedIdx = items.indexOf(draggedItem);
+                        const targetIdx = items.indexOf(item);
+                        
+                        if (draggedIdx < targetIdx) {
+                            item.after(draggedItem);
+                        } else {
+                            item.before(draggedItem);
+                        }
+                        
+                        // Update images array order
+                        const movedImg = this.images.splice(draggedIdx, 1)[0];
+                        this.images.splice(targetIdx, 0, movedImg);
+                    }
+                });
+            });
+        },
+        
+        updateFormData() {
+            const jsonInput = document.getElementById('imagesJsonInput');
+            const mainImageInput = document.getElementById('mainImageInput');
+            
+            // Get existing image filenames to keep
+            const existingToKeep = this.images
+                .filter(img => img.isExisting)
+                .map(img => img.filename);
+            
+            jsonInput.value = JSON.stringify(existingToKeep);
+            
+            // Create DataTransfer to set files on input
+            const dt = new DataTransfer();
+            this.images.forEach((img, idx) => {
+                if (img.file) {
+                    // Rename first new file to be main image
+                    if (idx === 0 || (idx === 0 && !img.isExisting)) {
+                        dt.items.add(img.file);
+                    } else {
+                        dt.items.add(img.file);
+                    }
+                }
+            });
+            
+            // Store new files for form submission
+            const newFilesInput = document.getElementById('additionalImagesInput');
+            if (newFilesInput && dt.files.length > 0) {
+                // We'll handle this differently - store in hidden container
+                this.storeNewFiles();
+            }
+        },
+        
+        storeNewFiles() {
+            // Remove old hidden container
+            let container = document.getElementById('newImagesContainer');
+            if (container) container.remove();
+            
+            // Create new container
+            container = document.createElement('div');
+            container.id = 'newImagesContainer';
+            container.style.display = 'none';
+            
+            this.images.forEach((img, idx) => {
+                if (img.file) {
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.name = idx === 0 && !this.images[0].isExisting ? 'image' : 'additional_images[]';
+                    
+                    // Clone file using DataTransfer
+                    const dt = new DataTransfer();
+                    dt.items.add(img.file);
+                    input.files = dt.files;
+                    
+                    container.appendChild(input);
+                }
+            });
+            
+            document.querySelector('form').appendChild(container);
+        },
+        
+        getFormData() {
+            return {
+                existingImages: this.images.filter(i => i.isExisting).map(i => i.filename),
+                newFiles: this.images.filter(i => !i.isExisting).map(i => i.file)
             };
-            reader.readAsDataURL(input.files[0]);
         }
-    }
-
-    function removeImage() {
-        document.getElementById('imageInput').value = '';
-        document.getElementById('previewImg').src = '';
-        document.querySelector('.upload-placeholder').style.display = 'flex';
-        document.getElementById('imagePreview').style.display = 'none';
-    }
+    };
+    
+    // Initialize on DOM ready
+    document.addEventListener('DOMContentLoaded', () => {
+        MultiImageManager.init();
+    });
 </script>

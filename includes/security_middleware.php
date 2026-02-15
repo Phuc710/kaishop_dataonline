@@ -28,6 +28,20 @@ if (in_array($clientIP, $localhostIPs)) {
 }
 // ============================================================================
 
+// Set CORS headers first (before any other headers)
+if (CORS_ENABLED) {
+    header('Access-Control-Allow-Origin: ' . CORS_ALLOWED_ORIGINS);
+    header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+    header('Access-Control-Allow-Credentials: true');
+
+    // Handle preflight OPTIONS request
+    if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+        http_response_code(200);
+        exit;
+    }
+}
+
 // Set security headers
 if (isset($SECURITY_HEADERS)) {
     foreach ($SECURITY_HEADERS as $header => $value) {

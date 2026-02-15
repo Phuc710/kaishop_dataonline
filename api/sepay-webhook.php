@@ -3,7 +3,7 @@
  * Sepay Webhook Handler
  * Automatically processes payments when receiving webhook from Sepay
  * 
- * Webhook URL: https://yourdomain.com/api/sepay-webhook.php
+ * Webhook URL: https://kaishop.id.vn/api/sepay-webhook.php
  * 
  * Setup in Sepay:
  * 1. Login to Sepay dashboard: https://my.sepay.vn
@@ -14,6 +14,38 @@
 
 header('Content-Type: application/json');
 require_once __DIR__ . '/../config/config.php';
+
+// ========== API KEY AUTHENTICATION ==========
+// Get Authorization header
+$headers = getallheaders();
+$auth_header = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+
+// Get API key from database settings
+$stmt = $pdo->prepare("SELECT setting_value FROM settings WHERE setting_key = 'sepay_api_key' LIMIT 1");
+$stmt->execute();
+$sepay_api_key = $stmt->fetchColumn();
+
+// Validate API Key
+if (empty($sepay_api_key)) {
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Fail API ==> Please DM Admin'
+    ]);
+    exit;
+}
+
+// Expected format: "ApiKey YOUR_API_KEY"
+$expected_auth = "ApiKey " . $sepay_api_key;
+
+if ($auth_header !== $expected_auth) {
+    http_response_code(401);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Unauthorized: Invalid API Key'
+    ]);
+    exit;
+}
 
 // Get raw POST data
 $raw_data = file_get_contents('php://input');
@@ -157,13 +189,26 @@ try {
             'id' => $transaction['id']
         ]);
 
+        // Calculate bonus based on amount
+        $bonus_percent = 0;
+        if ($expected_amount >= 500000) {
+            $bonus_percent = 20;
+        } elseif ($expected_amount >= 200000) {
+            $bonus_percent = 15;
+        } elseif ($expected_amount >= 100000) {
+            $bonus_percent = 10;
+        }
+
+        $bonus_amount = ($expected_amount * $bonus_percent) / 100;
+        $total_received = $expected_amount + $bonus_amount;
+
         // Get current balance before adding
         $stmt = $pdo->prepare("SELECT balance_vnd FROM users WHERE id = ?");
         $stmt->execute([$transaction['user_id']]);
         $balance_before = floatval($stmt->fetchColumn());
-        $balance_after = $balance_before + $expected_amount;
+        $balance_after = $balance_before + $total_received;
 
-        // Add balance to user account (always VND)
+        // Add balance to user account (amount + bonus)
         $stmt = $pdo->prepare("
             UPDATE users 
             SET balance_vnd = balance_vnd + :amount 
@@ -171,7 +216,7 @@ try {
         ");
 
         $stmt->execute([
-            'amount' => $expected_amount,
+            'amount' => $total_received,
             'user_id' => $transaction['user_id']
         ]);
 
@@ -179,6 +224,11 @@ try {
         $bank_name = $gate ?: 'MB Bank'; // Use gate (bank_brand_name) or default to MB Bank
 
         $bt_id = generateSnowflakeId();
+
+        $note = 'Nạp tiền qua QR - ' . $transaction_code . ' | Bank: ' . $bank_name;
+        if ($bonus_amount > 0) {
+            $note .= " (Gốc: " . number_format($expected_amount) . "đ + KM {$bonus_percent}%: " . number_format($bonus_amount) . "đ)";
+        }
 
         $stmt = $pdo->prepare("
             INSERT INTO balance_transactions 
@@ -189,10 +239,10 @@ try {
         $stmt->execute([
             'id' => $bt_id,
             'user_id' => $transaction['user_id'],
-            'amount' => $expected_amount,
+            'amount' => $total_received,
             'balance_before' => $balance_before,
             'balance_after' => $balance_after,
-            'note' => 'Nạp tiền qua QR - ' . $transaction_code . ' | Bank: ' . $bank_name
+            'note' => $note
         ]);
 
         // Mark webhook as processed

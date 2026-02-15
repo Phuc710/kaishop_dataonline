@@ -369,7 +369,7 @@ class NotificationBell
 
             function markAllAsRead() {
                 // Use relative path from root
-                const apiPath = window.location.origin + '/kaishop/api/mark-notifications-read.php';
+                const apiPath = window.location.origin + `${window.APP_CONFIG.baseUrl}/api/mark-notifications-read.php`;
 
                 fetch(apiPath, {
                     method: 'POST',

@@ -506,6 +506,26 @@ body::after {
     /* Allow horizontal scroll */
     margin-bottom: 24px;
     width: 100%;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.5) rgba(255, 255, 255, 0.1);
+}
+
+.table-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.7);
 }
 
 table {
@@ -1118,11 +1138,6 @@ body.sidebar-open {
     color: #475569 !important;
 }
 
-/* --- TABLES --- */
-[data-theme="light"] .table-wrapper {
-    background: #ffffff !important;
-    border: 1px solid #1f1f1f !important;
-}
 
 [data-theme="light"] table {
     background: #ffffff !important;
@@ -1195,14 +1210,13 @@ body.sidebar-open {
 }
 
 [data-theme="light"] .btn-secondary {
-    background: #f1f5f9 !important;
+    background: #000000 !important;
     border: 1px solid #1f1f1f !important;
-    color: #334155 !important;
+    color: #ffffff !important;
 }
 
 [data-theme="light"] .btn-secondary:hover {
-    background: #000000 !important;
-    color: #ffffff !important;
+    transform: translateY(-2px) !important;
 }
 
 [data-theme="light"] .btn-success {
@@ -1552,4 +1566,34 @@ body.sidebar-open {
 [data-theme="light"] .avatar,
 [data-theme="light"] img[style*="border-radius: 50%"] {
     border: 2px solid #000000 !important;
+}
+
+/* ========================================
+   ACCOUNT DISPLAY BOX
+   ======================================== */
+.account-display-box {
+    background: rgba(15, 23, 42, 0.8);
+    padding: 1.5rem;
+    border-radius: 8px;
+    color: #10b981;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.8;
+}
+
+/* ========================================
+   ACCOUNT DISPLAY BOX - LIGHT MODE
+   ======================================== */
+[data-theme="light"] .account-display-box {
+    background: #ffffff !important;
+    border: 1px solid #1f1f1f !important;
+    color: #0f172a !important;
+}
+
+[data-theme="light"] .account-display-box span[style*="color: #a78bfa"] {
+    color: #8b5cf6 !important;
+}
+
+[data-theme="light"] .account-display-box span[style*="color: #10b981"] {
+    color: #059669 !important;
 }

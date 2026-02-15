@@ -91,10 +91,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($check->fetch())
                 $product_slug = $product_slug . '-' . time();
 
-            // Handle image upload
+            // Handle image uploads (multi-image support)
             $image_name = '';
+            $additional_images = [];
+
+            // Process main image
             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp'];
+                $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
                 $filename = $_FILES['image']['name'];
                 $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
@@ -103,6 +106,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     move_uploaded_file($_FILES['image']['tmp_name'], __DIR__ . '/../../../assets/images/uploads/' . $image_name);
                 }
             }
+
+            // Process additional images
+            if (isset($_FILES['additional_images']) && is_array($_FILES['additional_images']['name'])) {
+                $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+                $count = count($_FILES['additional_images']['name']);
+
+                for ($i = 0; $i < $count; $i++) {
+                    if ($_FILES['additional_images']['error'][$i] === UPLOAD_ERR_OK) {
+                        $filename = $_FILES['additional_images']['name'][$i];
+                        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+                        if (in_array($ext, $allowed) && $_FILES['additional_images']['size'][$i] <= 10 * 1024 * 1024) {
+                            $img_name = uniqid() . '_' . $i . '.' . $ext;
+                            if (move_uploaded_file($_FILES['additional_images']['tmp_name'][$i], __DIR__ . '/../../../assets/images/uploads/' . $img_name)) {
+                                if (empty($image_name)) {
+                                    $image_name = $img_name;
+                                } else {
+                                    $additional_images[] = $img_name;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            $images_json_input = $_POST['images_json'] ?? '[]';
+            $existing_to_keep = json_decode($images_json_input, true) ?: [];
+            $all_images = array_merge($existing_to_keep, $additional_images);
+            $images_json = json_encode(array_values($all_images));
 
             $price_usd = round($price_vnd / $exchange_rate, 2);
             $discount_amount_vnd = round($price_vnd * $discount_percent / 100);
@@ -115,9 +147,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     id, name, slug, description, price_vnd, price_usd,
                     discount_percent, discount_amount_vnd, discount_amount_usd,
                     final_price_vnd, final_price_usd, stock, category_id, label_id,
-                    min_purchase, max_purchase, label, label_text_color, label_bg_color, image,
+                    min_purchase, max_purchase, label, label_text_color, label_bg_color, image, images,
                     delivery_content, product_type
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ")->execute([
                         $product_id,
                         $name,
@@ -139,6 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $label_text_color,
                         $label_bg_color,
                         $image_name,
+                        $images_json,
                         $delivery_content,
                         'book'
                     ]);
@@ -218,8 +251,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <i class="fas fa-money-bill-wave"></i>
                         Giá Gốc (VND) <span style="color: #ef4444;">*</span>
                     </label>
-                    <input type="number" name="price_vnd" id="priceVnd" class="form-control" required min="1000"
-                        step="1000" placeholder="50000" oninput="calculatePrice()"
+                    <input type="number" name="price_vnd" id="priceVnd" class="form-control" required
+                        placeholder="100000" oninput="calculatePrice()"
                         value="<?= htmlspecialchars($_POST['price_vnd'] ?? '') ?>">
                     <small id="priceUsd" style="color: #10b981; font-weight: 600; display: block; margin-top: 0.5rem;">
                         USD: $0.00

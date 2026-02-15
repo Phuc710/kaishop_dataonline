@@ -58,17 +58,37 @@
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3) !important;
 }
 
-/* Enhanced Scroll to Top Button */
+/* Enhanced Scroll to Top Button (Premium Rebuild) */
 [data-theme="light"] .scroll-to-top {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
-    border: 2px solid #e5e7eb !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%) !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #6366f1 !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.8) !important;
 }
 
 [data-theme="light"] .scroll-to-top:hover {
-    border-color: #3b82f6 !important;
-    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2) !important;
-    transform: translateY(-5px) scale(1.05) !important;
+    background: #6366f1 !important;
+    color: #ffffff !important;
+    border-color: #4f46e5 !important;
+    box-shadow: 0 12px 40px rgba(99, 102, 241, 0.3) !important;
+}
+
+@keyframes light-scroll-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.2);
+    }
+
+    70% {
+        box-shadow: 0 0 0 15px rgba(99, 102, 241, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+    }
+}
+
+[data-theme="light"] .scroll-to-top.show:hover {
+    animation: light-scroll-pulse 2s infinite !important;
 }
 
 /* Enhanced Table Styling */

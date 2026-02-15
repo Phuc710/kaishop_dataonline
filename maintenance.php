@@ -16,7 +16,7 @@ try {
 
     // If maintenance is OFF, redirect to home
     if (($settings['maintenance_mode'] ?? '0') != '1') {
-        header('Location: /kaishop/');
+        header('Location: ' . BASE_URL . '/');
         exit;
     }
 } catch (Exception $e) {
@@ -77,21 +77,10 @@ try {
 
 <body>
     <div class="maintenance-container">
-        <img src="/kaishop/assets/images/baotri.png" alt="Hệ thống đang bảo trì" class="maintenance-image">
+        <img src="<?= BASE_URL ?>/assets/images/baotri.png" alt="Hệ thống đang bảo trì" class="maintenance-image">
     </div>
 
-    <script>
-        // Auto check if maintenance is over every 30 seconds
-        setInterval(function () {
-            fetch(window.location.href)
-                .then(response => {
-                    if (response.redirected) {
-                        window.location.reload();
-                    }
-                })
-                .catch(err => console.log('Check failed'));
-        }, 15000);
-    </script>
+    <script src="<?= BASE_URL ?>/js/maintenance.js?v=<?= time() ?>"></script>
 </body>
 
 </html>

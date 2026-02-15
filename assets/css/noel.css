@@ -21,16 +21,34 @@ body.holiday-mode-noel .hero-logo-image.noel-mode-img {
     display: block !important;
 }
 
-/* Noel Mode Scroll to Top */
+/* Noel Mode Scroll to Top (Premium Rebuild) */
 body.holiday-mode-noel .scroll-to-top {
-    background: linear-gradient(135deg, #0a4d2c 0%, #1a2f23 100%) !important;
-    color: #ffffff !important;
-    box-shadow: 0 0 15px rgba(10, 77, 44, 0.5) !important;
+    background: linear-gradient(135deg, #0a4d2c 0%, #166534 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 0 8px 32px rgba(10, 77, 44, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
 }
 
 body.holiday-mode-noel .scroll-to-top:hover {
     background: #c1121f !important;
-    box-shadow: 0 0 25px rgba(193, 18, 31, 0.6) !important;
+    box-shadow: 0 12px 40px rgba(193, 18, 31, 0.6) !important;
+}
+
+@keyframes noel-scroll-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3);
+    }
+
+    70% {
+        box-shadow: 0 0 0 15px rgba(255, 255, 255, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    }
+}
+
+body.holiday-mode-noel .scroll-to-top.show:hover {
+    animation: noel-scroll-pulse 2s infinite !important;
 }
 
 .hero-logo-image.noel-mode-img {
@@ -41,7 +59,7 @@ body.holiday-mode-noel .scroll-to-top:hover {
 body.holiday-mode-noel {
     background-color: #0a1f1a !important;
     background-image: linear-gradient(rgba(10, 31, 26, 0.582), rgba(0, 27, 18, 0.712)),
-        url('/kaishop/assets/images/noel/noel.jpg') !important;
+        url('../images/noel/noel.jpg') !important;
     background-size: cover !important;
     background-attachment: fixed !important;
     background-position: center !important;
@@ -50,7 +68,7 @@ body.holiday-mode-noel {
 
 body.holiday-mode-noel .page-wrapper::before {
     content: '' !important;
-    background-image: url('/kaishop/assets/images/noel/caythong.png') !important;
+    background-image: url('../images/noel/caythong.png') !important;
     background-size: 400px auto !important;
     background-attachment: fixed !important;
     background-position: bottom right !important;
@@ -64,6 +82,10 @@ body.holiday-mode-noel .page-wrapper::before {
 body.holiday-mode-noel .kai-header {
     background: rgb(0 0 0 / 50%) !important;
     backdrop-filter: blur(10px);
+}
+
+.feature-icon-box {
+    color: white;
 }
 
 body.holiday-mode-noel .kai-link {
@@ -260,10 +282,7 @@ body.holiday-mode-noel .stat-value {
 body.holiday-mode-noel .hero-title,
 body.holiday-mode-noel .section-title {
     color: #ffffff !important;
-    font-size: 3.5rem !important;
-    /* Make it big */
     text-shadow: 0 0 10px rgba(0, 255, 42, 0.3) !important;
-    /* Subtle green glow */
 }
 
 /* Text Gradient - HERO TITLE Customization */
@@ -368,11 +387,6 @@ body.holiday-mode-noel .drawer-title {
     color: #16a34a !important;
 }
 
-body.holiday-mode-noel .drawer-close {
-    color: #16a34a !important;
-    background: rgba(22, 163, 74, 0.15) !important;
-}
-
 body.holiday-mode-noel .drawer-menu li a:hover {
     background: #16a34a !important;
     color: #ffffff !important;
@@ -418,7 +432,7 @@ body.holiday-mode-noel .checkbox-wrapper input:checked+label::before {
 body.holiday-mode-noel .deposit-page {
     background-color: #0a1f1a !important;
     background-image: linear-gradient(rgba(10, 31, 26, 0.582), rgba(0, 27, 18, 0.712)),
-        url('/kaishop/assets/images/noel/noel.jpg') !important;
+        url('../images/noel/noel.jpg') !important;
     background-size: cover !important;
     background-attachment: fixed !important;
     background-position: center !important;

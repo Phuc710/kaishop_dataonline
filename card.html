@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student ID Card Generator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- HTML2Canvas for capturing DOM as image -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- jsPDF for generating PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom styles for the ID card to ensure exact dimensions and professional look */
+        .id-card-container {
+            width: 3.375in; /* Standard landscape ID card width */
+            height: 2.125in; /* Standard landscape ID card height */
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            background-color: white;
+        }
+
+        .photo-section {
+            width: 35%;
+            height: 100%;
+            flex-shrink: 0;
+        }
+
+        .photo-section img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .info-section {
+            width: 65%;
+            padding: 0.15in;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Hide the default file input text */
+        input[type="file"] {
+            color: transparent;
+        }
+
+        /* Style for the 3D "ghost" buttons */
+        .modern-button {
+            background-color: transparent; /* No fill color by default */
+            color: #4F46E5; /* Text color is the indigo */
+            padding: 0.6rem 1.2rem;
+            border-radius: 9999px; /* Pill shape */
+            cursor: pointer;
+            display: inline-block;
+            text-align: center;
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 600; /* semibold */
+            transition: all 0.15s ease-out; /* Snappy transition */
+            border: 2px solid #4F46E5; /* Visible outline */
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 4px #4338CA; /* Darker indigo shadow for depth */
+            position: relative;
+            top: 0;
+        }
+
+        .modern-button:hover {
+            background-color: #4F46E5; /* Fill color appears on hover */
+            color: #fff; /* White text on hover */
+            top: 2px;
+            box-shadow: 0 2px #4338CA; /* Reduce shadow to simulate pressing */
+        }
+        
+        .modern-button:active {
+            top: 4px;
+            box-shadow: 0 0 #4338CA;
+        }
+
+        /* Custom modal for messages */
+        .custom-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            text-align: center;
+            color: #333;
+            display: none; /* Hidden by default */
+        }
+        
+        .custom-modal.show {
+            display: block;
+        }
+
+        .custom-modal.success {
+            border: 2px solid #28a745;
+            color: #28a745;
+        }
+
+        .custom-modal.error {
+            border: 2px solid #dc3545;
+            color: #dc3545;
+        }
+
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="flex flex-col lg:flex-row bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-6xl">
+        <!-- Left Panel: Edit Area -->
+        <div class="w-full lg:w-1/2 p-6 md:p-8 space-y-4 border-r border-gray-200 overflow-y-auto" style="max-height: 90vh;">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4 text-center">ID Card Editor</h2>
+
+            <!-- Upload Option -->
+            <div class="border-b pb-4">
+                <label class="block text-sm font-medium text-gray-700">Upload Student Photo</label>
+                <label for="studentPhotoUpload" class="modern-button mt-2">Choose File</label>
+                <input type="file" id="studentPhotoUpload" accept="image/*" class="hidden">
+            </div>
+
+            <!-- Text Fields -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="universityNameInput" class="block text-sm font-medium text-gray-700">University Name:</label>
+                    <input type="text" id="universityNameInput" value="Guru Gobind Singh Indraprastha University" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                 <div>
+                    <label for="nameInput" class="block text-sm font-medium text-gray-700">Student Name:</label>
+                    <input type="text" id="nameInput" value="ANIL KUMAR" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                 <div>
+                    <label for="dobInput" class="block text-sm font-medium text-gray-700">Date of Birth:</label>
+                    <input type="text" id="dobInput" value="March 10 2004" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                 <div>
+                    <label for="studentIdInput" class="block text-sm font-medium text-gray-700">Student ID:</label>
+                    <input type="text" id="studentIdInput" value="9199-8219" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                 <div>
+                    <label for="phoneInput" class="block text-sm font-medium text-gray-700">Phone:</label>
+                    <input type="text" id="phoneInput" value="+91 808270026" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                 <div>
+                    <label for="academicYearInput" class="block text-sm font-medium text-gray-700">Academic Year:</label>
+                    <input type="text" id="academicYearInput" value="2025" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                <div class="md:col-span-2">
+                    <label for="addressInput" class="block text-sm font-medium text-gray-700">Address:</label>
+                    <input type="text" id="addressInput" value="3448, Hans Puri Ro Rampura" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel: Live Card View -->
+        <div class="w-full lg:w-1/2 p-6 md:p-8 flex flex-col items-center justify-center bg-gray-200 relative">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Live ID Card Preview</h2>
+
+            <!-- ID Card Preview Area -->
+            <div id="idCardPreview" class="id-card-container shadow-lg">
+                <!-- Photo Section -->
+                <div class="photo-section">
+                    <img id="cardStudentPhoto" src="https://placehold.co/252x324/BFDBFE/374151?text=PHOTO" alt="Student Photo" onerror="this.onerror=null;this.src='https://placehold.co/252x324/BFDBFE/374151?text=PHOTO';">
+                </div>
+                <!-- Info Section -->
+                <div class="info-section">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-8 h-8 text-gray-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L1 7.5V13.75C1 18.31 4.21 22.5 12 24C19.79 22.5 23 18.31 23 13.75V7.5L12 2ZM12 4.3L19.92 8.5L12 12.7L4.08 8.5L12 4.3ZM5 14.5C5 15.8 5.75 16.95 7 17.65V15.5H9V19.5C6.2 18.88 5 16.81 5 14.5Z M15 19.5V15.5H17V17.65C18.25 16.95 19 15.8 19 14.5C19 12.19 15.8 10.12 12 10.12C8.2 10.12 5 12.19 5 14.5H3C3 11.12 7.5 8.5 12 8.5C16.5 8.5 21 11.12 21 14.5C21 17.5 17.8 20.1 15 20.8V19.5Z"/></svg>
+                        <p id="cardUniversityName" class="font-semibold text-gray-700 text-[10px] leading-tight"></p>
+                    </div>
+                    
+                    <p class="text-[14px] font-bold text-orange-600 mt-2 tracking-wider">STUDENT ID CARD</p>
+                    <p id="cardName" class="text-[16px] font-extrabold text-black mt-1"></p>
+
+                    <hr class="my-2 border-gray-300">
+
+                    <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-[8px] flex-grow">
+                        <div>
+                            <p class="text-gray-500 font-semibold tracking-wider">DATE OF BIRTH</p>
+                            <p id="cardDob" class="text-black font-medium"></p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 font-semibold tracking-wider">STUDENT ID</p>
+                            <p id="cardStudentId" class="text-black font-medium"></p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 font-semibold tracking-wider">PHONE</p>
+                            <p id="cardPhone" class="text-black font-medium"></p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 font-semibold tracking-wider">ADDRESS</p>
+                            <p id="cardAddress" class="text-black font-medium leading-tight"></p>
+                        </div>
+                    </div>
+                    
+                    <div class="text-[8px] mt-auto">
+                        <p class="text-gray-500 font-semibold tracking-wider">CURRENT ACADEMIC YEAR</p>
+                        <p id="cardAcademicYear" class="text-black font-medium"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Download Button -->
+            <button id="downloadCardButton" class="modern-button mt-8">
+                Download Card
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Function to show a custom modal message
+        function showMessage(message, type = 'info') {
+            const existingModal = document.querySelector('.custom-modal');
+            if (existingModal) existingModal.remove();
+
+            const modal = document.createElement('div');
+            modal.className = `custom-modal ${type}`;
+            modal.textContent = message;
+            document.body.appendChild(modal);
+            
+            setTimeout(() => modal.classList.add('show'), 10);
+            setTimeout(() => {
+                modal.classList.remove('show');
+                setTimeout(() => modal.remove(), 500);
+            }, 3000);
+        }
+
+        // Function to handle image uploads
+        function handleImageUpload(event, targetElementId) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById(targetElementId).src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Generic function to update text fields on the card
+        function updateCardField(inputId, cardElementId) {
+            const inputElement = document.getElementById(inputId);
+            const cardElement = document.getElementById(cardElementId);
+            
+            const update = () => cardElement.textContent = inputElement.value;
+            
+            update(); // Initial update
+            inputElement.addEventListener('input', update);
+        }
+
+        // Initialize all fields and listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Image upload listener
+            document.getElementById('studentPhotoUpload').addEventListener('change', (e) => handleImageUpload(e, 'cardStudentPhoto'));
+
+            // Text field listeners
+            updateCardField('universityNameInput', 'cardUniversityName');
+            updateCardField('nameInput', 'cardName');
+            updateCardField('dobInput', 'cardDob');
+            updateCardField('studentIdInput', 'cardStudentId');
+            updateCardField('phoneInput', 'cardPhone');
+            updateCardField('addressInput', 'cardAddress');
+            updateCardField('academicYearInput', 'cardAcademicYear');
+        });
+
+        // Download functionality
+        document.getElementById('downloadCardButton').addEventListener('click', async () => {
+            const card = document.getElementById('idCardPreview');
+            const scaleFactor = 4; // Higher scale for better quality
+
+            try {
+                showMessage("Generating your card...", "info");
+
+                const canvas = await html2canvas(card, {
+                    scale: scaleFactor,
+                    useCORS: true,
+                    logging: false,
+                    width: card.offsetWidth,
+                    height: card.offsetHeight
+                });
+
+                const studentName = document.getElementById('nameInput').value.replace(/ /g, '_') || 'student';
+
+                // --- PNG Download ---
+                const pngUrl = canvas.toDataURL('image/png');
+                const pngLink = document.createElement('a');
+                pngLink.href = pngUrl;
+                pngLink.download = `${studentName}_id_card.png`;
+                document.body.appendChild(pngLink);
+                pngLink.click();
+                document.body.removeChild(pngLink);
+                
+                // --- PDF Download ---
+                const { jsPDF } = window.jspdf;
+                // Card dimensions in mm: 3.375in = 85.7mm, 2.125in = 54mm
+                const pdfWidth = 85.7;
+                const pdfHeight = 54;
+
+                const pdf = new jsPDF({
+                    orientation: 'landscape',
+                    unit: 'mm',
+                    format: [pdfWidth, pdfHeight]
+                });
+
+                pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, pdfWidth, pdfHeight);
+                pdf.save(`${studentName}_id_card.pdf`);
+                
+                setTimeout(() => {
+                    showMessage("Card downloaded as PNG and PDF!", "success");
+                }, 500);
+
+            } catch (error) {
+                console.error("Error generating card:", error);
+                showMessage("Failed to generate card. Check console for errors.", "error");
+            }
+        });
+    </script>
+</body>
+</html>
+
+
